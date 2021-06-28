@@ -2,6 +2,8 @@
 // Created by netcan on 2021/6/21.
 //
 #include <config-loader/DefineStruct.h>
+#include <config-loader/ReflectedTraits.h>
+#include <config-loader/ForEachField.h>
 #include <cstdint>
 #include <iostream>
 #include <sstream>
@@ -28,7 +30,7 @@ void serializeObj(std::ostream& out, T&& obj,
     if constexpr(IsReflected_v<std::decay_t<T>>) {
         indent();
         out << fieldName << (*fieldName ? ": {" : "{") << std::endl;
-        forEach(std::forward<T>(obj),
+        forEachField(std::forward<T>(obj),
                 [&](auto&& fieldName, auto&& value)
                 { serializeObj(out, value, fieldName, depth + 1); });
         indent();
@@ -49,7 +51,7 @@ void deserializeObj(std::istream& in, T&& obj,
             in >> token; // WARNING: needs check fieldName valid
         }
 
-        forEach(std::forward<T>(obj),
+        forEachField(std::forward<T>(obj),
                 [&](auto&& fieldName, auto&& value)
                 { deserializeObj(in, value, fieldName); });
 
@@ -80,6 +82,5 @@ int main() {
     deserializeObj(result, rect2);
     std::cout << "deserialize rect result:" << std::endl;
     serializeObj(std::cout, rect2);
-
 
 }

@@ -3,13 +3,7 @@ project(config_loader)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# for Catch2
-Include(FetchContent)
-FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v2.13.1)
-FetchContent_MakeAvailable(Catch2)
+include(cmake/ThirdParty.cmake)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

@@ -22,6 +22,6 @@ add_executable(config_loader_test
         test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h)
+        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp)
 
-target_link_libraries(config_loader_test PRIVATE Catch2::Catch2)
+target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2)

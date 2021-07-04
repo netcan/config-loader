@@ -19,8 +19,9 @@ add_library(config-loader STATIC
 
 add_executable(config_loader_test
         ${CONFIG_LOADER_SRC}
+        test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        )
+        test/ut/ReflectedStruct.h)
 
 target_link_libraries(config_loader_test PRIVATE Catch2::Catch2)

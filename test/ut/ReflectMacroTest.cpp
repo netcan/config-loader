@@ -6,18 +6,9 @@
 #include <string>
 #include <sstream>
 #include <config-loader/ConfigLoader.h>
+#include "ReflectedStruct.h"
 
 using namespace CONFIG_LOADER_NS;
-
-// define and reflect a struct
-DEFINE_STRUCT(Point,
-              (double) x,
-              (double) y);
-
-DEFINE_STRUCT(Rect,
-              (Point) p1,
-              (Point) p2,
-              (uint32_t) color);
 
 template<typename T>
 static void serializeObj(std::ostream& out, T&& obj,

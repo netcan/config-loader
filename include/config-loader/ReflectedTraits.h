@@ -16,4 +16,5 @@ constexpr bool IsReflected_v
         = true;
 
 CONFIG_LOADER_NS_END
+
 #endif //CONFIG_LOADER_REFLECTEDTRAITS_H

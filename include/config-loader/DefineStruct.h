@@ -7,7 +7,6 @@
 #include <type_traits>
 #include <utility>
 #include <cstddef>
-#include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/RepeatMacro.h>
 
 #define FIELD_EACH(i, arg)                    \

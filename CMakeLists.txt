@@ -12,7 +12,10 @@ set(CONFIG_LOADER_SRC
         include/config-loader/DefineStruct.h
         include/config-loader/ReflectedTraits.h
         include/config-loader/ConfigLoaderNS.h
-        include/config-loader/ForEachField.h include/config-loader/ConfigLoader.h)
+        include/config-loader/ForEachField.h
+        include/config-loader/ConfigLoaderBuilder.h
+        include/config-loader/ConfigLoader.h
+        include/config-loader/Result.h include/config-loader/PathString.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})
@@ -22,6 +25,6 @@ add_executable(config_loader_test
         test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp)
+        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/PathStringTest.cpp)
 
 target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2)

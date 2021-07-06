@@ -4,7 +4,7 @@
 
 #ifndef CONFIG_LOADER_REFLECTEDSTRUCT_H
 #define CONFIG_LOADER_REFLECTEDSTRUCT_H
-#include <config-loader/DefineStruct.h>
+#include <config-loader/core/DefineStruct.h>
 
 // define and reflect a struct
 DEFINE_STRUCT(Point,

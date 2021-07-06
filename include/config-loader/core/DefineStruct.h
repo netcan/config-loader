@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <utility>
 #include <cstddef>
-#include <config-loader/RepeatMacro.h>
+#include <config-loader/utils/RepeatMacro.h>
 
 #define FIELD_EACH(i, arg)                    \
     PAIR(arg);                                \

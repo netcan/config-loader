@@ -5,7 +5,7 @@
 #ifndef CONFIG_LOADER_DESERIALIZABLE_H
 #define CONFIG_LOADER_DESERIALIZABLE_H
 #include <config-loader/Result.h>
-#include <config-loader/DeserializeTraits.h>
+#include <config-loader/deserialize/DeserializeTraits.h>
 
 CONFIG_LOADER_NS_BEGIN
 

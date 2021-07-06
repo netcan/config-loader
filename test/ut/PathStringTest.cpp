@@ -4,7 +4,7 @@
 
 #include <type_traits>
 #include <catch2/catch.hpp>
-#include <config-loader/PathString.h>
+#include <config-loader/utils/PathString.h>
 
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;

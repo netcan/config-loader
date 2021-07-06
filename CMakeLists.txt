@@ -8,14 +8,14 @@ include(cmake/ThirdParty.cmake)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(CONFIG_LOADER_SRC
-        include/config-loader/RepeatMacro.h
-        include/config-loader/DefineStruct.h
-        include/config-loader/ReflectedTraits.h
+        include/config-loader/utils/RepeatMacro.h
+        include/config-loader/core/DefineStruct.h
+        include/config-loader/core/ReflectedTraits.h
         include/config-loader/ConfigLoaderNS.h
-        include/config-loader/ForEachField.h
-        include/config-loader/Deserializable.h
+        include/config-loader/core/ForEachField.h
+        include/config-loader/deserialize/Deserializable.h
         include/config-loader/ConfigLoader.h
-        include/config-loader/Result.h include/config-loader/PathString.h include/config-loader/DeserializeTraitsDecl.h include/config-loader/DeserializeTraits.h include/config-loader/TinyXML2DeserializeTraits.h)
+        include/config-loader/Result.h include/config-loader/utils/PathString.h include/config-loader/deserialize/DeserializeTraitsDecl.h include/config-loader/deserialize/DeserializeTraits.h include/config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})

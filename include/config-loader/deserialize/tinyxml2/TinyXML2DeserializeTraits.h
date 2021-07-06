@@ -4,9 +4,9 @@
 
 #ifndef CONFIG_LOADER_TINYXML2DESERIALIZETRAITS_H
 #define CONFIG_LOADER_TINYXML2DESERIALIZETRAITS_H
-#include <config-loader/DeserializeTraitsDecl.h>
-#include <config-loader/ReflectedTraits.h>
-#include <config-loader/ForEachField.h>
+#include <config-loader/deserialize/DeserializeTraitsDecl.h>
+#include <config-loader/core/ReflectedTraits.h>
+#include <config-loader/core/ForEachField.h>
 #include <config-loader/Result.h>
 #include <sstream>
 #include <string_view>

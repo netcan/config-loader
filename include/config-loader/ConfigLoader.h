@@ -6,10 +6,10 @@
 #define CONFIG_LOADER_CONFIGLOADER_H
 
 #include <config-loader/ConfigLoaderNS.h>
-#include <config-loader/RepeatMacro.h>
-#include <config-loader/DefineStruct.h>
-#include <config-loader/ForEachField.h>
-#include <config-loader/ReflectedTraits.h>
-#include <config-loader/Deserializable.h>
+#include <config-loader/utils/RepeatMacro.h>
+#include <config-loader/core/DefineStruct.h>
+#include <config-loader/core/ForEachField.h>
+#include <config-loader/core/ReflectedTraits.h>
+#include <config-loader/deserialize/Deserializable.h>
 
 #endif //CONFIG_LOADER_CONFIGLOADER_H

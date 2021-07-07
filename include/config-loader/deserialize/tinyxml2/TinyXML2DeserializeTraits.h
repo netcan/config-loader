@@ -26,6 +26,9 @@ template<>
 struct DeserializeTraits<TinyXML2Tag> {
     template<typename T>
     static Result load(T& obj, std::string_view content) {
+        if (content.empty()) {
+            return Result::ERR_EMPTY_CONTENT;
+        }
         tinyxml2::XMLDocument doc;
         if (doc.Parse(content.data()) != tinyxml2::XML_SUCCESS) {
             return Result::ERR_LOAD_CONTENT;

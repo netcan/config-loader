@@ -10,6 +10,7 @@ CONFIG_LOADER_NS_BEGIN
 
 enum class Result {
     SUCCESS,
+    ERR_EMPTY_CONTENT,
     ERR_LOAD_CONTENT,
 };
 

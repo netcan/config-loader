@@ -13,7 +13,7 @@ using namespace tinyxml2;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("deserialize a xml to obj") {
-    WHEN("deserialize a plain point config") {
+    WHEN("deserialize a flatten point config") {
         Point point;
         Deserializable<Point, TinyXML2Tag> deserializer;
         auto res = deserializer.load(point, [] {

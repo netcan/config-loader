@@ -13,7 +13,7 @@ constexpr auto rectConfigPath = "configs/Rect.xml"_path;
 constexpr auto someOfPointsConfigPath = "configs/SomeOfPoints.xml"_path;
 
 SCENARIO("test deserializable config file") {
-    WHEN("deserializable a complex data from xml file") {
+    WHEN("deserializable build by type") {
         Deserializable<SomeOfPoints
                 , TinyXML2Tag
                 , decltype(someOfPointsConfigPath)> deserializer;
@@ -25,8 +25,10 @@ SCENARIO("test deserializable config file") {
         REQUIRE(someOfPoints.points.size() == 3);
     }
 
-    WHEN("deserializable a complex data from xml file") {
-        Deserializable deserializer(SomeOfPoints{}, TinyXML2Tag{}, someOfPointsConfigPath);
+    WHEN("deserializable build by value") {
+        Deserializable deserializer(SomeOfPoints{}
+            , TinyXML2Tag{}
+            , someOfPointsConfigPath);
 
         SomeOfPoints someOfPoints;
         REQUIRE(deserializer.load(someOfPoints) == Result::SUCCESS);
@@ -37,7 +39,7 @@ SCENARIO("test deserializable config file") {
 
 }
 SCENARIO("composing deserializable to deserializer") {
-    GIVEN("two deserializable") {
+    GIVEN("composing by type") {
         using RectDeserializable = Deserializable<Rect
                 , TinyXML2Tag
                 , decltype(rectConfigPath)>;
@@ -93,7 +95,29 @@ SCENARIO("composing deserializable to deserializer") {
             REQUIRE(rect.p1.y == 7.8);
             REQUIRE(rect.color == 0x12345678);
         }
+    }
 
+    GIVEN("composing by value") {
+        Deserializer deserializer(
+                AddItem<Point, TinyXML2Tag>("configs/Point.xml"_path),
+                AddItem<Rect, TinyXML2Tag>("configs/Rect.xml"_path),
+                AddItem<SomeOfPoints, TinyXML2Tag>("configs/SomeOfPoints.xml"_path)
+        );
+        THEN("deserialize a flatten point") {
+            Point point;
+            REQUIRE(deserializer.load(point) == Result::SUCCESS);
+            REQUIRE(point.x == 1.2);
+            REQUIRE(point.y == 3.4);
+        }
+        THEN("deserialize a complex config") {
+            {
+                SomeOfPoints someOfPoints;
+                REQUIRE(deserializer.load(someOfPoints) == Result::SUCCESS);
+                REQUIRE_THAT(someOfPoints.name,
+                             Equals("Some of points"));
+                REQUIRE(someOfPoints.points.size() == 3);
+            }
+        }
     }
 
 }

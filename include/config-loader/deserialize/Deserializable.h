@@ -12,6 +12,9 @@ CONFIG_LOADER_NS_BEGIN
 
 template<typename T, typename FORMAT, typename CONFIG_CONTENT = decltype(""_path)>
 struct Deserializable: private CONFIG_CONTENT {
+    Deserializable() = default;
+    Deserializable(T, FORMAT, CONFIG_CONTENT) {}
+
     template<typename GET_CONTENT>
     Result load(T& obj, GET_CONTENT&& getContent) {
         return DeserializeTraits<FORMAT>::load(obj, getContent());
@@ -21,6 +24,10 @@ struct Deserializable: private CONFIG_CONTENT {
         return DeserializeTraits<FORMAT>::load(obj, CONFIG_CONTENT::getContent());
     }
 };
+
+// C++17 deduction guide
+template<typename T, typename FORMAT, typename CONFIG_CONTENT = decltype(""_path)>
+Deserializable(T, FORMAT, CONFIG_CONTENT) -> Deserializable<T, FORMAT, CONFIG_CONTENT>;
 
 CONFIG_LOADER_NS_END
 

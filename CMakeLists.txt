@@ -15,10 +15,15 @@ set(CONFIG_LOADER_SRC
         include/config-loader/core/ForEachField.h
         include/config-loader/deserialize/Deserializable.h
         include/config-loader/ConfigLoader.h
-        include/config-loader/Result.h include/config-loader/utils/PathString.h include/config-loader/deserialize/DeserializeTraitsDecl.h include/config-loader/deserialize/DeserializeTraits.h include/config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h include/config-loader/deserialize/CommonDeserializeTraits.h)
+        include/config-loader/Result.h
+        include/config-loader/utils/PathString.h
+        include/config-loader/deserialize/DeserializeTraitsDecl.h
+        include/config-loader/deserialize/DeserializeTraits.h
+        include/config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h
+        include/config-loader/deserialize/CommonDeserializeTraits.h)
 
-add_library(config-loader STATIC
-        ${CONFIG_LOADER_SRC})
+#add_library(config-loader STATIC
+#        ${CONFIG_LOADER_SRC})
 
 add_executable(config_loader_test
         ${CONFIG_LOADER_SRC}

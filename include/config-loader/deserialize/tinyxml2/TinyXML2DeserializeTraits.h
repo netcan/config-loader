@@ -8,6 +8,9 @@
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/Result.h>
+#include <list>
+#include <deque>
+#include <vector>
 #include <string_view>
 #include <tinyxml2.h>
 
@@ -47,10 +50,37 @@ struct TinyXML2DeserializeTraits<T
 template<typename T>
 struct TinyXML2DeserializeTraits<T
         , std::enable_if_t<CommonDeserializeTraits<T>::isSupport>> {
-static Result deserialize(T& obj, tinyxml2::XMLElement* node) {
-    return CommonDeserializeTraits<T>::deserialize(obj, node->GetText());
-}
+    static Result deserialize(T& obj, tinyxml2::XMLElement* node) {
+        return CommonDeserializeTraits<T>::deserialize(obj, node->GetText());
+    }
 };
+
+template<typename T> // for container like list/vector/deque but not string
+struct TinyXML2SeqContainerDeserialize {
+    static Result deserialize(T& obj, tinyxml2::XMLElement* node) {
+        for (auto item = node->FirstChildElement()
+                ; item
+                ; item = item->NextSiblingElement()) {
+            using value_type = typename T::value_type;
+            value_type value;
+            TinyXML2DeserializeTraits<value_type>::deserialize(value, item);
+            obj.push_back(std::move(value));
+        }
+        return Result::SUCCESS;
+    }
+};
+
+template<typename T>
+struct TinyXML2DeserializeTraits<std::vector<T>>
+        : TinyXML2SeqContainerDeserialize<std::vector<T>> { };
+
+template<typename T>
+struct TinyXML2DeserializeTraits<std::list<T>>
+        : TinyXML2SeqContainerDeserialize<std::list<T>> { };
+
+template<typename T>
+struct TinyXML2DeserializeTraits<std::deque<T>>
+        : TinyXML2SeqContainerDeserialize<std::deque<T>> { };
 
 }
 

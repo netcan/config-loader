@@ -10,6 +10,6 @@
 #include <config-loader/core/DefineStruct.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/core/ReflectedTraits.h>
-#include <config-loader/deserialize/Deserializable.h>
+#include <config-loader/deserialize/Deserializer.h>
 
 #endif //CONFIG_LOADER_CONFIGLOADER_H

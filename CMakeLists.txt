@@ -16,20 +16,22 @@ set(CONFIG_LOADER_SRC
         include/config-loader/deserialize/Deserializable.h
         include/config-loader/ConfigLoader.h
         include/config-loader/Result.h
-        include/config-loader/utils/PathString.h
+        include/config-loader/utils/ConfigPath.h
         include/config-loader/deserialize/DeserializeTraitsDecl.h
         include/config-loader/deserialize/DeserializeTraits.h
         include/config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h
-        include/config-loader/deserialize/CommonDeserializeTraits.h)
+        include/config-loader/deserialize/CommonDeserializeTraits.h src/utils/ConfigPath.cpp)
 
-#add_library(config-loader STATIC
-#        ${CONFIG_LOADER_SRC})
+add_library(config-loader STATIC
+        ${CONFIG_LOADER_SRC})
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/ut/configs DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(config_loader_test
         ${CONFIG_LOADER_SRC}
         test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/PathStringTest.cpp test/ut/TinyXML2DeserializeTest.cpp)
+        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/ConfigPathTest.cpp test/ut/TinyXML2DeserializeTest.cpp)
 
 target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2)

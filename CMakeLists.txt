@@ -3,7 +3,7 @@ project(config_loader)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(cmake/ThirdParty.cmake)
+include(third-party/ThirdParty.cmake)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

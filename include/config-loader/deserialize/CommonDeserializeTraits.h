@@ -21,7 +21,7 @@ struct CommonDeserializeTraits<Integer
         ss << valueText;
         if (valueText.substr(0, 2) == "0x") { ss << std::hex; }
         ss >> num;
-        if (valueText.substr(0, 2) == "0x") { ss << std::oct; }
+        if (valueText.substr(0, 2) == "0x") { ss << std::dec; }
         return Result::SUCCESS;
     }
 };

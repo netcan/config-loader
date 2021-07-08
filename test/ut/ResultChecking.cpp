@@ -59,4 +59,17 @@ SCENARIO("Error checking") {
         }
     }
 
+    WHEN("a err extracting field config") {
+        Point point;
+        auto res = deserializer.load(point, [] {
+            return R"(
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <point>
+                        <x>abc</x>
+                    </point>
+                )";
+        });
+        REQUIRE(res == Result::ERE_EXTRACTING_FIELD);
+    }
+
 }

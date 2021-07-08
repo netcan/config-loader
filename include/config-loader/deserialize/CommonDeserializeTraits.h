@@ -22,7 +22,7 @@ struct CommonDeserializeTraits<Integer
         if (valueText.substr(0, 2) == "0x") { ss << std::hex; }
         ss >> num;
         if (valueText.substr(0, 2) == "0x") { ss << std::dec; }
-        return Result::SUCCESS;
+        return ss.fail() ? Result::ERE_EXTRACTING_FIELD : Result::SUCCESS;
     }
 };
 

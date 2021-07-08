@@ -4,7 +4,7 @@
 
 #ifndef CONFIG_LOADER_REFLECTEDSTRUCT_H
 #define CONFIG_LOADER_REFLECTEDSTRUCT_H
-#include <config-loader/core/DefineStruct.h>
+#include <config-loader/ConfigLoader.h>
 
 // define and reflect a struct
 DEFINE_STRUCT(Point,
@@ -22,4 +22,12 @@ DEFINE_STRUCT(SomeOfPoints,
               (std::string) name,
               (std::vector<Point>) points);
 
+using CONFIG_LOADER_NS::Deserializer;
+using CONFIG_LOADER_NS::XMLItem;
+
+inline Deserializer deserializer(
+    XMLItem<Point>(),
+    XMLItem<Rect>(),
+    XMLItem<SomeOfPoints>()
+);
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

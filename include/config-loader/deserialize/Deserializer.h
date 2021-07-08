@@ -24,7 +24,7 @@ Deserializer(DESERIALIZABLE, DESERIALIZABLEs...) -> Deserializer<DESERIALIZABLE,
 
 // helper
 template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto XMLItem(CONFIG_CONTENT) {
+constexpr auto XMLItem(CONFIG_CONTENT = {}) {
     return Deserializable<T, TinyXML2Tag, CONFIG_CONTENT>{};
 }
 

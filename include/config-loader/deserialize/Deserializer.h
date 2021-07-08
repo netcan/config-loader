@@ -8,11 +8,13 @@
 
 CONFIG_LOADER_NS_BEGIN
 template<typename DESERIALIZABLE, typename ...DESERIALIZABLEs>
-struct Deserializer
+struct Deserializer // EBO
         : private DESERIALIZABLE
         , private DESERIALIZABLEs... {
     Deserializer() = default;
-    Deserializer(DESERIALIZABLE, DESERIALIZABLEs...) {}
+    Deserializer(DESERIALIZABLE, DESERIALIZABLEs...) {
+        static_assert(sizeof(Deserializer) == 1); // empty obj check, stateless
+    }
     using DESERIALIZABLE::load;
     using DESERIALIZABLEs::load...;
 };
@@ -21,9 +23,9 @@ template<typename DESERIALIZABLE, typename ...DESERIALIZABLEs> // C++17 deductio
 Deserializer(DESERIALIZABLE, DESERIALIZABLEs...) -> Deserializer<DESERIALIZABLE, DESERIALIZABLEs...>;
 
 // helper
-template<typename T, typename FORMAT, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto AddItem(CONFIG_CONTENT) {
-    return Deserializable<T, FORMAT, CONFIG_CONTENT>{};
+template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
+constexpr auto XMLItem(CONFIG_CONTENT) {
+    return Deserializable<T, TinyXML2Tag, CONFIG_CONTENT>{};
 }
 
 CONFIG_LOADER_NS_END

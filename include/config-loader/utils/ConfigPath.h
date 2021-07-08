@@ -15,8 +15,7 @@ std::string getFileContent(const char* path);
 template<char... cs>
 struct Path {
     static constexpr char value[] = {cs..., '\0'};
-    static constexpr char length = sizeof...(cs);
-    std::string getContent() {
+    static std::string getContent() {
         return getFileContent(value);
     }
 };

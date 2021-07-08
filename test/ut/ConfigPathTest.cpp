@@ -21,7 +21,6 @@ SCENARIO("test path string") {
         {
             using PATH = decltype("hello world.xml"_path);
             REQUIRE_THAT(PATH::value, Equals("hello world.xml"));
-            static_assert(PATH::length == 15);
             static_assert(PATH::value[15] == '\0');
             static_assert(std::extent_v<decltype(PATH::value)> == 16);
         }

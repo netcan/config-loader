@@ -11,7 +11,7 @@
 CONFIG_LOADER_NS_BEGIN
 
 template<typename T, typename FORMAT, typename CONFIG_CONTENT = decltype(""_path)>
-struct Deserializable: private CONFIG_CONTENT {
+struct Deserializable {
     Deserializable() = default;
     Deserializable(T, FORMAT, CONFIG_CONTENT) {}
 

@@ -99,9 +99,9 @@ SCENARIO("composing deserializable to deserializer") {
 
     GIVEN("composing by value") {
         Deserializer deserializer(
-                AddItem<Point, TinyXML2Tag>("configs/Point.xml"_path),
-                AddItem<Rect, TinyXML2Tag>("configs/Rect.xml"_path),
-                AddItem<SomeOfPoints, TinyXML2Tag>("configs/SomeOfPoints.xml"_path)
+                XMLItem<Point>("configs/Point.xml"_path),
+                XMLItem<Rect>("configs/Rect.xml"_path),
+                XMLItem<SomeOfPoints>("configs/SomeOfPoints.xml"_path)
         );
         THEN("deserialize a flatten point") {
             Point point;

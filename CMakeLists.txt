@@ -31,11 +31,12 @@ add_library(config-loader STATIC
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/ut/configs DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_executable(config_loader_test
         ${CONFIG_LOADER_SRC}
         test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/ConfigPathTest.cpp test/ut/TinyXML2DeserializeTest.cpp test/ut/DeserializableTest.cpp test/ut/ResultChecking.cpp test/ut/UtilsTest.cpp)
+        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/ConfigPathTest.cpp test/ut/TinyXML2DeserializeTest.cpp test/ut/DeserializableTest.cpp test/ut/ResultChecking.cpp test/ut/UtilsTest.cpp test/ut/DeserializeJsonCppConfig.h test/ut/JsonCppTest.cpp)
 
-target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2)
+target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2 jsoncpp_static)

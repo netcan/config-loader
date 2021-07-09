@@ -3,6 +3,7 @@
 //
 
 #include <catch2/catch.hpp>
+#include <map>
 #include <tinyxml2.h>
 #include <iostream>
 #include "ReflectedStruct.h"
@@ -12,7 +13,7 @@ using namespace Catch;
 using namespace tinyxml2;
 using namespace CONFIG_LOADER_NS;
 
-SCENARIO("deserialize a xml to obj") {
+SCENARIO("deserialize xml to struct") {
     WHEN("deserialize a flatten point config") {
         Point point;
         Deserializable<Point, TinyXML2Tag> deserializer;
@@ -57,6 +58,42 @@ SCENARIO("deserialize a xml to obj") {
             REQUIRE(someOfPoints.points[i].x == pointsV[i * 2]);
             REQUIRE(someOfPoints.points[i].y == pointsV[i * 2 + 1]);
         }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+DEFINE_STRUCT(STLObj,
+              (std::map<int, int>) m1,
+              (std::unordered_map<std::string, Point>) m2);
+
+SCENARIO("deserialize xml to extra STL container") {
+    GIVEN("a STL obj") {
+        STLObj data;
+        auto deserializer = XMLLoader<STLObj>();
+        auto res = deserializer.load(data, [] {
+            return R"(
+                <STLOBj>
+                    <m1>
+                        <key name="0">2</key>
+                        <key name="1">4</key>
+                        <key name="2">6</key>
+                    </m1>
+                    <m2>
+                        <key name="hello world">
+                            <x>1.2</x>
+                            <y>3.4</y>
+                        </key>
+                    </m2>
+                </STLOBj>
+             )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(data.m1.size() == 3);
+        REQUIRE(data.m1[0] == 2);
+        REQUIRE(data.m1[1] == 4);
+        REQUIRE(data.m1[2] == 6);
+        REQUIRE(data.m2["hello world"].x == 1.2);
+        REQUIRE(data.m2["hello world"].y == 3.4);
     }
 
 }

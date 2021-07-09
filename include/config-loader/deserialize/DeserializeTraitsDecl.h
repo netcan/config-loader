@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_DESERIALIZETRAITSDECL_H
 #define CONFIG_LOADER_DESERIALIZETRAITSDECL_H
 #include <config-loader/ConfigLoaderNS.h>
+#include <config-loader/utils/Log.h>
 
 CONFIG_LOADER_NS_BEGIN
 
@@ -18,8 +19,13 @@ struct IsSupport {
 template<typename FORMAT>
 struct DeserializeTraits;
 
-template<typename FORMAT, typename = void>
-struct CommonDeserializeTraits: detail::IsSupport<false> { };
+template<typename T, typename = void>
+struct CommonDeserializeTraits: detail::IsSupport<false> {
+    static Result deserialize(T&, std::string_view) {
+        LOGE("unimplemented");
+        return Result::ERE_EXTRACTING_FIELD;
+    }
+};
 
 CONFIG_LOADER_NS_END
 

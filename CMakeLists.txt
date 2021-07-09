@@ -20,7 +20,11 @@ set(CONFIG_LOADER_SRC
         include/config-loader/deserialize/DeserializeTraitsDecl.h
         include/config-loader/deserialize/DeserializeTraits.h
         include/config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h
-        include/config-loader/deserialize/CommonDeserializeTraits.h src/utils/ConfigPath.cpp include/config-loader/deserialize/Deserializer.h include/config-loader/utils/Log.h)
+        include/config-loader/deserialize/CommonDeserializeTraits.h
+        include/config-loader/deserialize/Deserializer.h
+        include/config-loader/utils/Log.h
+        include/config-loader/utils/Assertion.h
+        src/utils/ConfigPath.cpp )
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})

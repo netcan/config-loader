@@ -25,10 +25,8 @@ SCENARIO("test deserializable config file") {
         REQUIRE(someOfPoints.points.size() == 3);
     }
 
-    WHEN("deserializable build by value") {
-        Deserializable deserializer(SomeOfPoints{}
-            , TinyXML2Tag{}
-            , someOfPointsConfigPath);
+    WHEN("deserializable build by helper") {
+        auto deserializer = XMLLoader<SomeOfPoints>(someOfPointsConfigPath);
 
         SomeOfPoints someOfPoints;
         REQUIRE(deserializer.load(someOfPoints) == Result::SUCCESS);

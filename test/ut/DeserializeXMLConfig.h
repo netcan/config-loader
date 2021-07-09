@@ -28,7 +28,6 @@ constexpr auto RECT_CONFIG = R"(
 </rect>
 )";
 
-// TODO: custom point: array delimiter <value></value>
 constexpr auto SOME_OF_POINTS_CONFIG = R"(
 <?xml version="1.0" encoding="UTF-8"?>
 <some_of_points>

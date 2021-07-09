@@ -12,19 +12,14 @@ using namespace tinyxml2;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("test path string") {
-    WHEN("user-defined string literal") {
-        {
-            constexpr auto path = "/home/netcan/test.xml"_path;
-            REQUIRE_THAT(path.value, Equals("/home/netcan/test.xml"));
-            static_assert(sizeof(path) == 1);
-        }
-        {
-            using PATH = decltype("hello world.xml"_path);
-            REQUIRE_THAT(PATH::value, Equals("hello world.xml"));
-            static_assert(PATH::value[15] == '\0');
-            static_assert(std::extent_v<decltype(PATH::value)> == 16);
+    GIVEN("empty path") {
+        auto path = ""_path;
+        THEN("read its content") {
+            auto content = path.getContent();
+            REQUIRE(content.empty());
         }
     }
+
     GIVEN("config path") {
         auto path = "configs/SomeOfPoints.xml"_path;
         THEN("read its content") {

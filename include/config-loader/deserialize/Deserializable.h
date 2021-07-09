@@ -29,6 +29,12 @@ struct Deserializable {
 template<typename T, typename FORMAT, typename CONFIG_CONTENT = decltype(""_path)>
 Deserializable(T, FORMAT, CONFIG_CONTENT) -> Deserializable<T, FORMAT, CONFIG_CONTENT>;
 
+// helper
+template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
+constexpr auto XMLLoader(CONFIG_CONTENT = {}) {
+    return Deserializable<T, TinyXML2Tag, CONFIG_CONTENT>{};
+}
+
 CONFIG_LOADER_NS_END
 
 #endif //CONFIG_LOADER_DESERIALIZABLE_H

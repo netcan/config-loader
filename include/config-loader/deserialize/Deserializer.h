@@ -7,6 +7,7 @@
 #include <config-loader/deserialize/Deserializable.h>
 
 CONFIG_LOADER_NS_BEGIN
+// A deserializable composer(manager)
 template<typename DESERIALIZABLE, typename ...DESERIALIZABLEs>
 struct Deserializer // EBO
         : private DESERIALIZABLE
@@ -21,12 +22,6 @@ struct Deserializer // EBO
 
 template<typename DESERIALIZABLE, typename ...DESERIALIZABLEs> // C++17 deduction guide
 Deserializer(DESERIALIZABLE, DESERIALIZABLEs...) -> Deserializer<DESERIALIZABLE, DESERIALIZABLEs...>;
-
-// helper
-template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto XMLItem(CONFIG_CONTENT = {}) {
-    return Deserializable<T, TinyXML2Tag, CONFIG_CONTENT>{};
-}
 
 CONFIG_LOADER_NS_END
 

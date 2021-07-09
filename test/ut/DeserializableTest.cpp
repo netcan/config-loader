@@ -99,9 +99,9 @@ SCENARIO("composing deserializable to deserializer") {
 
     GIVEN("composing by value") {
         Deserializer deserializer(
-                XMLItem<Point>("configs/Point.xml"_path),
-                XMLItem<Rect>("configs/Rect.xml"_path),
-                XMLItem<SomeOfPoints>("configs/SomeOfPoints.xml"_path)
+                XMLLoader<Point>("configs/Point.xml"_path),
+                XMLLoader<Rect>("configs/Rect.xml"_path),
+                XMLLoader<SomeOfPoints>("configs/SomeOfPoints.xml"_path)
         );
         THEN("deserialize a flatten point") {
             Point point;

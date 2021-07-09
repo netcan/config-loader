@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.17)
 project(config_loader)
 
 set(CMAKE_CXX_STANDARD 17)

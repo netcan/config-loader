@@ -23,11 +23,11 @@ DEFINE_STRUCT(SomeOfPoints,
               (std::vector<Point>) points);
 
 using CONFIG_LOADER_NS::Deserializer;
-using CONFIG_LOADER_NS::XMLItem;
+using CONFIG_LOADER_NS::XMLLoader;
 
 inline Deserializer deserializer(
-    XMLItem<Point>(),
-    XMLItem<Rect>(),
-    XMLItem<SomeOfPoints>()
+    XMLLoader<Point>(),
+    XMLLoader<Rect>(),
+    XMLLoader<SomeOfPoints>()
 );
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

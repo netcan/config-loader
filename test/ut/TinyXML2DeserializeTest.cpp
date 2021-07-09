@@ -64,7 +64,10 @@ SCENARIO("deserialize xml to struct") {
 ///////////////////////////////////////////////////////////////////////////////
 DEFINE_STRUCT(STLObj,
               (std::map<int, int>) m1,
-              (std::unordered_map<std::string, Point>) m2);
+              (std::unordered_map<std::string, Point>) m2,
+              (std::map<int, int>) m3,
+              (std::optional<Point>) m4,
+              (std::optional<int>) m5);
 
 SCENARIO("deserialize xml to extra STL container") {
     GIVEN("a STL obj") {
@@ -77,6 +80,7 @@ SCENARIO("deserialize xml to extra STL container") {
                         <key name="0">2</key>
                         <key name="1">4</key>
                         <key name="2">6</key>
+                        <key name="2">8</key>
                     </m1>
                     <m2>
                         <key name="hello world">
@@ -84,16 +88,31 @@ SCENARIO("deserialize xml to extra STL container") {
                             <y>3.4</y>
                         </key>
                     </m2>
+                    <m3></m3>
+                    <m4>
+                        <x>5.6</x>
+                        <y>7.8</y>
+                    </m4>
                 </STLOBj>
              )";
         });
         REQUIRE(res == Result::SUCCESS);
-        REQUIRE(data.m1.size() == 3);
         REQUIRE(data.m1[0] == 2);
         REQUIRE(data.m1[1] == 4);
         REQUIRE(data.m1[2] == 6);
+        REQUIRE(data.m1.size() == 3);
+
         REQUIRE(data.m2["hello world"].x == 1.2);
         REQUIRE(data.m2["hello world"].y == 3.4);
+        REQUIRE(data.m2.size() == 1);
+
+        REQUIRE(data.m3.empty());
+
+        REQUIRE(data.m4.has_value());
+        REQUIRE(data.m4->x == 5.6);
+        REQUIRE(data.m4->y == 7.8);
+
+        REQUIRE(! data.m5.has_value());
     }
 
 }

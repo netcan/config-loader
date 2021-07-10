@@ -9,6 +9,7 @@
 - Complete test cases
 
 Future plans:
+
 - Support Yaml configuration file
 - Support from native data structure to config file, stringify data structure
 - Enable the supported formats through CMake options
@@ -116,7 +117,7 @@ enum class Result {
     ERR_EMPTY_CONTENT,    // The parsing file is empty
     ERR_ILL_FORMED,       // Illegal parsing file
     ERR_MISSING_FIELD,    // Missing field
-    ERE_EXTRACTING_FIELD, // Failed to parse the value
+    ERR_EXTRACTING_FIELD, // Failed to parse the value
     ERR_TYPE,             // Type error
 };
 ```

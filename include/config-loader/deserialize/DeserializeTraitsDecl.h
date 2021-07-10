@@ -26,7 +26,7 @@ template<typename T, typename = void>
 struct TrivialDeserializeTraits: detail::IsSupport<false> {
     static Result deserialize(T&, std::string_view) {
         LOGE("unimplemented");
-        return Result::ERE_EXTRACTING_FIELD;
+        return Result::ERR_EXTRACTING_FIELD;
     }
 };
 

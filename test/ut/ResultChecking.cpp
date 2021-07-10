@@ -74,6 +74,6 @@ SCENARIO("Error checking") {
                     </point>
                 )";
         });
-        REQUIRE(res == Result::ERE_EXTRACTING_FIELD);
+        REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
     }
 }

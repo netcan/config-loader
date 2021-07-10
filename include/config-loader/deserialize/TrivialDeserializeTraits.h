@@ -21,7 +21,28 @@ struct TrivialDeserializeTraits<Integer
         ss << valueText;
         if (valueText.substr(0, 2) == "0x") { ss << std::hex; }
         ss >> num;
-        return ss.fail() ? Result::ERE_EXTRACTING_FIELD : Result::SUCCESS;
+        return ss.fail() ? Result::ERR_EXTRACTING_FIELD : Result::SUCCESS;
+    }
+};
+
+template<>
+struct TrivialDeserializeTraits<bool>
+        : detail::IsSupport<true> {
+    static Result deserialize(bool& value, std::string_view valueText) {
+        std::stringstream ss;
+        ss << valueText;
+        ss >> value;
+        if (! ss.fail()) { return Result::SUCCESS; }
+        if (valueText == "true" || valueText == "True") {
+            value = true;
+            return Result::SUCCESS;
+        }
+        if (valueText == "false" || valueText == "False") {
+            value = false;
+            return Result::SUCCESS;
+        }
+
+        return Result::ERR_EXTRACTING_FIELD;
     }
 };
 

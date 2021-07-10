@@ -107,5 +107,46 @@ SCENARIO("deserialize xml to extra STL container") {
 
         REQUIRE(! data.m5.has_value());
     }
+}
 
+DEFINE_STRUCT(TestObj,
+              (bool) m1);
+
+SCENARIO("deserialize primitive type") {
+    auto deserializer = XMLLoader<TestObj>();
+    TestObj obj;
+    GIVEN("a valid bool") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestObj><m1>true</m1></TestObj>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.m1);
+    }
+    GIVEN("a valid bool") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestObj><m1>True</m1></TestObj>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.m1);
+    }
+    GIVEN("a valid bool") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestObj><m1>1</m1></TestObj>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.m1);
+    }
+    GIVEN("a valid bool") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestObj><m1>false</m1></TestObj>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(! obj.m1);
+    }
+    GIVEN("a invalid bool") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestObj><m1>unknown</m1></TestObj>";
+        });
+        REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
+    }
 }

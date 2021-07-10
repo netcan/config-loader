@@ -9,6 +9,7 @@
 - 测试用例完备
 
 将来计划：
+
 - 支持Yaml配置文件
 - 支持从原生数据结构写到配置文件、打印数据结构
 - 通过CMake选项来控制支持的格式
@@ -116,7 +117,7 @@ enum class Result {
     ERR_EMPTY_CONTENT,    // 解析文件为空
     ERR_ILL_FORMED,       // 解析文件非法
     ERR_MISSING_FIELD,    // 丢失字段
-    ERE_EXTRACTING_FIELD, // 解析值失败
+    ERR_EXTRACTING_FIELD, // 解析值失败
     ERR_TYPE,             // 类型错误
 };
 ```

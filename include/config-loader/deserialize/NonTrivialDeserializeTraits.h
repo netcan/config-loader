@@ -103,7 +103,7 @@ struct KVContainerDeserialize {
         return node.forEachElement([&container](auto&& item) {
             Key key; // Key is simply from XML Key Name
             auto keyName = item.getKeyName();
-            if (keyName == nullptr) { return Result::ERE_EXTRACTING_FIELD; }
+            if (keyName == nullptr) { return Result::ERR_EXTRACTING_FIELD; }
             CFL_EXPECT_SUCC(TrivialDeserializeTraits<Key>::deserialize(key, keyName));
 
             Value value; // Value may be complex data struct

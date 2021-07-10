@@ -11,16 +11,30 @@
 #include <config-loader/parsers/JsonCppParser.h>
 
 CONFIG_LOADER_NS_BEGIN
+namespace detail {
+template<typename T, typename PARSER,
+        typename DEFAULT_PATH, bool = DEFAULT_PATH::isEmpty>
+struct DeserializableWithDefaultPath {
+    constexpr Result load(T& obj) { // load from default config
+        return DeserializeTraits<PARSER>::load(obj, DEFAULT_PATH::getContent());
+    }
+};
 
-template<typename T, typename PARSER, typename DEFAULT_CONFIG = decltype(""_path)>
-struct Deserializable {
+template<typename T, typename PARSER, typename DEFAULT_PATH>
+struct DeserializableWithDefaultPath<T, PARSER, DEFAULT_PATH, true> {
+    // if default path is empty, delete it
+    constexpr Result load(T& obj) = delete;
+};
+}
+
+template<typename T, typename PARSER, typename DEFAULT_PATH = decltype(""_path)>
+struct Deserializable: private detail::DeserializableWithDefaultPath<T, PARSER, DEFAULT_PATH> {
+    // import `default load' from default path if provide
+    using detail::DeserializableWithDefaultPath<T, PARSER, DEFAULT_PATH>::load;
+
     template<typename GET_CONTENT>
     constexpr Result load(T& obj, GET_CONTENT&& getContent) {
         return DeserializeTraits<PARSER>::load(obj, getContent());
-    }
-
-    constexpr Result load(T& obj) { // load from default config
-        return DeserializeTraits<PARSER>::load(obj, DEFAULT_CONFIG::getContent());
     }
 };
 

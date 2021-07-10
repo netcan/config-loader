@@ -11,12 +11,11 @@
 #include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
-
+namespace detail {
 template<typename Integer>
-struct PrimitiveDeserializeTraits<Integer
-        , std::enable_if_t<std::is_arithmetic_v<Integer>>>
+struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
-    static Result deserialize(Integer& num, std::string_view valueText) {
+    static Result deserialize(Integer &num, std::string_view valueText) {
         std::stringstream ss;
         ss << valueText;
         if (valueText.substr(0, 2) == "0x") { ss << std::hex; }
@@ -28,11 +27,11 @@ struct PrimitiveDeserializeTraits<Integer
 template<>
 struct PrimitiveDeserializeTraits<bool>
         : detail::IsSupport<true> {
-    static Result deserialize(bool& value, std::string_view valueText) {
+    static Result deserialize(bool &value, std::string_view valueText) {
         std::stringstream ss;
         ss << valueText;
         ss >> value;
-        if (! ss.fail()) { return Result::SUCCESS; }
+        if (!ss.fail()) { return Result::SUCCESS; }
         if (valueText == "true" || valueText == "True") {
             value = true;
             return Result::SUCCESS;
@@ -49,11 +48,12 @@ struct PrimitiveDeserializeTraits<bool>
 template<>
 struct PrimitiveDeserializeTraits<std::string>
         : detail::IsSupport<true> {
-    static Result deserialize(std::string& str, std::string_view valueText) {
+    static Result deserialize(std::string &str, std::string_view valueText) {
         str = valueText;
         return Result::SUCCESS;
     }
 };
+}
 
 CONFIG_LOADER_NS_END
 

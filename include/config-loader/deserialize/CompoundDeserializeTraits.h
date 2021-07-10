@@ -8,7 +8,6 @@
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/utils/Log.h>
-#include <config-loader/utils/Assertion.h>
 #include <config-loader/Result.h>
 #include <list>
 #include <deque>
@@ -17,28 +16,6 @@
 #include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
-
-namespace detail {
-template<typename T, typename = void>
-struct CompoundDeserializeTraits;
-}
-
-template<typename PARSER>
-struct DeserializeTraits {
-    template<typename T>
-    static Result load(T& obj, std::string_view content) {
-        if (content.empty()) { return Result::ERR_EMPTY_CONTENT; }
-
-        PARSER parser;
-        CFL_EXPECT_SUCC(parser.parse(content.data()));
-
-        auto firstElem = parser.toRootElemType();
-        if (! firstElem) { return Result::ERR_MISSING_FIELD; }
-        return detail::CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
-    }
-};
-
-////////////////////////////////////////////////////////////////////////////////
 
 namespace detail {
 template<typename T>
@@ -65,6 +42,7 @@ struct CompoundDeserializeTraits<T
     }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 template<typename SEQ> // for container like list/vector/deque but not string, code reuse
 struct SeqContainerDeserialize {
     template<typename ELEM_TYPE>
@@ -92,6 +70,7 @@ template<typename T> // code reuse
 struct CompoundDeserializeTraits<std::deque<T>>
         : SeqContainerDeserialize<std::deque<T>> { };
 
+////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
     template<typename ELEM_TYPE>
@@ -125,7 +104,7 @@ template<typename K, typename V>
 struct CompoundDeserializeTraits<std::unordered_map<K, V>>
         : KVContainerDeserialize<std::unordered_map<K, V>> {};
 
-
+////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 struct CompoundDeserializeTraits<std::optional<T>> {
     template<typename ELEM_TYPE>

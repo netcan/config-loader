@@ -2,8 +2,8 @@
 // Created by netcan on 2021/07/07.
 //
 
-#ifndef CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H
-#define CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H
+#ifndef CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
+#define CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <string>
@@ -13,7 +13,7 @@
 CONFIG_LOADER_NS_BEGIN
 
 template<typename Integer>
-struct TrivialDeserializeTraits<Integer
+struct PrimitiveDeserializeTraits<Integer
         , std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
     static Result deserialize(Integer& num, std::string_view valueText) {
@@ -26,7 +26,7 @@ struct TrivialDeserializeTraits<Integer
 };
 
 template<>
-struct TrivialDeserializeTraits<bool>
+struct PrimitiveDeserializeTraits<bool>
         : detail::IsSupport<true> {
     static Result deserialize(bool& value, std::string_view valueText) {
         std::stringstream ss;
@@ -47,7 +47,7 @@ struct TrivialDeserializeTraits<bool>
 };
 
 template<>
-struct TrivialDeserializeTraits<std::string>
+struct PrimitiveDeserializeTraits<std::string>
         : detail::IsSupport<true> {
     static Result deserialize(std::string& str, std::string_view valueText) {
         str = valueText;
@@ -57,4 +57,4 @@ struct TrivialDeserializeTraits<std::string>
 
 CONFIG_LOADER_NS_END
 
-#endif //CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H
+#endif //CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H

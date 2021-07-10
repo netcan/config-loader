@@ -19,8 +19,8 @@ set(CONFIG_LOADER_SRC
         include/config-loader/utils/ConfigPath.h
         include/config-loader/deserialize/DeserializeTraitsDecl.h
         include/config-loader/deserialize/DeserializeTraits.h
-        include/config-loader/deserialize/NonTrivialDeserializeTraits.h
-        include/config-loader/deserialize/TrivialDeserializeTraits.h
+        include/config-loader/deserialize/CompoundDeserializeTraits.h
+        include/config-loader/deserialize/PrimitiveDeserializeTraits.h
         include/config-loader/deserialize/Deserializer.h
         include/config-loader/utils/Log.h
         include/config-loader/utils/Assertion.h

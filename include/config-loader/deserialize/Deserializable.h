@@ -15,11 +15,11 @@ CONFIG_LOADER_NS_BEGIN
 template<typename T, typename PARSER, typename DEFAULT_CONFIG = decltype(""_path)>
 struct Deserializable {
     template<typename GET_CONTENT>
-    Result load(T& obj, GET_CONTENT&& getContent) {
+    constexpr Result load(T& obj, GET_CONTENT&& getContent) {
         return DeserializeTraits<PARSER>::load(obj, getContent());
     }
 
-    Result load(T& obj) { // load from default config
+    constexpr Result load(T& obj) { // load from default config
         return DeserializeTraits<PARSER>::load(obj, DEFAULT_CONFIG::getContent());
     }
 };

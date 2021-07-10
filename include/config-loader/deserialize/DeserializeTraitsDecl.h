@@ -23,9 +23,6 @@ template<typename T, typename = void>
 struct CompoundDeserializeTraits;
 }
 
-template<typename FORMAT>
-struct Parser;
-
 template<typename PARSER>
 struct DeserializeTraits {
     template<typename T>
@@ -36,7 +33,7 @@ struct DeserializeTraits {
         CFL_EXPECT_SUCC(parser.parse(content.data()));
 
         auto firstElem = parser.toRootElemType();
-        if (! firstElem) { return Result::ERR_MISSING_FIELD; }
+        if (! firstElem.isValid()) { return Result::ERR_MISSING_FIELD; }
         return detail::CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
     }
 };

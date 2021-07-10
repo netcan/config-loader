@@ -37,7 +37,7 @@ struct CompoundDeserializeTraits<T
         , std::enable_if_t<PrimitiveDeserializeTraits<T>::isSupport>> {
     template<typename ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
-        if (! node) { return Result::ERR_MISSING_FIELD; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return PrimitiveDeserializeTraits<T>::deserialize(obj, node.getValueText());
     }
 };
@@ -47,7 +47,7 @@ template<typename SEQ> // for container like list/vector/deque but not string, c
 struct SeqContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(SEQ& container, ELEM_TYPE node) {
-        if (! node) { return Result::ERR_MISSING_FIELD; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         using value_type = typename SEQ::value_type;
         return node.forEachElement([&container](auto&& item) {
             value_type value;
@@ -75,7 +75,7 @@ template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(KV& container, ELEM_TYPE node) {
-        if (! node) { return Result::ERR_MISSING_FIELD; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         using Key = typename KV::key_type;
         using Value = typename KV::mapped_type;
 
@@ -109,7 +109,7 @@ template<typename T>
 struct CompoundDeserializeTraits<std::optional<T>> {
     template<typename ELEM_TYPE>
     static Result deserialize(std::optional<T>& obj, ELEM_TYPE node) {
-        if (! node) {
+        if (! node.isValid()) {
             obj.reset();
             return Result::SUCCESS;
         }

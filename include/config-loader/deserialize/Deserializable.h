@@ -42,12 +42,12 @@ struct Deserializable: private detail::DeserializableWithDefaultPath<T, PARSER, 
 // xml helper
 template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
 constexpr auto XMLLoader(CONFIG_CONTENT = {}) {
-    return Deserializable<T, Parser<TinyXML2Tag>, CONFIG_CONTENT>{};
+    return Deserializable<T, TinyXML2Parser, CONFIG_CONTENT>{};
 }
 
 template<typename T>
 Result loadXMLtoObj(T& obj, std::string_view path) {
-    return Deserializable<T, Parser<TinyXML2Tag>>::load(obj, [&path] {
+    return Deserializable<T, TinyXML2Parser>::load(obj, [&path] {
         return getFileContent(path.data());
     });
 }
@@ -55,12 +55,12 @@ Result loadXMLtoObj(T& obj, std::string_view path) {
 // json helper
 template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
 constexpr auto JsonLoader(CONFIG_CONTENT = {}) {
-    return Deserializable<T, Parser<JsonCppTag>, CONFIG_CONTENT>{};
+    return Deserializable<T, JsonCppParser, CONFIG_CONTENT>{};
 }
 
 template<typename T>
 Result loadJsontoObj(T& obj, std::string_view path) {
-    return Deserializable<T, Parser<JsonCppTag>>::load(obj, [&path] {
+    return Deserializable<T, JsonCppParser>::load(obj, [&path] {
         return getFileContent(path.data());
     });
 }

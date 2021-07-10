@@ -10,10 +10,8 @@
 #include <tinyxml2.h>
 
 CONFIG_LOADER_NS_BEGIN
-struct TinyXML2Tag {};
 
-template<>
-struct Parser<TinyXML2Tag> {
+struct TinyXML2Parser {
     constexpr Result parse(std::string_view content) {
         return doc.Parse(content.data()) == tinyxml2::XML_SUCCESS
                ? Result::SUCCESS
@@ -22,14 +20,14 @@ struct Parser<TinyXML2Tag> {
     struct ElemType;
 
     constexpr ElemType toRootElemType() {
-        return doc.FirstChildElement();
+        return ElemType{doc.FirstChildElement()};
     }
 
     struct ElemType {
-        constexpr ElemType(tinyxml2::XMLElement* elem): elem(elem) {}
-        constexpr operator bool() const { return elem != nullptr; }
+        constexpr explicit ElemType(const tinyxml2::XMLElement* elem): elem(elem) {}
+        constexpr bool isValid() const { return elem != nullptr; }
         constexpr ElemType toChildElem(const char* fieldName) const {
-            return elem->FirstChildElement(fieldName);
+            return ElemType{elem->FirstChildElement(fieldName)};
         }
         constexpr const char* getValueText() const {
             return elem->GetText();
@@ -47,7 +45,7 @@ struct Parser<TinyXML2Tag> {
             return Result::SUCCESS;
         }
     private:
-        tinyxml2::XMLElement* elem;
+        const tinyxml2::XMLElement* elem;
     };
 
 private:

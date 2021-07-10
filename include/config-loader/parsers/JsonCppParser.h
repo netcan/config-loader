@@ -12,10 +12,8 @@
 #include <json/json.h>
 
 CONFIG_LOADER_NS_BEGIN
-struct JsonCppTag {};
 
-template<>
-struct Parser<JsonCppTag> {
+struct JsonCppParser {
     Result parse(std::string_view content) {
         Json::CharReaderBuilder builder;
         std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
@@ -28,15 +26,15 @@ struct Parser<JsonCppTag> {
     struct ElemType;
 
     ElemType toRootElemType() {
-        return root;
+        return ElemType{root};
     }
 
     struct ElemType {
-        ElemType(const Json::Value& elem, const char* keyName = {})
+        explicit ElemType(const Json::Value& elem, const char* keyName = {})
                 : keyName(keyName), elem(elem) {}
-        constexpr operator bool() const { return ! elem.isNull(); }
+        constexpr bool isValid() const { return ! elem.isNull(); }
         ElemType toChildElem(const char* fieldName) const {
-            return elem[fieldName];
+            return ElemType{elem[fieldName]};
         }
         std::string getValueText() const {
             return elem.asString();

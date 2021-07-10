@@ -1,20 +1,20 @@
-# config-loader
-`config-loader`是一个使用C++17编写的 **解析配置文件** 到 **原生数据结构** 的静态反射框架，它拥有如下特点：
+# config-loader [中文版](README_CN.md)
+`config-loader` is a static reflection framework written in C++17 from **parse configuration file** to **native data structure**. It has the following characteristics:
 
-- 简单的接口，用户通过 **定义数据结构** 与提供对应的 **配置文件**，框架利用元编程技术生成 **读取** 接口
-- 设计符合开闭原则，扩展 数据结构 无需修改框架
-- 目前支持XML与Json格式的配置文件，多种方式可以 **灵活组合**
-- 轻量级，容易集成，核心代码不到1000行
-- 支持 嵌套的数据结构、STL容器
-- 测试用例完备
+- Simple interface, users need to **define data structure** and provide corresponding **configuration file**, the framework uses meta-programming technology to generate **load** interface
+- The design conforms to the opening and closing principle, extends the data structure without modifying the framework
+- Currently supports XML and Json format configuration files, a variety of methods can be **flexibly composed**
+- Lightweight, easy to integrate, less than ~1000 lines of code
+- Support nested data structure, STL container
+- Complete test cases
 
-将来计划：
-- 支持Yaml配置文件
-- 通过CMake选项来控制支持的格式
-- 提供额外的C++20版本
+Future plans:
+- Support Yaml configuration file
+- Enable the supported formats through CMake options
+- Provide additional C++20 version
 
-## 快速上手
-定义数据结构：
+## Get started quickly
+Firstly use `DEFINE_STRUCT` macro to define the data structure:
 
 ```cpp
 // define and reflect a struct
@@ -30,7 +30,7 @@ DEFINE_STRUCT(SomeOfPoints,                   // struct SomeOfPoints {
                                               // };
 ```
 
-提供配置文件，按需加载：
+Provide configuration files, load on demand:
 
 ```cpp
 SomeOfPoints someOfPoints;
@@ -39,9 +39,9 @@ auto res = JsonLoader<SomeOfPoints>().load(someOfPoints, [] {
         {
             "name": "Some of points",
             "points":[
-                { "x": 1.2, "y": 3.4 },
-                { "x": 5.6, "y": 7.8 },
-                { "x": 2.2, "y": 3.3 }
+                {"x": 1.2, "y": 3.4 },
+                {"x": 5.6, "y": 7.8 },
+                {"x": 2.2, "y": 3.3}
             ]
         }
     )";
@@ -51,7 +51,7 @@ REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
 ```
 
-又或者，通过XML配置文件。
+Or, through an XML configuration file.
 ```cpp
 SomeOfPoints someOfPoints;
 auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
@@ -72,19 +72,19 @@ REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
 ```
 
-有时候，你的软件系统需要一个统一的配置管理模块，管理 所有的数据结构 与 对应的配置文件，这时可以通过组合各个 `Loader` 来定义管理者。
+Sometimes, your software system needs a unified configuration management module to manage all data structures and corresponding configuration files. At this time, you can define the manager by composing each `Loader`.
 
 ```cpp
 inline Deserializer ConfigLoaderManager(
     JsonLoader<Point>("/etc/configs/Point.json"_path),
     XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
-    JsonLoader<SomeOfPoints>() // 按需提供
+    JsonLoader<SomeOfPoints>() // Provide config file on demand
 );
 ```
 
-同样地，使用`load`接口按需加载，`ConfigLoaderManager`会自动根据 配置的路径 与 给定的数据结构 进行解析。你的IDE应该能够获得所有的 `load` 接口。
+Similarly, use the `load` interface to load on demand, and `ConfigLoaderManager` will automatically parse it according to the configured path and the given data structure. Your IDE should be able to get all the `load` interfaces.
 
-```cpp
+```text
  82     Deserializer ConfigLoaderManager(
  83             JsonLoader<Point>(),
  84             XMLLoader<Rect>(),
@@ -99,12 +99,23 @@ inline Deserializer ConfigLoaderManager(
 ~                           load(Point &obj, GET_CONTENT &&getContent)~        f [LS]
 ```
 
-## 注意事项
-当前框架依赖如下两个框架：
-- tinyxml2，解析xml配置文件用
-- jsoncpp，解析json配置文件用
+## Notice
+The current framework depends on the following two library:
+- `tinyxml2`, used for parsing xml configuration files
+- `jsoncpp`, used for parsing json configuration files
 
-将来可能通过CMake选项来使能这些框架，避免在实际使用中产生不必要的依赖：只用xml就只依赖xml的解析框架。
+In the future, these libraries may be enabled through CMake options to avoid unnecessary dependencies in actual use: only using xml will only rely on the xml parsing library.
 
-本框架需要配置文件按规范的格式提供。以XML为例，要求字段名与XML标签名对应，值与XML的文本内容对应；对于`map`数据结构，标签通过属性`name`作为Key名。
+This framework requires configuration files to be provided in a standardized format. Taking XML as an example, the field name is required to correspond to the XML tag name, and the value corresponds to the text content of the XML; for the `map` data structure, the tag uses the attribute `name` as the key name.
 
+The semantics of the current error code.
+```cpp
+enum class Result {
+    SUCCESS,              // parse successfully
+    ERR_EMPTY_CONTENT,    // The parsing file is empty
+    ERR_ILL_FORMED,       // Illegal parsing file
+    ERR_MISSING_FIELD,    // Missing field
+    ERE_EXTRACTING_FIELD, // Failed to parse the value
+    ERR_TYPE,             // Type error
+};
+```

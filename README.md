@@ -3,13 +3,14 @@
 
 - Simple interface, users need to **define data structure** and provide corresponding **configuration file**, the framework uses meta-programming technology to generate **load** interface
 - The design conforms to the opening and closing principle, extends the data structure without modifying the framework
-- Currently supports XML and Json format configuration files, a variety of methods can be **flexibly composed**
+- Currently supports XML and JSON format configuration files, a variety of methods can be **flexibly composed**
 - Lightweight, easy to integrate, less than ~1000 lines of code
 - Support nested data structure, STL container
 - Complete test cases
 
 Future plans:
 - Support Yaml configuration file
+- Support from native data structure to config file, stringify data structure
 - Enable the supported formats through CMake options
 - Provide additional C++20 version
 

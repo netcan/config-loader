@@ -19,9 +19,7 @@ SCENARIO("mixin deserializer") {
     WHEN("deserialize a flatten point config") {
         Point point;
         auto res = deserializer.load(point, [] {
-            return R"(
-                { "x": 1.2, "y": 3.4 }
-            )";
+            return R"({ "x": 1.2, "y": 3.4 })";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(point.x == 1.2);

@@ -2,8 +2,8 @@
 // Created by netcan on 2021/07/10.
 //
 
-#ifndef CONFIG_LOADER_TINYXML2ADAPTER_H
-#define CONFIG_LOADER_TINYXML2ADAPTER_H
+#ifndef CONFIG_LOADER_TINYXML2PARSER_H
+#define CONFIG_LOADER_TINYXML2PARSER_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <config-loader/Result.h>
@@ -13,7 +13,7 @@ CONFIG_LOADER_NS_BEGIN
 struct TinyXML2Tag;
 
 template<>
-struct FormatAdapter<TinyXML2Tag> {
+struct Parser<TinyXML2Tag> {
     Result parse(std::string_view content) {
         return doc.Parse(content.data()) != tinyxml2::XML_SUCCESS
                ? Result::ERR_ILL_FORMED
@@ -50,4 +50,4 @@ private:
 
 CONFIG_LOADER_NS_END
 
-#endif //CONFIG_LOADER_TINYXML2ADAPTER_H
+#endif //CONFIG_LOADER_TINYXML2PARSER_H

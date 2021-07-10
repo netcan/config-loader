@@ -16,7 +16,7 @@ using namespace CONFIG_LOADER_NS;
 SCENARIO("deserialize xml to struct") {
     WHEN("deserialize a flatten point config") {
         Point point;
-        Deserializable<Point, TinyXML2Tag> deserializer;
+        auto deserializer = XMLLoader<Point>();
         auto res = deserializer.load(point, [] {
             return POINT_CONFIG;
         });
@@ -27,7 +27,7 @@ SCENARIO("deserialize xml to struct") {
 
     WHEN("deserialize a nest rect config") {
         Rect rect;
-        Deserializable<Rect, TinyXML2Tag> deserializer;
+        auto deserializer = XMLLoader<Rect>();
         auto res = deserializer.load(rect, [] {
             return RECT_CONFIG;
         });
@@ -41,7 +41,7 @@ SCENARIO("deserialize xml to struct") {
 
     WHEN("deserialize a complex rect config") {
         SomeOfPoints someOfPoints;
-        Deserializable<SomeOfPoints, TinyXML2Tag> deserializer;
+        auto deserializer = XMLLoader<SomeOfPoints>();
         auto res = deserializer.load(someOfPoints, [] {
             return SOME_OF_POINTS_CONFIG;
         });

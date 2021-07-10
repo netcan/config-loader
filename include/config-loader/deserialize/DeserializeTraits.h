@@ -6,7 +6,7 @@
 #define CONFIG_LOADER_DESERIALIZETRAITS_H
 
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
-#include <config-loader/deserialize/CommonDeserializeTraits.h>
-#include <config-loader/deserialize/tinyxml2/TinyXML2DeserializeTraits.h>
+#include <config-loader/deserialize/TrivialDeserializeTraits.h>
+#include <config-loader/deserialize/NonTrivialDeserializeTraits.h>
 
 #endif //CONFIG_LOADER_DESERIALIZETRAITS_H

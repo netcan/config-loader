@@ -13,18 +13,6 @@ constexpr auto rectConfigPath = "configs/Rect.xml"_path;
 constexpr auto someOfPointsConfigPath = "configs/SomeOfPoints.xml"_path;
 
 SCENARIO("test deserializable config file") {
-    WHEN("deserializable build by type") {
-        Deserializable<SomeOfPoints
-                , TinyXML2Tag
-                , decltype(someOfPointsConfigPath)> deserializer;
-
-        SomeOfPoints someOfPoints;
-        REQUIRE(deserializer.load(someOfPoints) == Result::SUCCESS);
-        REQUIRE_THAT(someOfPoints.name,
-                     Equals("Some of points"));
-        REQUIRE(someOfPoints.points.size() == 3);
-    }
-
     WHEN("deserializable build by helper") {
         auto deserializer = XMLLoader<SomeOfPoints>(someOfPointsConfigPath);
 
@@ -36,16 +24,12 @@ SCENARIO("test deserializable config file") {
     }
 
 }
-SCENARIO("composing deserializable to deserializer") {
-    GIVEN("composing by type") {
-        using RectDeserializable = Deserializable<Rect
-                , TinyXML2Tag
-                , decltype(rectConfigPath)>;
-        using SomeOfPointsDeserializable = Deserializable<SomeOfPoints
-                , TinyXML2Tag
-                , decltype(someOfPointsConfigPath)>;
-        Deserializer<RectDeserializable
-                    , SomeOfPointsDeserializable> deserializer;
+SCENARIO("composing deserializable to deserialize") {
+    GIVEN("composing by deserializable") {
+        auto deserializer = Deserializer(
+                XMLLoader<Rect>(rectConfigPath),
+                XMLLoader<SomeOfPoints>(someOfPointsConfigPath)
+        );
 
         THEN("load both by default config") {
             {

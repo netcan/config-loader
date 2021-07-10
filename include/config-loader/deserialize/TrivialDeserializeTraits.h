@@ -2,8 +2,8 @@
 // Created by netcan on 2021/07/07.
 //
 
-#ifndef CONFIG_LOADER_COMMONDESERIALIZETRAITS_H
-#define CONFIG_LOADER_COMMONDESERIALIZETRAITS_H
+#ifndef CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H
+#define CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <string>
@@ -13,7 +13,7 @@
 CONFIG_LOADER_NS_BEGIN
 
 template<typename Integer>
-struct CommonDeserializeTraits<Integer
+struct TrivialDeserializeTraits<Integer
         , std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
     static Result deserialize(Integer& num, std::string_view valueText) {
@@ -26,7 +26,7 @@ struct CommonDeserializeTraits<Integer
 };
 
 template<>
-struct CommonDeserializeTraits<std::string>
+struct TrivialDeserializeTraits<std::string>
         : detail::IsSupport<true> {
     static Result deserialize(std::string& str, std::string_view valueText) {
         str = valueText;
@@ -36,4 +36,4 @@ struct CommonDeserializeTraits<std::string>
 
 CONFIG_LOADER_NS_END
 
-#endif //CONFIG_LOADER_COMMONDESERIALIZETRAITS_H
+#endif //CONFIG_LOADER_TRIVIALDESERIALIZETRAITS_H

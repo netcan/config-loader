@@ -88,15 +88,14 @@ inline Deserializer ConfigLoaderManager(
 
 ```text
  82     Deserializer ConfigLoaderManager(
- 83             JsonLoader<Point>(),
- 84             XMLLoader<Rect>(),
+ 83             JsonLoader<Point>("/etc/configs/Point.json"_path),
+ 84             XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
  85             JsonLoader<SomeOfPoints>()
  86     );
  87     ConfigLoaderManager.l
  88                         load(Rect &obj)~                                   f [LS]
  89                         load(Point &obj)~                                  f [LS]
  90 }                       load(SomeOfPoints &obj, GET_CONTENT &&getContent)~ f [LS]
-~                           load(SomeOfPoints &obj)~                           f [LS]
 ~                           load(Rect &obj, GET_CONTENT &&getContent)~         f [LS]
 ~                           load(Point &obj, GET_CONTENT &&getContent)~        f [LS]
 ```

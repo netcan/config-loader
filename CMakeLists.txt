@@ -24,7 +24,7 @@ set(CONFIG_LOADER_SRC
         include/config-loader/deserialize/Deserializer.h
         include/config-loader/utils/Log.h
         include/config-loader/utils/Assertion.h
-        src/utils/ConfigPath.cpp include/config-loader/parsers/TinyXML2Parser.h)
+        src/utils/ConfigPath.cpp include/config-loader/parsers/TinyXML2Parser.h include/config-loader/parsers/JsonCppParser.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})
@@ -37,6 +37,6 @@ add_executable(config_loader_test
         test/ut/DeserializeXMLConfig.h
         test/ut/ReflectMacroTest.cpp
         test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/ConfigPathTest.cpp test/ut/TinyXML2DeserializeTest.cpp test/ut/DeserializableTest.cpp test/ut/ResultChecking.cpp test/ut/UtilsTest.cpp test/ut/DeserializeJsonCppConfig.h test/ut/JsonCppTest.cpp)
+        test/ut/ReflectedStruct.h test/ut/TinyXML2Test.cpp test/ut/ConfigPathTest.cpp test/ut/TinyXML2DeserializeTest.cpp test/ut/DeserializableTest.cpp test/ut/ResultChecking.cpp test/ut/UtilsTest.cpp test/ut/DeserializeJsonConfig.h test/ut/JsonCppTest.cpp test/ut/JsonCppDeserializeTest.cpp)
 
 target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2 jsoncpp_static)

@@ -4,7 +4,7 @@
 
 #include <catch2/catch.hpp>
 #include <json/json.h>
-#include "DeserializeJsonCppConfig.h"
+#include "DeserializeJsonConfig.h"
 
 using namespace Catch;
 
@@ -14,6 +14,7 @@ static void checkPoint(Json::Value& root, double x, double y) {
     REQUIRE(root["y"] == y);
 }
 
+using namespace json_config;
 SCENARIO("load a json config") {
     Json::CharReaderBuilder builder;
     std::unique_ptr<Json::CharReader> reader(builder.newCharReader());

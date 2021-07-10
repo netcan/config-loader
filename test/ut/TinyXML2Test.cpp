@@ -19,6 +19,7 @@ static void checkPoint(XMLElement* point, double x, double y) {
 };
 
 SCENARIO("Load a xml config") {
+    using namespace xml_config;
     WHEN("load point config") {
         XMLDocument doc;
         REQUIRE(doc.Parse(POINT_CONFIG) == XML_SUCCESS);

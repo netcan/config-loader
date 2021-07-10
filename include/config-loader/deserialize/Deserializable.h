@@ -8,6 +8,7 @@
 #include <config-loader/utils/ConfigPath.h>
 #include <config-loader/deserialize/DeserializeTraits.h>
 #include <config-loader/parsers/TinyXML2Parser.h>
+#include <config-loader/parsers/JsonCppParser.h>
 
 CONFIG_LOADER_NS_BEGIN
 
@@ -24,7 +25,7 @@ struct Deserializable {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// helper
+// xml helper
 template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
 constexpr auto XMLLoader(CONFIG_CONTENT = {}) {
     return Deserializable<T, Parser<TinyXML2Tag>, CONFIG_CONTENT>{};
@@ -33,6 +34,19 @@ constexpr auto XMLLoader(CONFIG_CONTENT = {}) {
 template<typename T>
 Result loadXMLtoObj(T& obj, std::string_view path) {
     return Deserializable<T, Parser<TinyXML2Tag>>::load(obj, [&path] {
+        return getFileContent(path.data());
+    });
+}
+
+// json helper
+template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
+constexpr auto JsonLoader(CONFIG_CONTENT = {}) {
+    return Deserializable<T, Parser<JsonCppTag>, CONFIG_CONTENT>{};
+}
+
+template<typename T>
+Result loadJsontoObj(T& obj, std::string_view path) {
+    return Deserializable<T, Parser<JsonCppTag>>::load(obj, [&path] {
         return getFileContent(path.data());
     });
 }

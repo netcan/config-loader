@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_DESERIALIZEXMLCONFIG_H
 #define CONFIG_LOADER_DESERIALIZEXMLCONFIG_H
 
+namespace xml_config {
 constexpr auto POINT_CONFIG = R"(
 <?xml version="1.0" encoding="UTF-8"?>
 <point>
@@ -48,5 +49,6 @@ constexpr auto SOME_OF_POINTS_CONFIG = R"(
     </points>
 </some_of_points>
 )";
+}
 
 #endif //CONFIG_LOADER_DESERIALIZEXMLCONFIG_H

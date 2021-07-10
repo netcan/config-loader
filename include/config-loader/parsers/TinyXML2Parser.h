@@ -27,22 +27,22 @@ struct Parser<TinyXML2Tag> {
 
     struct ElemType {
         constexpr ElemType(tinyxml2::XMLElement* elem): elem(elem) {}
-        constexpr operator bool() { return elem != nullptr; }
-        constexpr ElemType toChildElem(const char* fieldName = nullptr) {
+        constexpr operator bool() const { return elem != nullptr; }
+        constexpr ElemType toChildElem(const char* fieldName) const {
             return elem->FirstChildElement(fieldName);
         }
-        constexpr const char* getValueText() {
+        constexpr const char* getValueText() const {
             return elem->GetText();
         }
-        constexpr const char* getKeyName() {
+        constexpr const char* getKeyName() const {
             return elem->Attribute("name");
         }
         template<typename F>
-        constexpr Result forEachElement(F&& f) {
+        constexpr Result forEachElement(F&& f) const {
             for (auto item = elem->FirstChildElement()
                     ; item
                     ; item = item->NextSiblingElement()) {
-                CFL_EXPECT_SUCC(f(ElemType(item)));
+                CFL_EXPECT_SUCC(f(ElemType{item}));
             }
             return Result::SUCCESS;
         }

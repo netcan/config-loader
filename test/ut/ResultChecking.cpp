@@ -10,6 +10,11 @@
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("Error checking") {
+    Deserializer deserializer(
+            XMLLoader<Point>(),
+            XMLLoader<Rect>(),
+            XMLLoader<SomeOfPoints>()
+    );
     WHEN("a empty config") {
         Point point;
         auto res = deserializer.load(point, [] {
@@ -71,5 +76,4 @@ SCENARIO("Error checking") {
         });
         REQUIRE(res == Result::ERE_EXTRACTING_FIELD);
     }
-
 }

@@ -14,6 +14,7 @@ enum class Result {
     ERR_ILL_FORMED,
     ERR_MISSING_FIELD,
     ERE_EXTRACTING_FIELD,
+    ERR_TYPE,
 };
 
 CONFIG_LOADER_NS_END

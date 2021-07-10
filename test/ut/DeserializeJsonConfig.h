@@ -2,9 +2,10 @@
 // Created by netcan on 2021/07/09.
 //
 
-#ifndef CONFIG_LOADER_DESERIALIZEJSONCPPCONFIG_H
-#define CONFIG_LOADER_DESERIALIZEJSONCPPCONFIG_H
+#ifndef CONFIG_LOADER_DESERIALIZEJSONCONFIG_H
+#define CONFIG_LOADER_DESERIALIZEJSONCONFIG_H
 
+namespace json_config {
 constexpr std::string_view POINT_CONFIG = R"(
 {
   "x": 1.2,
@@ -45,5 +46,6 @@ constexpr std::string_view SOME_OF_POINTS_CONFIG = R"(
   ]
 }
 )";
+}
 
-#endif //CONFIG_LOADER_DESERIALIZEJSONCPPCONFIG_H
+#endif //CONFIG_LOADER_DESERIALIZEJSONCONFIG_H

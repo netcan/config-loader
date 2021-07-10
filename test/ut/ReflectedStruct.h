@@ -25,9 +25,11 @@ DEFINE_STRUCT(SomeOfPoints,
 using CONFIG_LOADER_NS::Deserializer;
 using CONFIG_LOADER_NS::XMLLoader;
 
-inline Deserializer deserializer(
-    XMLLoader<Point>(),
-    XMLLoader<Rect>(),
-    XMLLoader<SomeOfPoints>()
-);
+DEFINE_STRUCT(STLObj,
+              (std::map<int, int>) m1,
+              (std::unordered_map<std::string, Point>) m2,
+              (std::map<int, int>) m3,
+              (std::optional<Point>) m4,
+              (std::optional<int>) m5);
+
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

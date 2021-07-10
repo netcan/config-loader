@@ -24,7 +24,7 @@ set(CONFIG_LOADER_SRC
         include/config-loader/deserialize/Deserializer.h
         include/config-loader/utils/Log.h
         include/config-loader/utils/Assertion.h
-        src/utils/ConfigPath.cpp )
+        src/utils/ConfigPath.cpp include/config-loader/deserialize/tinyxml2/TinyXML2Adapter.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})

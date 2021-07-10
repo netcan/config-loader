@@ -19,6 +19,9 @@ struct IsSupport {
 template<typename FORMAT>
 struct DeserializeTraits;
 
+template<typename FORMAT>
+struct FormatAdapter;
+
 template<typename T, typename = void>
 struct CommonDeserializeTraits: detail::IsSupport<false> {
     static Result deserialize(T&, std::string_view) {

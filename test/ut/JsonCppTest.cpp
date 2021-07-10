@@ -57,7 +57,6 @@ SCENARIO("load a json config") {
     }
 }
 
-
 SCENARIO("test Json::Value as string") {
     GIVEN("a int") {
         Json::Value v = 2;

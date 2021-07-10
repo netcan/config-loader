@@ -65,23 +65,13 @@ struct NonTrivialDeserializeTraits<T
     }
 };
 
-template<typename F, typename ELEM_TYPE>
-constexpr Result forEachXMLElement(ELEM_TYPE node, F&& f) {
-    for (auto item = node.toChildElem()
-            ; item
-            ; item = item.toNextSiblingElem()) {
-        CFL_EXPECT_SUCC(f(item));
-    }
-    return Result::SUCCESS;
-}
-
 template<typename SEQ> // for container like list/vector/deque but not string, code reuse
 struct SeqContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(SEQ& container, ELEM_TYPE node) {
         if (! node) { return Result::ERR_MISSING_FIELD; }
         using value_type = typename SEQ::value_type;
-        return forEachXMLElement(node, [&container](auto&& item) {
+        return node.forEachElement([&container](auto&& item) {
             value_type value;
             CFL_EXPECT_SUCC(NonTrivialDeserializeTraits<value_type>::deserialize(value, item));
             container.push_back(std::move(value));
@@ -110,7 +100,7 @@ struct KVContainerDeserialize {
         using Key = typename KV::key_type;
         using Value = typename KV::mapped_type;
 
-        return forEachXMLElement(node, [&container](auto&& item) {
+        return node.forEachElement([&container](auto&& item) {
             Key key; // Key is simply from XML Key Name
             auto keyName = item.getKeyName();
             if (keyName == nullptr) { return Result::ERE_EXTRACTING_FIELD; }

@@ -10,18 +10,18 @@
 #include <tinyxml2.h>
 
 CONFIG_LOADER_NS_BEGIN
-struct TinyXML2Tag;
+struct TinyXML2Tag {};
 
 template<>
 struct Parser<TinyXML2Tag> {
-    Result parse(std::string_view content) {
-        return doc.Parse(content.data()) != tinyxml2::XML_SUCCESS
-               ? Result::ERR_ILL_FORMED
-               : Result::SUCCESS;
+    constexpr Result parse(std::string_view content) {
+        return doc.Parse(content.data()) == tinyxml2::XML_SUCCESS
+               ? Result::SUCCESS
+               : Result::ERR_ILL_FORMED;
     }
     struct ElemType;
 
-    ElemType toRootElemType() {
+    constexpr ElemType toRootElemType() {
         return doc.FirstChildElement();
     }
 
@@ -31,14 +31,20 @@ struct Parser<TinyXML2Tag> {
         constexpr ElemType toChildElem(const char* fieldName = nullptr) {
             return elem->FirstChildElement(fieldName);
         }
-        constexpr ElemType toNextSiblingElem() {
-            return elem->NextSiblingElement();
-        }
         constexpr const char* getValueText() {
             return elem->GetText();
         }
         constexpr const char* getKeyName() {
             return elem->Attribute("name");
+        }
+        template<typename F>
+        constexpr Result forEachElement(F&& f) {
+            for (auto item = elem->FirstChildElement()
+                    ; item
+                    ; item = item->NextSiblingElement()) {
+                CFL_EXPECT_SUCC(f(ElemType(item)));
+            }
+            return Result::SUCCESS;
         }
     private:
         tinyxml2::XMLElement* elem;

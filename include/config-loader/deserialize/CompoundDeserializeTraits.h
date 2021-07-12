@@ -23,6 +23,7 @@ struct CompoundDeserializeTraits<T
         , std::enable_if_t<IsReflected_v<T>>> {
     template<typename ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return CONFIG_LOADER_NS::forEachField(obj, [&node](const char* fieldName, auto& value) {
             auto res = CompoundDeserializeTraits<std::remove_reference_t<decltype(value)>>
                             ::deserialize(value, node.toChildElem(fieldName));
@@ -47,7 +48,7 @@ template<typename SEQ> // for container like list/vector/deque but not string, c
 struct SeqContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(SEQ& container, ELEM_TYPE node) {
-        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
+        if (! node.isValid()) { return Result::SUCCESS; }
         using value_type = typename SEQ::value_type;
         return node.forEachElement([&container](auto&& item) {
             value_type value;
@@ -75,7 +76,7 @@ template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(KV& container, ELEM_TYPE node) {
-        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
+        if (! node.isValid()) { return Result::SUCCESS; }
         using Key = typename KV::key_type;
         using Value = typename KV::mapped_type;
 

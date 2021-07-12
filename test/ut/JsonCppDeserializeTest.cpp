@@ -13,7 +13,7 @@ using namespace CONFIG_LOADER_NS;
 
 SCENARIO("deserialize json to struct") {
     using namespace json_config;
-    WHEN("deserialize a flatten point config") {
+    GIVEN("a flatten point config") {
         Point point;
         auto deserializer = JsonLoader<Point>();
         auto res = deserializer.load(point, [] {
@@ -24,7 +24,7 @@ SCENARIO("deserialize json to struct") {
         REQUIRE(point.y == 3.4);
     }
 
-    WHEN("deserialize a nest rect config") {
+    GIVEN("a nest rect config") {
         Rect rect;
         auto deserializer = JsonLoader<Rect>();
         auto res = deserializer.load(rect, [] {
@@ -38,7 +38,16 @@ SCENARIO("deserialize json to struct") {
         REQUIRE(rect.color == 12345678);
     }
 
-    WHEN("deserialize a complex rect config") {
+    GIVEN("a nest rect config that missing p1/p2") {
+        Rect rect;
+        auto deserializer = JsonLoader<Rect>();
+        auto res = deserializer.load(rect, [] {
+            return R"({ "color": 12345678 })";
+        });
+        REQUIRE(res == Result::ERR_MISSING_FIELD);
+    }
+
+    GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
         auto deserializer = JsonLoader<SomeOfPoints>();
         auto res = deserializer.load(someOfPoints, [] {
@@ -68,22 +77,12 @@ SCENARIO("deserialize json to extra STL container") {
         auto res = deserializer.load(data, [] {
             return R"(
                 {
-                  "m1": {
-                    "0": 2,
-                    "1": 4,
-                    "2": 6,
-                  },
+                  "m1": { "0": 2, "1": 4, "2": 6, },
                   "m2": {
-                    "hello world": {
-                      "x": 1.2,
-                      "y": 3.4
-                    }
+                    "hello world": { "x": 1.2, "y": 3.4 }
                   },
                   "m3": {},
-                  "m4": {
-                    "x": 5.6,
-                    "y": 7.8
-                  }
+                  "m4": { "x": 5.6, "y": 7.8 }
                 }
              )";
         });
@@ -104,6 +103,7 @@ SCENARIO("deserialize json to extra STL container") {
         REQUIRE(data.m4->y == 7.8);
 
         REQUIRE(! data.m5.has_value());
+        REQUIRE(data.m6.empty());
     }
 
 }

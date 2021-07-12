@@ -32,14 +32,14 @@ struct JsonCppParser {
     struct ElemType {
         explicit ElemType(const Json::Value& elem, const char* keyName = {})
                 : keyName(keyName), elem(elem) {}
-        constexpr bool isValid() const { return ! elem.isNull(); }
+        bool isValid() const { return ! elem.isNull(); }
         ElemType toChildElem(const char* fieldName) const {
             return ElemType{elem[fieldName]};
         }
         std::string getValueText() const {
             return elem.asString();
         }
-        constexpr const char* getKeyName() const {
+        const char* getKeyName() const {
             return keyName;
         }
 

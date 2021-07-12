@@ -14,7 +14,7 @@ using namespace CONFIG_LOADER_NS;
 
 SCENARIO("deserialize xml to struct") {
     using namespace xml_config;
-    WHEN("deserialize a flatten point config") {
+    GIVEN("a flatten point config") {
         Point point;
         auto deserializer = XMLLoader<Point>();
         auto res = deserializer.load(point, [] {
@@ -25,7 +25,7 @@ SCENARIO("deserialize xml to struct") {
         REQUIRE(point.y == 3.4);
     }
 
-    WHEN("deserialize a nest rect config") {
+    GIVEN("a nest rect config") {
         Rect rect;
         auto deserializer = XMLLoader<Rect>();
         auto res = deserializer.load(rect, [] {
@@ -39,7 +39,21 @@ SCENARIO("deserialize xml to struct") {
         REQUIRE(rect.color == 0x12345678);
     }
 
-    WHEN("deserialize a complex rect config") {
+    GIVEN("a nest rect config that missing p1/p2") {
+        Rect rect;
+        auto deserializer = XMLLoader<Rect>();
+        auto res = deserializer.load(rect, [] {
+            return R"(
+                <?xml version="1.0" encoding="UTF-8"?>
+                <rect>
+                    <color>0x12345678</color>
+                </rect>
+            )";
+        });
+        REQUIRE(res == Result::ERR_MISSING_FIELD);
+    }
+
+    GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
         auto deserializer = XMLLoader<SomeOfPoints>();
         auto res = deserializer.load(someOfPoints, [] {
@@ -81,7 +95,6 @@ SCENARIO("deserialize xml to extra STL container") {
                             <y>3.4</y>
                         </key>
                     </m2>
-                    <m3></m3>
                     <m4>
                         <x>5.6</x>
                         <y>7.8</y>
@@ -106,7 +119,10 @@ SCENARIO("deserialize xml to extra STL container") {
         REQUIRE(data.m4->y == 7.8);
 
         REQUIRE(! data.m5.has_value());
+        REQUIRE(data.m6.empty());
+
     }
+
 }
 
 DEFINE_STRUCT(TestObj,

@@ -30,6 +30,7 @@ DEFINE_STRUCT(STLObj,
               (std::unordered_map<std::string, Point>) m2,
               (std::map<int, int>) m3,
               (std::optional<Point>) m4,
-              (std::optional<int>) m5);
+              (std::optional<int>) m5,
+              (std::vector<int>) m6);
 
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

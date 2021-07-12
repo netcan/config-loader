@@ -12,31 +12,31 @@
 CONFIG_LOADER_NS_BEGIN
 
 struct TinyXML2Parser {
-    constexpr Result parse(std::string_view content) {
+    Result parse(std::string_view content) {
         return doc.Parse(content.data()) == tinyxml2::XML_SUCCESS
                ? Result::SUCCESS
                : Result::ERR_ILL_FORMED;
     }
     struct ElemType;
 
-    constexpr ElemType toRootElemType() {
+    ElemType toRootElemType() {
         return ElemType{doc.FirstChildElement()};
     }
 
     struct ElemType {
-        constexpr explicit ElemType(const tinyxml2::XMLElement* elem): elem(elem) {}
-        constexpr bool isValid() const { return elem != nullptr; }
-        constexpr ElemType toChildElem(const char* fieldName) const {
+        explicit ElemType(const tinyxml2::XMLElement* elem): elem(elem) {}
+        bool isValid() const { return elem != nullptr; }
+        ElemType toChildElem(const char* fieldName) const {
             return ElemType{elem->FirstChildElement(fieldName)};
         }
-        constexpr const char* getValueText() const {
+        const char* getValueText() const {
             return elem->GetText();
         }
-        constexpr const char* getKeyName() const {
+        const char* getKeyName() const {
             return elem->Attribute("name");
         }
         template<typename F>
-        constexpr Result forEachElement(F&& f) const {
+        Result forEachElement(F&& f) const {
             for (auto item = elem->FirstChildElement()
                     ; item
                     ; item = item->NextSiblingElement()) {

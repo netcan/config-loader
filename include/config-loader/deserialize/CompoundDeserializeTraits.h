@@ -13,6 +13,7 @@
 #include <deque>
 #include <map>
 #include <vector>
+#include <unordered_map>
 #include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
@@ -24,7 +25,9 @@ struct CompoundDeserializeTraits<T
     template<typename ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
-        return CONFIG_LOADER_NS::forEachField(obj, [&node](const char* fieldName, auto& value) {
+        return CONFIG_LOADER_NS::forEachField(obj, [&node](auto&& fieldInfo) {
+            decltype(auto) fieldName = fieldInfo.name();
+            decltype(auto) value = fieldInfo.value();
             auto res = CompoundDeserializeTraits<std::remove_reference_t<decltype(value)>>
                             ::deserialize(value, node.toChildElem(fieldName));
             if (res != Result::SUCCESS) { LOGE("error handle field: %s", fieldName); }

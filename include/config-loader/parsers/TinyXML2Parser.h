@@ -29,8 +29,13 @@ struct TinyXML2Parser {
         ElemType toChildElem(const char* fieldName) const {
             return ElemType{elem->FirstChildElement(fieldName)};
         }
-        const char* getValueText() const {
-            return elem->GetText();
+        std::optional<std::string> getValueText() const {
+            auto valueText = elem->GetText();
+            if (valueText == nullptr) { // no exist
+                return std::nullopt;
+            } else {
+                return valueText;
+            }
         }
         const char* getKeyName() const {
             return elem->Attribute("name");

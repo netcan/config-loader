@@ -13,6 +13,8 @@
 #include <deque>
 #include <map>
 #include <vector>
+#include <optional>
+#include <variant>
 #include <unordered_map>
 #include <string_view>
 
@@ -109,7 +111,7 @@ struct CompoundDeserializeTraits<std::unordered_map<K, V>>
         : KVContainerDeserialize<std::unordered_map<K, V>> {};
 
 ////////////////////////////////////////////////////////////////////////////////
-template<typename T>
+template<typename T> // for optional type
 struct CompoundDeserializeTraits<std::optional<T>> {
     template<typename ELEM_TYPE>
     static Result deserialize(std::optional<T>& obj, ELEM_TYPE node) {
@@ -121,6 +123,28 @@ struct CompoundDeserializeTraits<std::optional<T>> {
         CFL_EXPECT_SUCC(CompoundDeserializeTraits<T>::deserialize(value, node));
         obj = std::move(value);
         return Result::SUCCESS;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+template<typename T, typename ELEM_TYPE>
+Result buildVariant(T& obj, ELEM_TYPE node) {
+
+}
+
+template<typename ...Ts> // for sum type(variant)
+struct CompoundDeserializeTraits<std::variant<Ts...>> {
+    template<typename ELEM_TYPE>
+    static Result deserialize(std::variant<Ts...>& obj, ELEM_TYPE node) {
+        auto buildVariant = [&obj, &node](auto&& value) {
+            using type = std::remove_reference_t<decltype(value)>;
+            auto  res  = CompoundDeserializeTraits<type>::deserialize(value, node);
+            if (res == Result::SUCCESS) { obj.template emplace<type>(std::move(value)); }
+            return res;
+        };
+        bool success {false};
+        (void) ( ( success = (buildVariant(Ts{}) == Result::SUCCESS)) || ...);
+        return success ? Result::SUCCESS : Result::ERR_TYPE;
     }
 };
 

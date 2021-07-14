@@ -76,7 +76,7 @@ SCENARIO("deserialize xml to struct") {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-SCENARIO("deserialize xml to extra STL container") {
+SCENARIO("deserialize xml to compound STL container") {
     GIVEN("a valid STL obj") {
         auto deserializer = XMLLoader<STLObj>();
         STLObj data;
@@ -122,47 +122,156 @@ SCENARIO("deserialize xml to extra STL container") {
         REQUIRE(data.m6.empty());
 
     }
-
 }
 
-DEFINE_STRUCT(TestObj,
+DEFINE_STRUCT(TestBool,
               (bool) m1);
 
-SCENARIO("deserialize primitive type") {
-    auto deserializer = XMLLoader<TestObj>();
-    TestObj obj;
+SCENARIO("deserialize bool type") {
+    auto deserializer = XMLLoader<TestBool>();
+    TestBool obj;
     GIVEN("a valid bool") {
         auto res = deserializer.load(obj, [] {
-            return "<TestObj><m1>true</m1></TestObj>";
+            return "<TestBool><m1>true</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
         auto res = deserializer.load(obj, [] {
-            return "<TestObj><m1>True</m1></TestObj>";
+            return "<TestBool><m1>True</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
         auto res = deserializer.load(obj, [] {
-            return "<TestObj><m1>1</m1></TestObj>";
+            return "<TestBool><m1>1</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
         auto res = deserializer.load(obj, [] {
-            return "<TestObj><m1>false</m1></TestObj>";
+            return "<TestBool><m1>false</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(! obj.m1);
     }
     GIVEN("a invalid bool") {
         auto res = deserializer.load(obj, [] {
-            return "<TestObj><m1>unknown</m1></TestObj>";
+            return "<TestBool><m1>unknown</m1></TestBool>";
         });
         REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
+    }
+}
+
+DEFINE_STRUCT(TestInt,
+              (int) number);
+
+SCENARIO("deserialize a number") {
+    auto deserializer = XMLLoader<TestInt>();
+    TestInt obj;
+    GIVEN("a HEX number") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestInt><number>0X12</number></TestInt>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.number == 0x12);
+    }
+    GIVEN("a hex number") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestInt><number>0x12</number></TestInt>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.number == 0x12);
+    }
+
+    GIVEN("a hex number") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestInt><number>0x</number></TestInt>";
+        });
+        REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
+    }
+
+}
+
+
+DEFINE_STRUCT(TestVariant,
+              (std::variant<Point, int, std::string>) sumType);
+
+SCENARIO("deserialize sum type(std::variant)") {
+    auto deserializer = XMLLoader<TestVariant>();
+    TestVariant obj;
+    GIVEN("a string") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                     <sumType>hello world!</sumType>
+                 </TestVariant>
+                )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.sumType.index() == 2);
+        REQUIRE(! obj.sumType.valueless_by_exception());
+        REQUIRE_THAT(std::get<2>(obj.sumType),
+                     Equals("hello world!"));
+    }
+
+    GIVEN("a int") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                     <sumType>987654</sumType>
+                 </TestVariant>
+                )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.sumType.index() == 1);
+        REQUIRE(! obj.sumType.valueless_by_exception());
+        REQUIRE(std::get<1>(obj.sumType) == 987654);
+    }
+
+    GIVEN("a point") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                     <sumType>
+                        <x>1.2</x><y>3.4</y>
+                    </sumType>
+                 </TestVariant>
+            )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.sumType.index() == 0);
+        REQUIRE(! obj.sumType.valueless_by_exception());
+        auto&& [x, y] = std::get<0>(obj.sumType);
+        REQUIRE(x == 1.2);
+        REQUIRE(y == 3.4);
+    }
+
+    GIVEN("a invalid object") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                     <sumType>
+                        <x>1.2</x>
+                    </sumType>
+                 </TestVariant>
+            )";
+        });
+        REQUIRE(res == Result::ERR_TYPE);
+    }
+
+    GIVEN("a empty object") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                     <sumType>
+                    </sumType>
+                 </TestVariant>
+            )";
+        });
+        REQUIRE(res == Result::ERR_TYPE);
     }
 }

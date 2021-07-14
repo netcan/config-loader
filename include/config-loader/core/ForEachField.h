@@ -12,9 +12,9 @@ namespace detail {
     template<typename T, typename F, size_t... Is>
     constexpr Result forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
         using TDECAY = std::decay_t<T>;
-
         Result res = Result::SUCCESS;
-        (void)( ( (res = f(typename TDECAY::template FIELD<T, Is>(std::forward<T>(obj)))) == Result::SUCCESS) && ...);
+        (void) ( ( (res = f(typename TDECAY::template FIELD<T, Is>
+                          (std::forward<T>(obj)))) == Result::SUCCESS) && ...);
         return res;
     }
 }

@@ -70,7 +70,7 @@ SCENARIO("deserialize json to struct") {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-SCENARIO("deserialize json to extra STL container") {
+SCENARIO("deserialize json to compound STL container") {
     GIVEN("a valid STL obj") {
         auto deserializer = JsonLoader<STLObj>();
         STLObj data;

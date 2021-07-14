@@ -7,6 +7,7 @@
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <string>
+#include <optional>
 #include <sstream>
 #include <string_view>
 
@@ -15,10 +16,12 @@ namespace detail {
 template<typename Integer>
 struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
-    static Result deserialize(Integer &num, std::string_view valueText) {
+    static Result deserialize(Integer &num, std::optional<std::string> valueText) {
+        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
         std::stringstream ss;
-        ss << valueText;
-        if (valueText.substr(0, 2) == "0x") { ss << std::hex; }
+        ss << *valueText;
+        if (valueText->substr(0, 2) == "0x" ||
+            valueText->substr(0, 2) == "0X") { ss << std::hex; }
         ss >> num;
         return ss.fail() ? Result::ERR_EXTRACTING_FIELD : Result::SUCCESS;
     }
@@ -27,16 +30,16 @@ struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v
 template<>
 struct PrimitiveDeserializeTraits<bool>
         : detail::IsSupport<true> {
-    static Result deserialize(bool &value, std::string_view valueText) {
+    static Result deserialize(bool &value, std::optional<std::string> valueText) {
+        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
         std::stringstream ss;
-        ss << valueText;
+        ss << *valueText;
         ss >> value;
         if (!ss.fail()) { return Result::SUCCESS; }
         if (valueText == "true" || valueText == "True") {
             value = true;
             return Result::SUCCESS;
-        }
-        if (valueText == "false" || valueText == "False") {
+        } else if (valueText == "false" || valueText == "False") {
             value = false;
             return Result::SUCCESS;
         }
@@ -48,8 +51,9 @@ struct PrimitiveDeserializeTraits<bool>
 template<>
 struct PrimitiveDeserializeTraits<std::string>
         : detail::IsSupport<true> {
-    static Result deserialize(std::string &str, std::string_view valueText) {
-        str = valueText;
+    static Result deserialize(std::string &str, std::optional<std::string> valueText) {
+        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
+        str = std::move(*valueText);
         return Result::SUCCESS;
     }
 };

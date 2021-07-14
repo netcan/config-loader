@@ -127,11 +127,6 @@ struct CompoundDeserializeTraits<std::optional<T>> {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-template<typename T, typename ELEM_TYPE>
-Result buildVariant(T& obj, ELEM_TYPE node) {
-
-}
-
 template<typename ...Ts> // for sum type(variant)
 struct CompoundDeserializeTraits<std::variant<Ts...>> {
     template<typename ELEM_TYPE>

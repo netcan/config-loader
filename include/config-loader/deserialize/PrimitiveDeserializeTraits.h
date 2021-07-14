@@ -39,7 +39,8 @@ struct PrimitiveDeserializeTraits<bool>
         if (valueText == "true" || valueText == "True") {
             value = true;
             return Result::SUCCESS;
-        } else if (valueText == "false" || valueText == "False") {
+        }
+        if (valueText == "false" || valueText == "False") {
             value = false;
             return Result::SUCCESS;
         }

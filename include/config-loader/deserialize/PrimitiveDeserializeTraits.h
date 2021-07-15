@@ -17,7 +17,7 @@ template<typename Integer>
 struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
     static Result deserialize(Integer &num, std::optional<std::string> valueText) {
-        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
+        if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }
         std::stringstream ss;
         ss << *valueText;
         if (valueText->substr(0, 2) == "0x" ||
@@ -31,7 +31,7 @@ template<>
 struct PrimitiveDeserializeTraits<bool>
         : detail::IsSupport<true> {
     static Result deserialize(bool &value, std::optional<std::string> valueText) {
-        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
+        if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }
         std::stringstream ss;
         ss << *valueText;
         ss >> value;
@@ -53,7 +53,7 @@ template<>
 struct PrimitiveDeserializeTraits<std::string>
         : detail::IsSupport<true> {
     static Result deserialize(std::string &str, std::optional<std::string> valueText) {
-        if (valueText->empty()) { return Result::ERR_EXTRACTING_FIELD; }
+        if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }
         str = std::move(*valueText);
         return Result::SUCCESS;
     }

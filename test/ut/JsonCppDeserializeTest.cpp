@@ -164,7 +164,7 @@ SCENARIO("deserialize json to sum type(std::variant)") {
         auto res = deserializer.load(obj, [] {
             return R"( { "sumType": null } )";
         });
-        REQUIRE(res == Result::ERR_TYPE);
+        REQUIRE(res == Result::ERR_MISSING_FIELD);
     }
 
     GIVEN("a empty object") {

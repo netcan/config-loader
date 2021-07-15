@@ -13,6 +13,7 @@
 #include <deque>
 #include <map>
 #include <vector>
+#include <memory>
 #include <optional>
 #include <variant>
 #include <unordered_map>
@@ -115,10 +116,7 @@ template<typename T> // for optional type
 struct CompoundDeserializeTraits<std::optional<T>> {
     template<typename ELEM_TYPE>
     static Result deserialize(std::optional<T>& obj, ELEM_TYPE node) {
-        if (! node.isValid()) {
-            obj.reset();
-            return Result::SUCCESS;
-        }
+        if (! node.isValid()) { return Result::SUCCESS; }
         T value;
         CFL_EXPECT_SUCC(CompoundDeserializeTraits<T>::deserialize(value, node));
         obj = std::move(value);
@@ -131,6 +129,7 @@ template<typename ...Ts> // for sum type(variant)
 struct CompoundDeserializeTraits<std::variant<Ts...>> {
     template<typename ELEM_TYPE>
     static Result deserialize(std::variant<Ts...>& obj, ELEM_TYPE node) {
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         auto buildVariant = [&obj, &node](auto&& value) {
             using type = std::remove_reference_t<decltype(value)>;
             auto  res  = CompoundDeserializeTraits<type>::deserialize(value, node);
@@ -142,6 +141,29 @@ struct CompoundDeserializeTraits<std::variant<Ts...>> {
         return success ? Result::SUCCESS : Result::ERR_TYPE;
     }
 };
+
+///////////////////////////////////////////////////////////////////////////////
+template<typename SP> // for smart pointer like shared_ptr/unique_ptr, code reuse
+struct SmartPointDeserialize {
+    template<typename ELEM_TYPE>
+    static Result deserialize(SP& sp, ELEM_TYPE node) {
+        if (! node.isValid()) { return Result::SUCCESS; }
+        using SPElemType = typename SP::element_type;
+        SPElemType value;
+        CFL_EXPECT_SUCC(CompoundDeserializeTraits<SPElemType>::deserialize(value, node));
+        sp.reset(new SPElemType(std::move(value)));
+        return Result::SUCCESS;
+    }
+};
+
+template<typename T>
+struct CompoundDeserializeTraits<std::shared_ptr<T>>
+        : SmartPointDeserialize<std::shared_ptr<T>> {};
+
+template<typename T>
+struct CompoundDeserializeTraits<std::unique_ptr<T>>
+        : SmartPointDeserialize<std::unique_ptr<T>> {};
+
 
 }
 

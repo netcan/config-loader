@@ -196,7 +196,6 @@ SCENARIO("deserialize xml to a number") {
 
 }
 
-
 DEFINE_STRUCT(TestVariant,
               (std::variant<Point, int, std::string>) sumType);
 
@@ -206,10 +205,10 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     GIVEN("a string") {
         auto res = deserializer.load(obj, [] {
             return R"(
-                 <TestVariant>
-                     <sumType>hello world!</sumType>
-                 </TestVariant>
-                )";
+                <TestVariant>
+                    <sumType>hello world!</sumType>
+                </TestVariant>
+            )";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.sumType.index() == 2);
@@ -250,6 +249,16 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
         REQUIRE(y == 3.4);
     }
 
+    GIVEN("a missing field") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                 <TestVariant>
+                 </TestVariant>
+            )";
+        });
+        REQUIRE(res == Result::ERR_MISSING_FIELD);
+    }
+
     GIVEN("a invalid object") {
         auto res = deserializer.load(obj, [] {
             return R"(
@@ -274,4 +283,42 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
         });
         REQUIRE(res == Result::ERR_TYPE);
     }
+}
+
+DEFINE_STRUCT(TestTree,
+              (std::string) name,
+              (std::vector<std::unique_ptr<TestTree>>) children);
+
+SCENARIO("deserialize xml to tree type") {
+    auto deserializer = XMLLoader<TestTree>();
+    TestTree obj;
+    GIVEN("a tree") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                <TestTree>
+                    <name>hello</name>
+                    <children>
+                        <Node> <name>world</name> </Node>
+                        <Node> <name>first</name> </Node>
+                        <Node>
+                            <name>second</name>
+                            <children>
+                                <Node> <name>leaf</name> </Node>
+                            </children>
+                        </Node>
+                    </children>
+                </TestTree>
+            )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE_THAT(obj.name, Equals("hello"));
+        REQUIRE(obj.children.size() == 3);
+        REQUIRE_THAT(obj.children[0]->name, Equals("world"));
+        REQUIRE_THAT(obj.children[1]->name, Equals("first"));
+        REQUIRE_THAT(obj.children[2]->name, Equals("second"));
+        REQUIRE(obj.children[2]->children.size() == 1);
+        REQUIRE_THAT(obj.children[2]->children[0]->name, Equals("leaf"));
+
+    }
+
 }

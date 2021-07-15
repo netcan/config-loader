@@ -127,7 +127,7 @@ SCENARIO("deserialize xml to compound STL container") {
 DEFINE_STRUCT(TestBool,
               (bool) m1);
 
-SCENARIO("deserialize bool type") {
+SCENARIO("deserialize xml to bool type") {
     auto deserializer = XMLLoader<TestBool>();
     TestBool obj;
     GIVEN("a valid bool") {
@@ -169,7 +169,7 @@ SCENARIO("deserialize bool type") {
 DEFINE_STRUCT(TestInt,
               (int) number);
 
-SCENARIO("deserialize a number") {
+SCENARIO("deserialize xml to a number") {
     auto deserializer = XMLLoader<TestInt>();
     TestInt obj;
     GIVEN("a HEX number") {
@@ -200,7 +200,7 @@ SCENARIO("deserialize a number") {
 DEFINE_STRUCT(TestVariant,
               (std::variant<Point, int, std::string>) sumType);
 
-SCENARIO("deserialize sum type(std::variant)") {
+SCENARIO("deserialize xml to sum type(std::variant)") {
     auto deserializer = XMLLoader<TestVariant>();
     TestVariant obj;
     GIVEN("a string") {

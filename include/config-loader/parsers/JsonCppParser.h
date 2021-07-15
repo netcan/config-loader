@@ -34,9 +34,13 @@ struct JsonCppParser {
                 : keyName(keyName), elem(elem) {}
         bool isValid() const { return ! elem.isNull(); }
         ElemType toChildElem(const char* fieldName) const {
+            if (! elem.isObject()) {
+                return ElemType{Json::Value::nullSingleton()};
+            }
             return ElemType{elem[fieldName]};
         }
-        std::string getValueText() const {
+        std::optional<std::string> getValueText() const {
+            if (elem.isObject() || elem.isArray()) return std::nullopt;
             return elem.asString();
         }
         const char* getKeyName() const {

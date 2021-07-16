@@ -3,14 +3,13 @@
 
 - Simple interface, users need to **define data structure** and provide corresponding **configuration file**, the framework uses meta-programming technology to generate **load** interface
 - The design conforms to the opening and closing principle, extends the data structure without modifying the framework
-- Currently supports XML and JSON format configuration files, a variety of methods can be **flexibly composed**
+- Currently supports XML, JSON and YAML format configuration files, a variety of methods can be **flexibly composed**
 - Lightweight, easy to integrate, less than ~1000 lines of code
 - Support nested data structure, STL container
 - Complete test cases
 
 Future plans:
 
-- Support Yaml configuration file
 - Support from native data structure to config file, stringify data structure
 - Enable the supported formats through CMake options
 - Provide additional C++20 version
@@ -74,14 +73,34 @@ REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
 ```
 
+Through a YAML configuration file.
+```cpp
+SomeOfPoints someOfPoints;
+auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
+return R"(
+        name: Some of points
+        points:
+          - x: 1.2
+            y: 3.4
+          - x: 5.6
+            y: 7.8
+          - x: 2.2
+            y: 3.3
+    )";
+});
+REQUIRE(res == Result::SUCCESS);
+REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
+REQUIRE(someOfPoints.points.size() == 3);
+```
+
 Sometimes, your software system needs a unified configuration management module to manage all data structures and corresponding configuration files. At this time, you can define the manager by composing each `Loader`.
 
 ```cpp
-inline Deserializer ConfigLoaderManager(
+inline Deserializer ConfigLoaderManager {
     JsonLoader<Point>("/etc/configs/Point.json"_path),
     XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
-    JsonLoader<SomeOfPoints>() // Provide config file on demand
-);
+    YamlLoader<SomeOfPoints>() // Provide config file on demand
+};
 ```
 
 Similarly, use the `load` interface to load on demand, and `ConfigLoaderManager` will automatically parse it according to the configured path and the given data structure. Your IDE should be able to get all the `load` interfaces.
@@ -101,9 +120,10 @@ Similarly, use the `load` interface to load on demand, and `ConfigLoaderManager`
 ```
 
 ## Notice
-The current framework depends on the following two library:
+The current framework depends on the following libraries:
 - `tinyxml2`, used for parsing xml configuration files
 - `jsoncpp`, used for parsing json configuration files
+- `yamlcpp`, used for parsing yaml configuration files
 
 In the future, these libraries may be enabled through CMake options to avoid unnecessary dependencies in actual use: only using xml will only rely on the xml parsing library.
 

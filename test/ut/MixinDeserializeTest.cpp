@@ -10,11 +10,11 @@ using namespace CONFIG_LOADER_NS;
 using namespace Catch;
 
 SCENARIO("mixin deserializer") {
-    Deserializer deserializer(
+    Deserializer deserializer {
             JsonLoader<Point>(),
             XMLLoader<Rect>(),
-            JsonLoader<SomeOfPoints>()
-    );
+            YamlLoader<SomeOfPoints>()
+    };
 
     WHEN("deserialize a flatten point config") {
         Point point;
@@ -50,14 +50,14 @@ SCENARIO("mixin deserializer") {
         SomeOfPoints someOfPoints;
         auto res = deserializer.load(someOfPoints, [] {
             return R"(
-                {
-                  "name": "Some of points",
-                  "points":[
-                    { "x": 1.2, "y": 3.4 },
-                    { "x": 5.6, "y": 7.8 },
-                    { "x": 2.2, "y": 3.3 }
-                  ]
-                }
+                name: Some of points
+                points:
+                  - x: 1.2
+                    y: 3.4
+                  - x: 5.6
+                    y: 7.8
+                  - x: 2.2
+                    y: 3.3
             )";
         });
         REQUIRE(res == Result::SUCCESS);

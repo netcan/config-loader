@@ -84,16 +84,16 @@ SCENARIO("deserialize xml to compound STL container") {
             return R"(
                 <STLOBj>
                     <m1>
-                        <key name="0">2</key>
-                        <key name="1">4</key>
-                        <key name="2">6</key>
-                        <key name="2">8</key>
+                        <key number="0">2</key>
+                        <key number="1">4</key>
+                        <key number="2">6</key>
+                        <key number="2">8</key>
                     </m1>
                     <m2>
-                        <key name="hello world">
+                        <item name="hello world">
                             <x>1.2</x>
                             <y>3.4</y>
-                        </key>
+                        </item>
                     </m2>
                     <m4>
                         <x>5.6</x>

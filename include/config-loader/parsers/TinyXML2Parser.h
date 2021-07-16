@@ -35,7 +35,10 @@ struct TinyXML2Parser {
             return std::nullopt;
         }
         const char* getKeyName() const {
-            return elem->Attribute("name");
+            if (auto attr = elem->FirstAttribute()) {
+                return attr->Value();
+            }
+            return nullptr;
         }
         template<typename F>
         Result forEachElement(F&& f) const {

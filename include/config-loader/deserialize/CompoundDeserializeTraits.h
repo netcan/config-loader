@@ -87,7 +87,7 @@ struct KVContainerDeserialize {
         using Value = typename KV::mapped_type;
 
         return node.forEachElement([&container](auto&& item) {
-            Key key; // Key is simply from XML Key Name
+            Key key;
             auto keyName = item.getKeyName();
             if (keyName == nullptr) { return Result::ERR_EXTRACTING_FIELD; }
             CFL_EXPECT_SUCC(PrimitiveDeserializeTraits<Key>::deserialize(key, keyName));

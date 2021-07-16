@@ -26,7 +26,7 @@ set(CONFIG_LOADER_SRC
         include/config-loader/utils/Assertion.h
         src/utils/ConfigPath.cpp
         include/config-loader/parsers/TinyXML2Parser.h
-        include/config-loader/parsers/JsonCppParser.h)
+        include/config-loader/parsers/JsonCppParser.h include/config-loader/parsers/YamlCppParser.h test/ut/YamlCppDeserializeTest.cpp)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})

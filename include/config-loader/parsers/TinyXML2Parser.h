@@ -5,7 +5,6 @@
 #ifndef CONFIG_LOADER_TINYXML2PARSER_H
 #define CONFIG_LOADER_TINYXML2PARSER_H
 #include <config-loader/ConfigLoaderNS.h>
-#include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <config-loader/Result.h>
 #include <tinyxml2.h>
 

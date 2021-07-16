@@ -5,10 +5,8 @@
 #ifndef CONFIG_LOADER_JSONCPPPARSER_H
 #define CONFIG_LOADER_JSONCPPPARSER_H
 #include <config-loader/ConfigLoaderNS.h>
-#include <config-loader/deserialize/DeserializeTraitsDecl.h>
-#include <config-loader/utils/Assertion.h>
 #include <config-loader/Result.h>
-#include <memory>
+#include <config-loader/utils/Assertion.h>
 #include <json/json.h>
 
 CONFIG_LOADER_NS_BEGIN
@@ -54,12 +52,12 @@ struct JsonCppParser {
             }
 
             if (elem.isArray()) {
-                for (auto e: elem) {
+                for (auto&& e: elem) {
                     CFL_EXPECT_SUCC(f(ElemType{e}));
                 }
             } else {
                 auto keys = elem.getMemberNames();
-                for (auto key: keys) {
+                for (auto&& key: keys) {
                     CFL_EXPECT_SUCC(f(ElemType{elem[key], key.c_str()}));
                 }
             }

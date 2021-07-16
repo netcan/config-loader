@@ -5,7 +5,7 @@
 #include <catch2/catch.hpp>
 #include <tinyxml2.h>
 #include <iostream>
-#include "DeserializeXMLConfig.h"
+#include "DeserializeConfig.h"
 using namespace Catch;
 using namespace tinyxml2;
 

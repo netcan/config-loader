@@ -4,11 +4,11 @@
 
 #include <catch2/catch.hpp>
 #include <json/json.h>
-#include "DeserializeJsonConfig.h"
+#include "DeserializeConfig.h"
 
 using namespace Catch;
 
-static void checkPoint(Json::Value& root, double x, double y) {
+static void checkPoint(const Json::Value& root, double x, double y) {
     REQUIRE(root.isObject());
     REQUIRE(root["x"] == x);
     REQUIRE(root["y"] == y);

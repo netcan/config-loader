@@ -5,7 +5,7 @@
 #include <catch2/catch.hpp>
 #include <tinyxml2.h>
 #include "ReflectedStruct.h"
-#include "DeserializeJsonConfig.h"
+#include "DeserializeConfig.h"
 #include <config-loader/ConfigLoader.h>
 
 using namespace Catch;

@@ -7,3 +7,6 @@
 [submodule "third-party/jsoncpp"]
 	path = third-party/jsoncpp
 	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "third-party/yaml-cpp"]
+	path = third-party/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git

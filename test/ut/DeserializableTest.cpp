@@ -9,6 +9,7 @@
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;
 
+constexpr auto pointConfigPath = "configs/Point.xml"_path;
 constexpr auto rectConfigPath = "configs/Rect.xml"_path;
 constexpr auto someOfPointsConfigPath = "configs/SomeOfPoints.xml"_path;
 
@@ -81,9 +82,9 @@ SCENARIO("composing deserializable to deserialize") {
 
     GIVEN("composing by value") {
         Deserializer deserializer(
-                XMLLoader<Point>("configs/Point.xml"_path),
-                XMLLoader<Rect>("configs/Rect.xml"_path),
-                XMLLoader<SomeOfPoints>("configs/SomeOfPoints.xml"_path)
+                XMLLoader<Point>(pointConfigPath),
+                XMLLoader<Rect>(rectConfigPath),
+                XMLLoader<SomeOfPoints>(someOfPointsConfigPath)
         );
         THEN("deserialize a flatten point") {
             Point point;

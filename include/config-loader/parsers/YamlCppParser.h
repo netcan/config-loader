@@ -6,11 +6,16 @@
 #define CONFIG_LOADER_YAMLCPPPARSER_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/utils/Assertion.h>
+#include <config-loader/parsers/UnsupportedParser.h>
 #include <config-loader/Result.h>
+
+#if HAS_YAMLCPP
 #include <yaml-cpp/yaml.h>
+#endif
 
 CONFIG_LOADER_NS_BEGIN
 
+#if HAS_YAMLCPP
 struct YamlCppParser {
     Result parse(std::string_view content) {
         root = YAML::Load(content.data());
@@ -69,6 +74,9 @@ struct YamlCppParser {
 private:
     YAML::Node root;
 };
+#else
+using YamlCppParser = UnsupportedParser;
+#endif
 
 CONFIG_LOADER_NS_END
 

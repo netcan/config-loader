@@ -2,6 +2,7 @@
 // Created by netcan on 2021/07/05.
 //
 
+#ifdef HAS_TINYXML2
 #include <type_traits>
 #include <catch2/catch.hpp>
 #include <tinyxml2.h>
@@ -33,3 +34,4 @@ SCENARIO("test path string") {
     }
 
 }
+#endif

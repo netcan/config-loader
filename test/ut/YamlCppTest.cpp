@@ -2,6 +2,7 @@
 // Created by netcan on 2021/07/16.
 //
 
+#ifdef HAS_YAMLCPP
 #include <catch2/catch.hpp>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
@@ -47,3 +48,4 @@ SCENARIO("Load a yaml config") {
         }
     }
 }
+#endif

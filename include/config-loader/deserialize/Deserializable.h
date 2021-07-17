@@ -12,6 +12,9 @@
 #include <config-loader/parsers/YamlCppParser.h>
 
 CONFIG_LOADER_NS_BEGIN
+
+struct UnsupportedParser;
+
 namespace detail {
 template<typename T, typename PARSER, typename DEFAULT_PATH>
 struct DeserializableWithGetContent {
@@ -26,6 +29,14 @@ struct DeserializableWithGetContent {
         auto firstElem = parser.toRootElemType();
         if (! firstElem.isValid()) { return Result::ERR_MISSING_FIELD; }
         return detail::CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
+    }
+};
+
+template<typename T, typename DEFAULT_PATH>
+struct DeserializableWithGetContent<T, UnsupportedParser, DEFAULT_PATH>  {
+    template<typename GET_CONTENT>
+    static Result load(T& obj, GET_CONTENT&& getContent) {
+        return Result::ERR_UNSUPPORTED_PARSER;
     }
 };
 

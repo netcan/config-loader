@@ -3,13 +3,11 @@
 //
 
 #include <catch2/catch.hpp>
-#include <tinyxml2.h>
 #include "ReflectedStruct.h"
 #include "DeserializeConfig.h"
 #include <config-loader/ConfigLoader.h>
 
 using namespace Catch;
-using namespace tinyxml2;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("deserialize xml to struct") {

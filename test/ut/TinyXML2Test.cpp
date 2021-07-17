@@ -2,6 +2,7 @@
 // Created by netcan on 2021/07/04.
 //
 
+#ifdef HAS_TINYXML2
 #include <catch2/catch.hpp>
 #include <tinyxml2.h>
 #include <iostream>
@@ -66,3 +67,4 @@ SCENARIO("Load a xml config") {
 
     }
 }
+#endif

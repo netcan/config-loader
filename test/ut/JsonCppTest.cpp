@@ -2,6 +2,7 @@
 // Created by netcan on 2021/07/09.
 //
 
+#ifdef HAS_JSONCPP
 #include <catch2/catch.hpp>
 #include <json/json.h>
 #include "DeserializeConfig.h"
@@ -77,3 +78,5 @@ SCENARIO("test Json::Value as string") {
     }
 
 }
+
+#endif

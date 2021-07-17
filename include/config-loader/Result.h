@@ -8,13 +8,14 @@
 
 CONFIG_LOADER_NS_BEGIN
 
-enum class Result {
+enum class Result: uint8_t {
     SUCCESS,
     ERR_EMPTY_CONTENT,
     ERR_ILL_FORMED,
     ERR_MISSING_FIELD,
     ERR_EXTRACTING_FIELD,
     ERR_TYPE,
+    ERR_UNSUPPORTED_PARSER,
 };
 
 CONFIG_LOADER_NS_END

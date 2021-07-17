@@ -6,10 +6,15 @@
 #define CONFIG_LOADER_TINYXML2PARSER_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/Result.h>
+#include <config-loader/parsers/UnsupportedParser.h>
+
+#ifdef HAS_TINYXML2
 #include <tinyxml2.h>
+#endif
 
 CONFIG_LOADER_NS_BEGIN
 
+#ifdef HAS_TINYXML2
 struct TinyXML2Parser {
     Result parse(std::string_view content) {
         return doc.Parse(content.data()) == tinyxml2::XML_SUCCESS
@@ -56,6 +61,9 @@ struct TinyXML2Parser {
 private:
     tinyxml2::XMLDocument doc;
 };
+#else
+using TinyXML2Parser = UnsupportedParser;
+#endif
 
 CONFIG_LOADER_NS_END
 

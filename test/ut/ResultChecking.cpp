@@ -3,7 +3,6 @@
 //
 
 #include <catch2/catch.hpp>
-#include <tinyxml2.h>
 #include <config-loader/ConfigLoader.h>
 #include "ReflectedStruct.h"
 

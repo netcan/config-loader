@@ -4,13 +4,19 @@
 
 #ifndef CONFIG_LOADER_JSONCPPPARSER_H
 #define CONFIG_LOADER_JSONCPPPARSER_H
+
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/Result.h>
 #include <config-loader/utils/Assertion.h>
+#include <config-loader/parsers/UnsupportedParser.h>
+
+#if HAS_JSONCPP
 #include <json/json.h>
+#endif
 
 CONFIG_LOADER_NS_BEGIN
 
+#if HAS_JSONCPP
 struct JsonCppParser {
     Result parse(std::string_view content) {
         Json::CharReaderBuilder builder;
@@ -72,7 +78,11 @@ struct JsonCppParser {
 private:
     Json::Value root;
 };
+#else
+using JsonCppParser = UnsupportedParser;
+#endif
 
 CONFIG_LOADER_NS_END
+
 
 #endif //CONFIG_LOADER_JSONCPPPARSER_H

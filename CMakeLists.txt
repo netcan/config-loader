@@ -3,7 +3,35 @@ project(config_loader)
 
 set(CMAKE_CXX_STANDARD 17)
 
+###############################################################################
+# thirdparty option
+option(HAS_TINYXML2 "enable tinyxml2" ON)
+option(HAS_JSONCPP "enable jsoncpp" ON)
+option(HAS_YAMLCPP "enable yamlcpp" ON)
+
+message(STATUS "enable tinyxml2: ${HAS_TINYXML2}")
+message(STATUS "enable jsoncpp: ${HAS_JSONCPP}")
+message(STATUS "enable yamlcpp: ${HAS_YAMLCPP}")
+
+set(THIRD_PARTY_LIBRARIES)
+
+if (HAS_TINYXML2)
+    add_compile_definitions(HAS_TINYXML2)
+    list(APPEND THIRD_PARTY_LIBRARIES tinyxml2::tinyxml2)
+endif()
+
+if (HAS_JSONCPP)
+    add_compile_definitions(HAS_JSONCPP)
+    list(APPEND THIRD_PARTY_LIBRARIES jsoncpp_static)
+endif()
+
+if (HAS_YAMLCPP)
+    add_compile_definitions(HAS_YAMLCPP)
+    list(APPEND THIRD_PARTY_LIBRARIES yaml-cpp)
+endif()
+
 include(third-party/ThirdParty.cmake)
+###############################################################################
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -26,7 +54,7 @@ set(CONFIG_LOADER_SRC
         include/config-loader/utils/Assertion.h
         src/utils/ConfigPath.cpp
         include/config-loader/parsers/TinyXML2Parser.h
-        include/config-loader/parsers/JsonCppParser.h include/config-loader/parsers/YamlCppParser.h test/ut/YamlCppDeserializeTest.cpp)
+        include/config-loader/parsers/JsonCppParser.h include/config-loader/parsers/YamlCppParser.h test/ut/YamlCppDeserializeTest.cpp include/config-loader/parsers/UnsupportedParser.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})
@@ -46,7 +74,7 @@ add_executable(config_loader_test
         test/ut/JsonCppDeserializeTest.cpp
         test/ut/MixinDeserializeTest.cpp test/ut/DeserializeConfig.h test/ut/YamlCppTest.cpp)
 
-target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 tinyxml2::tinyxml2 jsoncpp_static yaml-cpp)
+target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})
 
 add_custom_target(copy_configs
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/ut/configs ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configs)

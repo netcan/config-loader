@@ -194,9 +194,6 @@ SCENARIO("deserialize xml to a number") {
 
 }
 
-DEFINE_STRUCT(TestVariant,
-              (std::variant<Point, int, std::string>) sumType);
-
 SCENARIO("deserialize xml to sum type(std::variant)") {
     auto deserializer = XMLLoader<TestVariant>();
     TestVariant obj;

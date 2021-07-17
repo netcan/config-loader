@@ -33,4 +33,7 @@ DEFINE_STRUCT(STLObj,
               (std::optional<int>) m5,
               (std::vector<int>) m6);
 
+DEFINE_STRUCT(TestVariant,
+              (std::variant<Point, int, std::string>) sumType);
+
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

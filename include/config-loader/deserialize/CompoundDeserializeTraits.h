@@ -137,7 +137,7 @@ struct CompoundDeserializeTraits<std::variant<Ts...>> {
             return res;
         };
         bool success {false};
-        (void) ( ( success = (buildVariant(Ts{}) == Result::SUCCESS)) || ...);
+        (void) ( ( success = (buildVariant(Ts{}) == Result::SUCCESS)) || ... );
         return success ? Result::SUCCESS : Result::ERR_TYPE;
     }
 };

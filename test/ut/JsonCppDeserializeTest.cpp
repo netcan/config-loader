@@ -106,9 +106,6 @@ SCENARIO("deserialize json to compound STL container") {
     }
 }
 
-DEFINE_STRUCT(TestVariant,
-              (std::variant<Point, int, std::string>) sumType);
-
 SCENARIO("deserialize json to sum type(std::variant)") {
     auto deserializer = JsonLoader<TestVariant>();
     TestVariant obj;
@@ -165,7 +162,6 @@ SCENARIO("deserialize json to sum type(std::variant)") {
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
     }
-
     GIVEN("a empty object") {
         auto res = deserializer.load(obj, [] {
             return R"( { "sumType": {} } )";

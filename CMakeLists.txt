@@ -13,29 +13,10 @@ message(STATUS "enable tinyxml2: ${HAS_TINYXML2}")
 message(STATUS "enable jsoncpp: ${HAS_JSONCPP}")
 message(STATUS "enable yamlcpp: ${HAS_YAMLCPP}")
 
-set(THIRD_PARTY_LIBRARIES)
-
-if (HAS_TINYXML2)
-    add_compile_definitions(HAS_TINYXML2)
-    list(APPEND THIRD_PARTY_LIBRARIES tinyxml2::tinyxml2)
-endif()
-
-if (HAS_JSONCPP)
-    add_compile_definitions(HAS_JSONCPP)
-    list(APPEND THIRD_PARTY_LIBRARIES jsoncpp_static)
-endif()
-
-if (HAS_YAMLCPP)
-    add_compile_definitions(HAS_YAMLCPP)
-    list(APPEND THIRD_PARTY_LIBRARIES yaml-cpp)
-endif()
-
 include(third-party/ThirdParty.cmake)
 ###############################################################################
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-set(CONFIG_LOADER_SRC
+set(CONFIG_LOADER_INC
         include/config-loader/utils/RepeatMacro.h
         include/config-loader/core/DefineStruct.h
         include/config-loader/core/ReflectedTraits.h
@@ -52,33 +33,19 @@ set(CONFIG_LOADER_SRC
         include/config-loader/deserialize/Deserializer.h
         include/config-loader/utils/Log.h
         include/config-loader/utils/Assertion.h
-        src/utils/ConfigPath.cpp
         include/config-loader/parsers/TinyXML2Parser.h
         include/config-loader/parsers/JsonCppParser.h
         include/config-loader/parsers/YamlCppParser.h
         include/config-loader/parsers/UnsupportedParser.h)
 
 add_library(config-loader STATIC
-        ${CONFIG_LOADER_SRC})
+        ${CONFIG_LOADER_INC}
+        src/utils/ConfigPath.cpp)
 
-add_executable(config_loader_test
-        ${CONFIG_LOADER_SRC}
-        test/ut/ReflectMacroTest.cpp
-        test/ut/CatchMain.cpp
-        test/ut/ReflectedStruct.h
-        test/ut/TinyXML2Test.cpp
-        test/ut/ConfigPathTest.cpp
-        test/ut/TinyXML2DeserializeTest.cpp
-        test/ut/DeserializableTest.cpp
-        test/ut/ResultChecking.cpp
-        test/ut/UtilsTest.cpp
-        test/ut/JsonCppTest.cpp
-        test/ut/JsonCppDeserializeTest.cpp
-        test/ut/YamlCppDeserializeTest.cpp
-        test/ut/MixinDeserializeTest.cpp test/ut/DeserializeConfig.h test/ut/YamlCppTest.cpp)
+target_include_directories(config-loader
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})
+install(TARGETS config-loader DESTINATION lib)
+install(DIRECTORY include/config-loader DESTINATION include)
 
-add_custom_target(copy_configs
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/test/ut/configs ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configs)
-add_dependencies(config_loader_test copy_configs)
+add_subdirectory(test/ut)

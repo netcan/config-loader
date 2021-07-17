@@ -54,7 +54,9 @@ set(CONFIG_LOADER_SRC
         include/config-loader/utils/Assertion.h
         src/utils/ConfigPath.cpp
         include/config-loader/parsers/TinyXML2Parser.h
-        include/config-loader/parsers/JsonCppParser.h include/config-loader/parsers/YamlCppParser.h test/ut/YamlCppDeserializeTest.cpp include/config-loader/parsers/UnsupportedParser.h)
+        include/config-loader/parsers/JsonCppParser.h
+        include/config-loader/parsers/YamlCppParser.h
+        include/config-loader/parsers/UnsupportedParser.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_SRC})
@@ -72,6 +74,7 @@ add_executable(config_loader_test
         test/ut/UtilsTest.cpp
         test/ut/JsonCppTest.cpp
         test/ut/JsonCppDeserializeTest.cpp
+        test/ut/YamlCppDeserializeTest.cpp
         test/ut/MixinDeserializeTest.cpp test/ut/DeserializeConfig.h test/ut/YamlCppTest.cpp)
 
 target_link_libraries(config_loader_test PRIVATE Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})

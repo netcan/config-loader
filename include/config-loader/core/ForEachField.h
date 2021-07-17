@@ -14,7 +14,7 @@ namespace detail {
         using TDECAY = std::decay_t<T>;
         Result res = Result::SUCCESS;
         (void) ( ( (res = f(typename TDECAY::template FIELD<T, Is>
-                          (std::forward<T>(obj)))) == Result::SUCCESS) && ...);
+                          (std::forward<T>(obj)))) == Result::SUCCESS) && ... );
         return res;
     }
 }

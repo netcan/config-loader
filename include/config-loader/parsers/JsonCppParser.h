@@ -53,21 +53,25 @@ struct JsonCppParser {
 
         template<typename F>
         Result forEachElement(F&& f) const {
-            if (!elem.isArray() && !elem.isObject()) {
-                return Result::ERR_TYPE;
-            }
-
-            if (elem.isArray()) {
-                for (auto&& e: elem) {
-                    CFL_EXPECT_SUCC(f(ElemType{e}));
+            switch (elem.type()) {
+                // null type isn't iterable, handle it as empty container
+                case Json::ValueType::nullValue:
+                    return Result::SUCCESS;
+                case Json::ValueType::arrayValue:
+                    for (auto&& e: elem) {
+                        CFL_EXPECT_SUCC(f(ElemType{e}));
+                    }
+                    return Result::SUCCESS;
+                case Json::ValueType::objectValue: {
+                    auto keys = elem.getMemberNames();
+                    for (auto &&key: keys) {
+                        CFL_EXPECT_SUCC(f(ElemType{elem[key], key.c_str()}));
+                    }
+                    return Result::SUCCESS;
                 }
-            } else {
-                auto keys = elem.getMemberNames();
-                for (auto&& key: keys) {
-                    CFL_EXPECT_SUCC(f(ElemType{elem[key], key.c_str()}));
-                }
+                default: // otherwise, is error type
+                    return Result::ERR_TYPE;
             }
-            return Result::SUCCESS;
         }
 
     private:

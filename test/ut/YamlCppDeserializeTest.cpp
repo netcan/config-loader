@@ -181,3 +181,32 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
         REQUIRE(res == Result::ERR_TYPE);
     }
 }
+
+SCENARIO("deserialize yaml to tree type") {
+
+    auto deserializer = YamlLoader<TestTree>();
+    TestTree obj;
+    GIVEN("a tree") {
+        auto res = deserializer.load(obj, [] {
+            return R"(
+                name: hello
+                children:
+                  - name: world
+                  - name: first
+                  - name: second
+                    children:
+                        - name: leaf
+            )";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE_THAT(obj.name, Equals("hello"));
+        REQUIRE(obj.children.size() == 3);
+        REQUIRE_THAT(obj.children[0]->name, Equals("world"));
+        REQUIRE_THAT(obj.children[1]->name, Equals("first"));
+        REQUIRE_THAT(obj.children[2]->name, Equals("second"));
+        REQUIRE(obj.children[2]->children.size() == 1);
+        REQUIRE_THAT(obj.children[2]->children[0]->name, Equals("leaf"));
+    }
+
+
+}

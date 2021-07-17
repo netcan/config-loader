@@ -280,10 +280,6 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 }
 
-DEFINE_STRUCT(TestTree,
-              (std::string) name,
-              (std::vector<std::unique_ptr<TestTree>>) children);
-
 SCENARIO("deserialize xml to tree type") {
     auto deserializer = XMLLoader<TestTree>();
     TestTree obj;

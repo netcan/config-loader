@@ -36,4 +36,8 @@ DEFINE_STRUCT(STLObj,
 DEFINE_STRUCT(TestVariant,
               (std::variant<Point, int, std::string>) sumType);
 
+DEFINE_STRUCT(TestTree,
+              (std::string) name,
+              (std::vector<std::unique_ptr<TestTree>>) children);
+
 #endif //CONFIG_LOADER_REFLECTEDSTRUCT_H

@@ -52,23 +52,29 @@ struct YamlCppParser {
 
         template<typename F>
         Result forEachElement(F&& f) const {
-            if (!node.IsMap() && !node.IsSequence()) return Result::ERR_TYPE;
-            if (node.IsSequence()) {
-                for(auto&& e: node) {
-                    CFL_EXPECT_SUCC(f(ElemType{e}));
-                }
-            } else {
-                for(auto&& e: node) {
-                    auto keyName = e.first.as<std::string>();
-                    CFL_EXPECT_SUCC(f(ElemType{e.second, keyName.c_str()}));
-                }
+            switch (node.Type()) {
+                // null type isn't iterable, handle it as empty container
+                case YAML::NodeType::Null:
+                    return Result::SUCCESS;
+                case YAML::NodeType::Sequence:
+                    for(auto&& e: node) {
+                        CFL_EXPECT_SUCC(f(ElemType{e}));
+                    }
+                    return Result::SUCCESS;
+                case YAML::NodeType::Map:
+                    for(auto&& e: node) {
+                        auto keyName = e.first.as<std::string>();
+                        CFL_EXPECT_SUCC(f(ElemType{e.second, keyName.c_str()}));
+                    }
+                    return Result::SUCCESS;
+                default: // otherwise, is error type
+                    return Result::ERR_TYPE;
             }
-            return Result::SUCCESS;
         }
 
     private:
         const char* keyName {};
-        YAML::Node node;
+        const YAML::Node node;
     };
 
 private:

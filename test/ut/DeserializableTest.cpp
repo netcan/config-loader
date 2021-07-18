@@ -5,17 +5,15 @@
 #include <catch2/catch.hpp>
 #include <config-loader/ConfigLoader.h>
 #include "ReflectedStruct.h"
+#include "DeserializeConfig.h"
 
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;
-
-constexpr auto pointConfigPath = "configs/Point.xml"_path;
-constexpr auto rectConfigPath = "configs/Rect.xml"_path;
-constexpr auto someOfPointsConfigPath = "configs/SomeOfPoints.xml"_path;
+using namespace xml_config;
 
 SCENARIO("test deserializable config file") {
     WHEN("deserializable build by helper") {
-        auto deserializer = XMLLoader<SomeOfPoints>(someOfPointsConfigPath);
+        auto deserializer = XMLLoader<SomeOfPoints>(SOME_OF_POINTS_CONFIG_PATH);
 
         SomeOfPoints someOfPoints;
         REQUIRE(deserializer.load(someOfPoints) == Result::SUCCESS);
@@ -26,7 +24,7 @@ SCENARIO("test deserializable config file") {
 
     WHEN("deserializable build by function") {
         SomeOfPoints someOfPoints;
-        REQUIRE(loadXML2Obj(someOfPoints, "configs/SomeOfPoints.xml") == Result::SUCCESS);
+        REQUIRE(loadXML2Obj(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));
         REQUIRE(someOfPoints.points.size() == 3);
@@ -36,8 +34,8 @@ SCENARIO("test deserializable config file") {
 SCENARIO("composing deserializable to deserialize") {
     GIVEN("composing by deserializable") {
         auto deserializer = Deserializer(
-                XMLLoader<Rect>(rectConfigPath),
-                XMLLoader<SomeOfPoints>(someOfPointsConfigPath)
+                XMLLoader<Rect>(RECT_CONFIG_PATH),
+                XMLLoader<SomeOfPoints>(SOME_OF_POINTS_CONFIG_PATH)
         );
 
         THEN("load both by default config") {
@@ -90,9 +88,9 @@ SCENARIO("composing deserializable to deserialize") {
 
     GIVEN("composing by value") {
         Deserializer deserializer(
-                XMLLoader<Point>(pointConfigPath),
-                XMLLoader<Rect>(rectConfigPath),
-                XMLLoader<SomeOfPoints>(someOfPointsConfigPath)
+                XMLLoader<Point>(POINT_CONFIG_PATH),
+                XMLLoader<Rect>(RECT_CONFIG_PATH),
+                XMLLoader<SomeOfPoints>(SOME_OF_POINTS_CONFIG_PATH)
         );
         THEN("deserialize a flatten point") {
             Point point;

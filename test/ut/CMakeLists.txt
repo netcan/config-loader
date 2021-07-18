@@ -14,7 +14,7 @@ add_executable(config_loader_test
         YamlCppTest.cpp
         MixinDeserializeTest.cpp
         DeserializeConfig.h
-        ContentLoaderTest.cpp)
+        )
 
 target_link_libraries(config_loader_test PRIVATE config-loader Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})
 

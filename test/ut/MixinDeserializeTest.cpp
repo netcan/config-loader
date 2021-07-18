@@ -5,40 +5,28 @@
 #include <catch2/catch.hpp>
 #include <config-loader/ConfigLoader.h>
 #include "ReflectedStruct.h"
+#include "DeserializeConfig.h"
 
 using namespace CONFIG_LOADER_NS;
 using namespace Catch;
 
 SCENARIO("mixin deserializer") {
     Deserializer deserializer {
-            JsonLoader<Point>(),
-            XMLLoader<Rect>(),
+            JsonLoader<Point>(json_config::POINT_CONFIG_PATH),
+            XMLLoader<Rect>(xml_config::RECT_CONFIG_PATH),
             YamlLoader<SomeOfPoints>()
     };
 
     WHEN("deserialize a flatten point config") {
         Point point;
-        auto res = deserializer.load(point, [] {
-            return R"({ "x": 1.2, "y": 3.4 })";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(point) == Result::SUCCESS);
         REQUIRE(point.x == 1.2);
         REQUIRE(point.y == 3.4);
     }
 
     WHEN("deserialize a nest rect config") {
         Rect rect;
-        auto res = deserializer.load(rect, [] {
-            return R"(
-                <?xml version="1.0" encoding="UTF-8"?>
-                <rect>
-                    <p1><x>1.2</x><y>3.4</y></p1>
-                    <p2><x>5.6</x><y>7.8</y></p2>
-                    <color>0x12345678</color>
-                </rect>
-            )";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(rect) == Result::SUCCESS);
         REQUIRE(rect.p1.x == 1.2);
         REQUIRE(rect.p1.y == 3.4);
         REQUIRE(rect.p2.x == 5.6);
@@ -48,18 +36,7 @@ SCENARIO("mixin deserializer") {
 
     WHEN("deserialize a complex rect config") {
         SomeOfPoints someOfPoints;
-        auto res = deserializer.load(someOfPoints, [] {
-            return R"(
-                name: Some of points
-                points:
-                  - x: 1.2
-                    y: 3.4
-                  - x: 5.6
-                    y: 7.8
-                  - x: 2.2
-                    y: 3.3
-            )";
-        });
+        auto res = deserializer.load(someOfPoints, yaml_config::SOME_OF_POINTS_CONFIG_PATH);
         REQUIRE(res == Result::SUCCESS);
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));

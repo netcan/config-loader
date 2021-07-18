@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(config_loader)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 ###############################################################################
 # thirdparty option
@@ -36,7 +37,7 @@ set(CONFIG_LOADER_INC
         include/config-loader/parsers/TinyXML2Parser.h
         include/config-loader/parsers/JsonCppParser.h
         include/config-loader/parsers/YamlCppParser.h
-        include/config-loader/parsers/UnsupportedParser.h include/config-loader/utils/ContentLoader.h)
+        include/config-loader/parsers/UnsupportedParser.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_INC}

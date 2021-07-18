@@ -24,6 +24,14 @@ SCENARIO("test deserializable config file") {
         REQUIRE(someOfPoints.points.size() == 3);
     }
 
+    WHEN("deserializable build by function") {
+        SomeOfPoints someOfPoints;
+        REQUIRE(loadXML2Obj(someOfPoints, "configs/SomeOfPoints.xml") == Result::SUCCESS);
+        REQUIRE_THAT(someOfPoints.name,
+                     Equals("Some of points"));
+        REQUIRE(someOfPoints.points.size() == 3);
+    }
+
 }
 SCENARIO("composing deserializable to deserialize") {
     GIVEN("composing by deserializable") {

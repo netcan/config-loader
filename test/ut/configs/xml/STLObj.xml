@@ -1,0 +1,18 @@
+<STLOBj>
+    <m1>
+        <key number="0">2</key>
+        <key number="1">4</key>
+        <key number="2">6</key>
+        <key number="2">8</key>
+    </m1>
+    <m2>
+        <item name="hello world">
+            <x>1.2</x>
+            <y>3.4</y>
+        </item>
+    </m2>
+    <m4>
+        <x>5.6</x>
+        <y>7.8</y>
+    </m4>
+</STLOBj>

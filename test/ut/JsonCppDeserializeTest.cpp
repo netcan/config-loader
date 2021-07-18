@@ -9,16 +9,13 @@
 
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;
+using namespace json_config;
 
 SCENARIO("deserialize json to struct") {
-    using namespace json_config;
     GIVEN("a flatten point config") {
         Point point;
         auto deserializer = JsonLoader<Point>();
-        auto res = deserializer.load(point, [] {
-            return POINT_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(point, POINT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(point.x == 1.2);
         REQUIRE(point.y == 3.4);
     }
@@ -26,10 +23,7 @@ SCENARIO("deserialize json to struct") {
     GIVEN("a nest rect config") {
         Rect rect;
         auto deserializer = JsonLoader<Rect>();
-        auto res = deserializer.load(rect, [] {
-            return RECT_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(rect.p1.x == 1.2);
         REQUIRE(rect.p1.y == 3.4);
         REQUIRE(rect.p2.x == 5.6);
@@ -49,10 +43,8 @@ SCENARIO("deserialize json to struct") {
     GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
         auto deserializer = JsonLoader<SomeOfPoints>();
-        auto res = deserializer.load(someOfPoints, [] {
-            return SOME_OF_POINTS_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
+
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));
         REQUIRE(someOfPoints.points.size() == 3);
@@ -73,19 +65,7 @@ SCENARIO("deserialize json to compound STL container") {
     GIVEN("a valid STL obj") {
         auto deserializer = JsonLoader<STLObj>();
         STLObj data;
-        auto res = deserializer.load(data, [] {
-            return R"(
-                {
-                  "m1": { "0": 2, "1": 4, "2": 6, },
-                  "m2": {
-                    "hello world": { "x": 1.2, "y": 3.4 }
-                  },
-                  "m3": {},
-                  "m4": { "x": 5.6, "y": 7.8 }
-                }
-             )";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(data.m1[0] == 2);
         REQUIRE(data.m1[1] == 4);
         REQUIRE(data.m1[2] == 6);
@@ -174,23 +154,7 @@ SCENARIO("deserialize json to tree type") {
     auto deserializer = JsonLoader<TestTree>();
     TestTree obj;
     GIVEN("a tree") {
-        auto res = deserializer.load(obj, [] {
-            return R"(
-                {
-                  "name": "hello",
-                  "children": [
-                    { "name": "world" },
-                    { "name": "first" },
-                    { "name": "second",
-                      "children": [
-                        { "name" : "leaf" }
-                      ]
-                    }
-                  ]
-                }
-            )";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(obj.name, Equals("hello"));
         REQUIRE(obj.children.size() == 3);
         REQUIRE_THAT(obj.children[0]->name, Equals("world"));

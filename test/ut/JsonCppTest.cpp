@@ -5,8 +5,10 @@
 #ifdef HAS_JSONCPP
 #include <catch2/catch.hpp>
 #include <json/json.h>
+#include <config-loader/utils/ConfigPath.h>
 #include "DeserializeConfig.h"
 
+using namespace CONFIG_LOADER_NS;
 using namespace Catch;
 
 static void checkPoint(const Json::Value& root, double x, double y) {
@@ -22,14 +24,16 @@ SCENARIO("load a json config") {
 
     GIVEN("a point config") {
         Json::Value root;
-        REQUIRE(reader->parse(POINT_CONFIG.begin(), POINT_CONFIG.end(),
+        auto pointCfg = getFileContent(POINT_CONFIG_PATH);
+        REQUIRE(reader->parse(pointCfg.data(), pointCfg.data() + pointCfg.size(),
                               &root , nullptr));
         checkPoint(root, 1.2, 3.4);
     }
 
     GIVEN("a rect config") {
         Json::Value root;
-        REQUIRE(reader->parse(RECT_CONFIG.begin(), RECT_CONFIG.end(),
+        auto rectCfg = getFileContent(RECT_CONFIG_PATH);
+        REQUIRE(reader->parse(rectCfg.data(), rectCfg.data() + rectCfg.size(),
                               &root , nullptr));
 
         checkPoint(root["p1"], 1.2, 3.4);
@@ -39,7 +43,8 @@ SCENARIO("load a json config") {
 
     GIVEN("a someOfPoints config") {
         Json::Value root;
-        REQUIRE(reader->parse(SOME_OF_POINTS_CONFIG.begin(), SOME_OF_POINTS_CONFIG.end(),
+        auto someOfPointsCfg = getFileContent(SOME_OF_POINTS_CONFIG_PATH);
+        REQUIRE(reader->parse(someOfPointsCfg.data(), someOfPointsCfg.data() + someOfPointsCfg.size(),
                               &root , nullptr));
         REQUIRE_THAT(root["name"].asString(), Equals("Some of points"));
 

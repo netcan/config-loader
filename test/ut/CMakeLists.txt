@@ -2,18 +2,19 @@ add_executable(config_loader_test
         ReflectMacroTest.cpp
         CatchMain.cpp
         ReflectedStruct.h
-        TinyXML2Test.cpp
         ConfigPathTest.cpp
-        TinyXML2DeserializeTest.cpp
+        UtilsTest.cpp
         DeserializableTest.cpp
         ResultChecking.cpp
-        UtilsTest.cpp
+        TinyXML2Test.cpp
+        TinyXML2DeserializeTest.cpp
         JsonCppTest.cpp
         JsonCppDeserializeTest.cpp
         YamlCppDeserializeTest.cpp
+        YamlCppTest.cpp
         MixinDeserializeTest.cpp
         DeserializeConfig.h
-        YamlCppTest.cpp)
+        ContentLoaderTest.cpp)
 
 target_link_libraries(config_loader_test PRIVATE config-loader Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})
 

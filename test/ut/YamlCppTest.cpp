@@ -17,13 +17,13 @@ static void checkPoint(const YAML::Node& node, double x, double y) {
 SCENARIO("Load a yaml config") {
     using namespace yaml_config;
     GIVEN("a point config") {
-        YAML::Node root = YAML::Load(POINT_CONFIG.data());
+        YAML::Node root = YAML::LoadFile(POINT_CONFIG_PATH.value);
         REQUIRE(! root.IsNull());
         checkPoint(root, 1.2, 3.4);
     }
 
     GIVEN("a rect config") {
-        YAML::Node root = YAML::Load(RECT_CONFIG.data());
+        YAML::Node root = YAML::LoadFile(RECT_CONFIG_PATH.value);
         REQUIRE(! root.IsNull());
         checkPoint(root["p1"], 1.2, 3.4);
         checkPoint(root["p2"], 5.6, 7.8);
@@ -31,7 +31,7 @@ SCENARIO("Load a yaml config") {
     }
 
     GIVEN("some of points") {
-        YAML::Node root = YAML::Load(SOME_OF_POINTS_CONFIG.data());
+        YAML::Node root = YAML::LoadFile(SOME_OF_POINTS_CONFIG_PATH.value);
         REQUIRE(! root.IsNull());
         REQUIRE_THAT(root["name"].as<std::string>(), Equals("Some of points"));
         double pointsV[] = {

@@ -23,7 +23,7 @@ SCENARIO("Load a xml config") {
     using namespace xml_config;
     WHEN("load point config") {
         XMLDocument doc;
-        REQUIRE(doc.Parse(POINT_CONFIG) == XML_SUCCESS);
+        REQUIRE(doc.LoadFile(POINT_CONFIG_PATH) == XML_SUCCESS);
         auto root = doc.FirstChildElement();
         REQUIRE_THAT(root->Name(), Equals("point"));
 
@@ -32,7 +32,7 @@ SCENARIO("Load a xml config") {
 
     WHEN("load rect config") {
         XMLDocument doc;
-        REQUIRE(doc.Parse(RECT_CONFIG) == XML_SUCCESS);
+        REQUIRE(doc.LoadFile(RECT_CONFIG_PATH) == XML_SUCCESS);
         auto root = doc.FirstChildElement();
         REQUIRE_THAT(root->Name(), Equals("rect"));
 
@@ -42,7 +42,7 @@ SCENARIO("Load a xml config") {
 
     WHEN("load some of points") {
         XMLDocument doc;
-        REQUIRE(doc.Parse(SOME_OF_POINTS_CONFIG) == XML_SUCCESS);
+        REQUIRE(doc.LoadFile(SOME_OF_POINTS_CONFIG_PATH) == XML_SUCCESS);
         auto root = doc.FirstChildElement();
         REQUIRE_THAT(root->Name(), Equals("some_of_points"));
         REQUIRE_THAT(root->FirstChildElement()->GetText(), Equals("Some of points"));

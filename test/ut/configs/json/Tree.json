@@ -1,0 +1,12 @@
+{
+  "name": "hello",
+  "children": [
+    { "name": "world" },
+    { "name": "first" },
+    { "name": "second",
+      "children": [
+        { "name" : "leaf" }
+      ]
+    }
+  ]
+}

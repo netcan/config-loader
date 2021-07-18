@@ -9,16 +9,13 @@
 
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;
+using namespace xml_config;
 
 SCENARIO("deserialize xml to struct") {
-    using namespace xml_config;
     GIVEN("a flatten point config") {
         Point point;
         auto deserializer = XMLLoader<Point>();
-        auto res = deserializer.load(point, [] {
-            return POINT_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(point, POINT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(point.x == 1.2);
         REQUIRE(point.y == 3.4);
     }
@@ -26,10 +23,7 @@ SCENARIO("deserialize xml to struct") {
     GIVEN("a nest rect config") {
         Rect rect;
         auto deserializer = XMLLoader<Rect>();
-        auto res = deserializer.load(rect, [] {
-            return RECT_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(rect.p1.x == 1.2);
         REQUIRE(rect.p1.y == 3.4);
         REQUIRE(rect.p2.x == 5.6);
@@ -54,10 +48,7 @@ SCENARIO("deserialize xml to struct") {
     GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
         auto deserializer = XMLLoader<SomeOfPoints>();
-        auto res = deserializer.load(someOfPoints, [] {
-            return SOME_OF_POINTS_CONFIG;
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));
         REQUIRE(someOfPoints.points.size() == 3);
@@ -78,29 +69,7 @@ SCENARIO("deserialize xml to compound STL container") {
     GIVEN("a valid STL obj") {
         auto deserializer = XMLLoader<STLObj>();
         STLObj data;
-        auto res = deserializer.load(data, [] {
-            return R"(
-                <STLOBj>
-                    <m1>
-                        <key number="0">2</key>
-                        <key number="1">4</key>
-                        <key number="2">6</key>
-                        <key number="2">8</key>
-                    </m1>
-                    <m2>
-                        <item name="hello world">
-                            <x>1.2</x>
-                            <y>3.4</y>
-                        </item>
-                    </m2>
-                    <m4>
-                        <x>5.6</x>
-                        <y>7.8</y>
-                    </m4>
-                </STLOBj>
-             )";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(data.m1[0] == 2);
         REQUIRE(data.m1[1] == 4);
         REQUIRE(data.m1[2] == 6);
@@ -284,24 +253,7 @@ SCENARIO("deserialize xml to tree type") {
     auto deserializer = XMLLoader<TestTree>();
     TestTree obj;
     GIVEN("a tree") {
-        auto res = deserializer.load(obj, [] {
-            return R"(
-                <TestTree>
-                    <name>hello</name>
-                    <children>
-                        <Node> <name>world</name> </Node>
-                        <Node> <name>first</name> </Node>
-                        <Node>
-                            <name>second</name>
-                            <children>
-                                <Node> <name>leaf</name> </Node>
-                            </children>
-                        </Node>
-                    </children>
-                </TestTree>
-            )";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(deserializer.load(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(obj.name, Equals("hello"));
         REQUIRE(obj.children.size() == 3);
         REQUIRE_THAT(obj.children[0]->name, Equals("world"));
@@ -309,7 +261,6 @@ SCENARIO("deserialize xml to tree type") {
         REQUIRE_THAT(obj.children[2]->name, Equals("second"));
         REQUIRE(obj.children[2]->children.size() == 1);
         REQUIRE_THAT(obj.children[2]->children[0]->name, Equals("leaf"));
-
     }
 
 }

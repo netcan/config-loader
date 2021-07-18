@@ -36,7 +36,7 @@ set(CONFIG_LOADER_INC
         include/config-loader/parsers/TinyXML2Parser.h
         include/config-loader/parsers/JsonCppParser.h
         include/config-loader/parsers/YamlCppParser.h
-        include/config-loader/parsers/UnsupportedParser.h)
+        include/config-loader/parsers/UnsupportedParser.h include/config-loader/utils/ContentLoader.h)
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_INC}

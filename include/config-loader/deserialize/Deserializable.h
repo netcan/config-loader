@@ -6,6 +6,7 @@
 #define CONFIG_LOADER_DESERIALIZABLE_H
 #include <config-loader/Result.h>
 #include <config-loader/utils/ConfigPath.h>
+#include <config-loader/utils/ContentLoader.h>
 #include <config-loader/deserialize/DeserializeTraits.h>
 #include <config-loader/parsers/TinyXML2Parser.h>
 #include <config-loader/parsers/JsonCppParser.h>
@@ -17,10 +18,9 @@ struct UnsupportedParser;
 
 namespace detail {
 template<typename T, typename PARSER, typename DEFAULT_PATH>
-struct DeserializableWithGetContent {
-    template<typename GET_CONTENT>
-    static Result load(T& obj, GET_CONTENT&& getContent) {
-        std::string content(getContent());
+struct DeserializableWithLoader {
+    static Result load(T& obj, const ContentLoader& loader) {
+        std::string content(loader());
         if (content.empty()) { return Result::ERR_EMPTY_CONTENT; }
 
         PARSER parser;
@@ -33,9 +33,8 @@ struct DeserializableWithGetContent {
 };
 
 template<typename T, typename DEFAULT_PATH>
-struct DeserializableWithGetContent<T, UnsupportedParser, DEFAULT_PATH>  {
-    template<typename GET_CONTENT>
-    static Result load(T& obj, GET_CONTENT&& getContent) {
+struct DeserializableWithLoader<T, UnsupportedParser, DEFAULT_PATH>  {
+    static Result load(T&, const ContentLoader&) {
         return Result::ERR_UNSUPPORTED_PARSER;
     }
 };
@@ -43,20 +42,20 @@ struct DeserializableWithGetContent<T, UnsupportedParser, DEFAULT_PATH>  {
 }
 
 template<typename T, typename PARSER, typename DEFAULT_PATH = decltype(""_path), bool = DEFAULT_PATH::isEmpty>
-struct Deserializable: private detail::DeserializableWithGetContent<T, PARSER, DEFAULT_PATH> {
+struct Deserializable: private detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {
     // import load with getContent func obj
-    using detail::DeserializableWithGetContent<T, PARSER, DEFAULT_PATH>::load;
+    using detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH>::load;
 
     // load from default path if not empty
     static Result load(T& obj) {
-        return load(obj, [] { return DEFAULT_PATH::getContent(); });
+        return load(obj, DEFAULT_PATH{});
     }
 };
 
 // if default path is empty, only provide load with getContent
 template<typename T, typename PARSER, typename DEFAULT_PATH>
 struct Deserializable<T, PARSER, DEFAULT_PATH, true>
-        : detail::DeserializableWithGetContent<T, PARSER, DEFAULT_PATH> {};
+        : detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {};
 
 
 ///////////////////////////////////////////////////////////////////////////////

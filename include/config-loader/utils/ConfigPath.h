@@ -15,16 +15,14 @@ std::string getFileContent(const char* path);
 template<char... cs>
 struct Path {
     static constexpr bool isEmpty = false;
-    static std::string getContent() {
-        constexpr char value[] = {cs..., '\0'};
-        return getFileContent(value);
-    }
+    static constexpr char value[] = {cs..., '\0'};
+    constexpr operator const char*() const { return value; }
+    constexpr operator std::string_view() const { return value; }
 };
 
 template<> // empty path optimize, decrease data section
 struct Path<> {
     static constexpr bool isEmpty = true;
-    static std::string getContent() { return {}; }
 };
 
 #ifdef __clang__

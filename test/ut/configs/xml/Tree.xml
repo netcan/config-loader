@@ -1,0 +1,13 @@
+<TestTree>
+    <name>hello</name>
+    <children>
+        <Node> <name>world</name> </Node>
+        <Node> <name>first</name> </Node>
+        <Node>
+            <name>second</name>
+            <children>
+                <Node> <name>leaf</name> </Node>
+            </children>
+        </Node>
+    </children>
+</TestTree>

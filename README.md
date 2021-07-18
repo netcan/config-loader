@@ -7,11 +7,10 @@
 - Lightweight, easy to integrate, less than ~1000 lines of code
 - Support nested data structure, STL container
 - Complete test cases
+- Support from native data structure to config file, stringify data structure
 
 Future plans:
 
-- Support from native data structure to config file, stringify data structure
-- Enable the supported formats through CMake options
 - Provide additional C++20 version
 
 ## Get started quickly

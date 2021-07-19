@@ -14,6 +14,25 @@
 - 支持从原生数据结构写到配置文件、打印数据结构
 - 提供额外的C++20版本
 
+## 构建与运行
+构建
+
+```shell
+$ git clone --depth=1 --recursive https://github.com/netcan/config-loader.git
+$ cd config-loader
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j
+```
+
+运行
+
+```shell
+$ cd bin/
+$ ./config_loader_test
+```
+
 ## 快速上手
 使用 `DEFINE_STRUCT` 定义数据结构：
 

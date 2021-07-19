@@ -13,7 +13,27 @@ Future plans:
 
 - Provide additional C++20 version
 
-## Get started quickly
+## Build & Run
+Build
+
+```shell
+$ git clone --depth=1 --recursive https://github.com/netcan/config-loader.git
+$ cd config-loader
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j
+```
+
+Run
+
+```shell
+$ cd bin/
+$ ./config_loader_test
+```
+
+## Quickly start
+
 Firstly use `DEFINE_STRUCT` macro to define the data structure:
 
 ```cpp

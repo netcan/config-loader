@@ -7,6 +7,7 @@
 #include <config-loader/Result.h>
 #include <config-loader/utils/ConfigPath.h>
 #include <config-loader/deserialize/DeserializeTraits.h>
+#include <config-loader/concept/Parser.h>
 #include <config-loader/parsers/TinyXML2Parser.h>
 #include <config-loader/parsers/JsonCppParser.h>
 #include <config-loader/parsers/YamlCppParser.h>
@@ -16,7 +17,7 @@ CONFIG_LOADER_NS_BEGIN
 struct UnsupportedParser;
 
 namespace detail {
-template<typename T, typename PARSER, typename DEFAULT_PATH>
+template<typename T, concepts::Parser PARSER, typename DEFAULT_PATH>
 struct DeserializableWithLoader {
     template<typename GET_CONTENT, // for test
             std::enable_if_t<std::is_invocable_v<GET_CONTENT>>* = nullptr>
@@ -48,7 +49,7 @@ struct DeserializableWithLoader<T, UnsupportedParser, DEFAULT_PATH>  {
 };
 }
 
-template<typename T, typename PARSER, typename DEFAULT_PATH = decltype(""_path), bool = DEFAULT_PATH::isEmpty>
+template<typename T, concepts::Parser PARSER, typename DEFAULT_PATH = decltype(""_path), bool = DEFAULT_PATH::isEmpty>
 struct Deserializable: private detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {
     // import load with getContent func obj
     using detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH>::load;
@@ -60,7 +61,7 @@ struct Deserializable: private detail::DeserializableWithLoader<T, PARSER, DEFAU
 };
 
 // if default path is empty, only provide load with getContent
-template<typename T, typename PARSER, typename DEFAULT_PATH>
+template<typename T, concepts::Parser PARSER, typename DEFAULT_PATH>
 struct Deserializable<T, PARSER, DEFAULT_PATH, true>
         : detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {};
 

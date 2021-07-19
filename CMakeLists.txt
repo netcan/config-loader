@@ -43,6 +43,8 @@ set(CONFIG_LOADER_INC
         include/config-loader/parsers/JsonCppParser.h
         include/config-loader/parsers/YamlCppParser.h
         include/config-loader/parsers/UnsupportedParser.h
+        include/config-loader/concept/Parser.h
+        include/config-loader/parsers/UnsupportedParser.h
         include/config-loader/serialize/Serializer.h
         include/config-loader/serialize/SerializeTraits.h
         include/config-loader/serialize/SerializeTraitsDecl.h

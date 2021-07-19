@@ -7,6 +7,7 @@
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
+#include <config-loader/concept/Parser.h>
 #include <config-loader/utils/Log.h>
 #include <config-loader/Result.h>
 #include <list>
@@ -23,7 +24,7 @@ CONFIG_LOADER_NS_BEGIN
 template<typename T>
 struct CompoundDeserializeTraits<T
         , std::enable_if_t<IsReflected_v<T>>> {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return forEachField(obj, [&node](auto&& fieldInfo) {
@@ -40,7 +41,7 @@ struct CompoundDeserializeTraits<T
 template<typename T>
 struct CompoundDeserializeTraits<T
         , std::enable_if_t<PrimitiveDeserializeTraits<T>::isSupport>> {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return PrimitiveDeserializeTraits<T>::deserialize(obj, node.getValueText());
@@ -50,7 +51,7 @@ struct CompoundDeserializeTraits<T
 ////////////////////////////////////////////////////////////////////////////////
 template<typename SEQ> // for container like list/vector but not string, code reuse
 struct SeqContainerDeserialize {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(SEQ& container, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using value_type = typename SEQ::value_type;
@@ -74,7 +75,7 @@ struct CompoundDeserializeTraits<std::list<T>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(KV& container, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using Key = typename KV::key_type;
@@ -108,7 +109,7 @@ struct CompoundDeserializeTraits<std::unordered_map<K, V>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T> // for optional type
 struct CompoundDeserializeTraits<std::optional<T>> {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(std::optional<T>& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         T value;
@@ -121,7 +122,7 @@ struct CompoundDeserializeTraits<std::optional<T>> {
 ////////////////////////////////////////////////////////////////////////////////
 template<typename ...Ts> // for sum type(variant)
 struct CompoundDeserializeTraits<std::variant<Ts...>> {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(std::variant<Ts...>& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         auto buildVariant = [&obj, &node](auto&& value) {
@@ -139,7 +140,7 @@ struct CompoundDeserializeTraits<std::variant<Ts...>> {
 ///////////////////////////////////////////////////////////////////////////////
 template<typename SP> // for smart pointer like shared_ptr/unique_ptr, code reuse
 struct SmartPointDeserialize {
-    template<typename ELEM_TYPE>
+    template<concepts::ParserElem ELEM_TYPE>
     static Result deserialize(SP& sp, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using SPElemType = typename SP::element_type;

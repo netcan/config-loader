@@ -4,6 +4,11 @@ project(config_loader)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
+message(CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+
 ###############################################################################
 # thirdparty option
 option(HAS_TINYXML2 "enable tinyxml2" ON)

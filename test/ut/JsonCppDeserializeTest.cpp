@@ -14,16 +14,14 @@ using namespace json_config;
 SCENARIO("deserialize json to struct") {
     GIVEN("a flatten point config") {
         Point point;
-        auto deserializer = JsonLoader<Point>();
-        REQUIRE(deserializer.load(point, POINT_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadJSON2Obj(point, POINT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(point.x == 1.2);
         REQUIRE(point.y == 3.4);
     }
 
     GIVEN("a nest rect config") {
         Rect rect;
-        auto deserializer = JsonLoader<Rect>();
-        REQUIRE(deserializer.load(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadJSON2Obj(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(rect.p1.x == 1.2);
         REQUIRE(rect.p1.y == 3.4);
         REQUIRE(rect.p2.x == 5.6);
@@ -42,8 +40,7 @@ SCENARIO("deserialize json to struct") {
 
     GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
-        auto deserializer = JsonLoader<SomeOfPoints>();
-        REQUIRE(deserializer.load(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadJSON2Obj(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
 
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));
@@ -63,9 +60,8 @@ SCENARIO("deserialize json to struct") {
 ///////////////////////////////////////////////////////////////////////////////
 SCENARIO("deserialize json to compound STL container") {
     GIVEN("a valid STL obj") {
-        auto deserializer = JsonLoader<STLObj>();
         STLObj data;
-        REQUIRE(deserializer.load(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadJSON2Obj(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(data.m1[0] == 2);
         REQUIRE(data.m1[1] == 4);
         REQUIRE(data.m1[2] == 6);
@@ -151,10 +147,9 @@ SCENARIO("deserialize json to sum type(std::variant)") {
 }
 
 SCENARIO("deserialize json to tree type") {
-    auto deserializer = JsonLoader<TestTree>();
     TestTree obj;
     GIVEN("a tree") {
-        REQUIRE(deserializer.load(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadJSON2Obj(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(obj.name, Equals("hello"));
         REQUIRE(obj.children.size() == 3);
         REQUIRE_THAT(obj.children[0]->name, Equals("world"));

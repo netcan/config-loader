@@ -14,16 +14,14 @@ using namespace yaml_config;
 SCENARIO("deserialize yaml to struct") {
     GIVEN("a flatten point config") {
         Point point;
-        auto deserializer = YamlLoader<Point>();
-        REQUIRE(deserializer.load(point, POINT_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadYAML2Obj(point, POINT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(point.x == 1.2);
         REQUIRE(point.y == 3.4);
     }
 
     GIVEN("a nest rect config") {
         Rect rect;
-        auto deserializer = YamlLoader<Rect>();
-        REQUIRE(deserializer.load(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadYAML2Obj(rect, RECT_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(rect.p1.x == 1.2);
         REQUIRE(rect.p1.y == 3.4);
         REQUIRE(rect.p2.x == 5.6);
@@ -35,15 +33,14 @@ SCENARIO("deserialize yaml to struct") {
         Rect rect;
         auto deserializer = YamlLoader<Rect>();
         auto res = deserializer.load(rect, [] {
-            return R"({ "color": 12345678 })";
+            return R"("color": 12345678)";
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
     }
 
     GIVEN("a complex rect config") {
         SomeOfPoints someOfPoints;
-        auto deserializer = YamlLoader<SomeOfPoints>();
-        REQUIRE(deserializer.load(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadYAML2Obj(someOfPoints, SOME_OF_POINTS_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(someOfPoints.name,
                      Equals("Some of points"));
         REQUIRE(someOfPoints.points.size() == 3);
@@ -62,9 +59,8 @@ SCENARIO("deserialize yaml to struct") {
 ///////////////////////////////////////////////////////////////////////////////
 SCENARIO("deserialize yaml to compound STL container") {
     GIVEN("a valid STL obj") {
-        auto deserializer = YamlLoader<STLObj>();
         STLObj data;
-        REQUIRE(deserializer.load(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadYAML2Obj(data, STLOBJ_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE(data.m1[0] == 2);
         REQUIRE(data.m1[1] == 4);
         REQUIRE(data.m1[2] == 6);
@@ -158,10 +154,9 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
 }
 
 SCENARIO("deserialize yaml to tree type") {
-    auto deserializer = YamlLoader<TestTree>();
     TestTree obj;
     GIVEN("a tree") {
-        REQUIRE(deserializer.load(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
+        REQUIRE(loadYAML2Obj(obj, TREE_CONFIG_PATH) == Result::SUCCESS);
         REQUIRE_THAT(obj.name, Equals("hello"));
         REQUIRE(obj.children.size() == 3);
         REQUIRE_THAT(obj.children[0]->name, Equals("world"));
@@ -170,6 +165,4 @@ SCENARIO("deserialize yaml to tree type") {
         REQUIRE(obj.children[2]->children.size() == 1);
         REQUIRE_THAT(obj.children[2]->children[0]->name, Equals("leaf"));
     }
-
-
 }

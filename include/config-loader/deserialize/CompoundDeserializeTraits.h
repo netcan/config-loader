@@ -8,6 +8,7 @@
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/concept/Parser.h>
+#include <config-loader/concept/Basic.h>
 #include <config-loader/utils/Log.h>
 #include <config-loader/Result.h>
 #include <list>
@@ -21,11 +22,10 @@
 
 CONFIG_LOADER_NS_BEGIN
 
-template<typename T>
-struct CompoundDeserializeTraits<T
-        , std::enable_if_t<IsReflected_v<T>>> {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(T& obj, ELEM_TYPE node) {
+namespace detail {
+template<concepts::Reflected T>
+struct CompoundDeserializeTraits<T> {
+    static Result deserialize(T& obj, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return forEachField(obj, [&node](auto&& fieldInfo) {
             decltype(auto) fieldName = fieldInfo.name();
@@ -38,11 +38,9 @@ struct CompoundDeserializeTraits<T
     }
 };
 
-template<typename T>
-struct CompoundDeserializeTraits<T
-        , std::enable_if_t<PrimitiveDeserializeTraits<T>::isSupport>> {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(T& obj, ELEM_TYPE node) {
+template<concepts::Primitive T>
+struct CompoundDeserializeTraits<T> {
+    static Result deserialize(T& obj, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         return PrimitiveDeserializeTraits<T>::deserialize(obj, node.getValueText());
     }
@@ -51,8 +49,7 @@ struct CompoundDeserializeTraits<T
 ////////////////////////////////////////////////////////////////////////////////
 template<typename SEQ> // for container like list/vector but not string, code reuse
 struct SeqContainerDeserialize {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(SEQ& container, ELEM_TYPE node) {
+    static Result deserialize(SEQ& container, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using value_type = typename SEQ::value_type;
         return node.forEachElement([&container](auto&& item) {
@@ -75,8 +72,7 @@ struct CompoundDeserializeTraits<std::list<T>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(KV& container, ELEM_TYPE node) {
+    static Result deserialize(KV& container, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using Key = typename KV::key_type;
         using Value = typename KV::mapped_type;
@@ -109,8 +105,7 @@ struct CompoundDeserializeTraits<std::unordered_map<K, V>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T> // for optional type
 struct CompoundDeserializeTraits<std::optional<T>> {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(std::optional<T>& obj, ELEM_TYPE node) {
+    static Result deserialize(std::optional<T>& obj, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         T value;
         CFL_EXPECT_SUCC(CompoundDeserializeTraits<T>::deserialize(value, node));
@@ -122,13 +117,11 @@ struct CompoundDeserializeTraits<std::optional<T>> {
 ////////////////////////////////////////////////////////////////////////////////
 template<typename ...Ts> // for sum type(variant)
 struct CompoundDeserializeTraits<std::variant<Ts...>> {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(std::variant<Ts...>& obj, ELEM_TYPE node) {
+    static Result deserialize(std::variant<Ts...>& obj, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
-        auto buildVariant = [&obj, &node](auto&& value) {
-            using type = std::remove_reference_t<decltype(value)>;
-            auto  res  = CompoundDeserializeTraits<type>::deserialize(value, node);
-            if (res == Result::SUCCESS) { obj.template emplace<type>(std::move(value)); }
+        auto buildVariant = [&obj, &node]<typename T>(T&& value) {
+            auto  res  = CompoundDeserializeTraits<T>::deserialize(value, node);
+            if (res == Result::SUCCESS) { obj.template emplace<T>(std::forward<T>(value)); }
             return res;
         };
         bool success {false};
@@ -140,8 +133,7 @@ struct CompoundDeserializeTraits<std::variant<Ts...>> {
 ///////////////////////////////////////////////////////////////////////////////
 template<typename SP> // for smart pointer like shared_ptr/unique_ptr, code reuse
 struct SmartPointDeserialize {
-    template<concepts::ParserElem ELEM_TYPE>
-    static Result deserialize(SP& sp, ELEM_TYPE node) {
+    static Result deserialize(SP& sp, concepts::ParserElem auto node) {
         if (! node.isValid()) { return Result::SUCCESS; }
         using SPElemType = typename SP::element_type;
         SPElemType value;
@@ -158,6 +150,8 @@ struct CompoundDeserializeTraits<std::shared_ptr<T>>
 template<typename T>
 struct CompoundDeserializeTraits<std::unique_ptr<T>>
         : SmartPointDeserialize<std::unique_ptr<T>> {};
+
+}
 
 CONFIG_LOADER_NS_END
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(config_loader)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
@@ -24,7 +24,7 @@ include(third-party/ThirdParty.cmake)
 
 set(CONFIG_LOADER_INC
         include/config-loader/utils/RepeatMacro.h
-        include/config-loader/core/DefineSchema.h
+        include/config-loader/core/DefineStruct.h
         include/config-loader/core/ReflectedTraits.h
         include/config-loader/ConfigLoaderNS.h
         include/config-loader/core/ForEachField.h
@@ -43,6 +43,8 @@ set(CONFIG_LOADER_INC
         include/config-loader/parsers/JsonCppParser.h
         include/config-loader/parsers/YamlCppParser.h
         include/config-loader/parsers/UnsupportedParser.h
+        include/config-loader/concept/Parser.h
+        include/config-loader/concept/Basic.h
         include/config-loader/concept/Parser.h
         include/config-loader/parsers/UnsupportedParser.h
         include/config-loader/serialize/Serializer.h

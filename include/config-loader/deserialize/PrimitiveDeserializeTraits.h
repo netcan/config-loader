@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
 #define CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
 #include <config-loader/ConfigLoaderNS.h>
+#include <config-loader/concept/Basic.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 #include <string>
 #include <optional>
@@ -19,8 +20,8 @@ constexpr bool isHex(std::string_view num) {
 }
 }
 
-template<typename Number>
-struct PrimitiveDeserializeTraits<Number, std::enable_if_t<std::is_arithmetic_v<Number>>>
+template<concepts::Arithmetic Number>
+struct PrimitiveDeserializeTraits<Number>
         : detail::IsSupport<true> {
     static Result deserialize(Number &num, std::optional<std::string> valueText) {
         if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }

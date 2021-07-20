@@ -4,6 +4,7 @@
 
 #ifndef CONFIG_LOADER_DESERIALIZABLE_H
 #define CONFIG_LOADER_DESERIALIZABLE_H
+#include <concepts>
 #include <config-loader/Result.h>
 #include <config-loader/utils/ConfigPath.h>
 #include <config-loader/deserialize/DeserializeTraits.h>
@@ -19,8 +20,7 @@ struct UnsupportedParser;
 namespace detail {
 template<typename T, concepts::Parser PARSER, typename DEFAULT_PATH>
 struct DeserializableWithLoader {
-    template<typename GET_CONTENT, // for test
-            std::enable_if_t<std::is_invocable_v<GET_CONTENT>>* = nullptr>
+    template<std::invocable GET_CONTENT>
     static Result load(T& obj, GET_CONTENT&& loader) {
         std::string content(loader());
         if (content.empty()) { return Result::ERR_EMPTY_CONTENT; }

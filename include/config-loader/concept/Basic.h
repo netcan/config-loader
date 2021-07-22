@@ -14,7 +14,7 @@ template<typename T>
 concept Reflected = IsReflected_v<T>;
 
 template<typename T>
-concept Primitive = detail::PrimitiveDeserializeTraits<T>::isSupport;
+concept Primitive = PrimitiveDeserializeTraits<T>::isSupport;
 
 template<typename T>
 concept Arithmetic = std::is_arithmetic_v<T>;

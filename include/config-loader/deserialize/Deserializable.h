@@ -29,7 +29,7 @@ struct DeserializableWithLoader {
 
         auto firstElem = parser.toRootElemType();
         if (! firstElem.isValid()) { return Result::ERR_MISSING_FIELD; }
-        return detail::CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
+        return CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
     }
 
     static Result load(T& obj, std::string_view path) {

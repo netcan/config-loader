@@ -12,7 +12,6 @@
 #include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
-namespace detail {
 template<typename Integer>
 struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
@@ -58,7 +57,6 @@ struct PrimitiveDeserializeTraits<std::string>
         return Result::SUCCESS;
     }
 };
-}
 
 CONFIG_LOADER_NS_END
 

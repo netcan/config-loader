@@ -21,7 +21,6 @@
 
 CONFIG_LOADER_NS_BEGIN
 
-namespace detail {
 template<typename T>
 struct CompoundDeserializeTraits<T
         , std::enable_if_t<IsReflected_v<T>>> {
@@ -163,9 +162,6 @@ struct CompoundDeserializeTraits<std::shared_ptr<T>>
 template<typename T>
 struct CompoundDeserializeTraits<std::unique_ptr<T>>
         : SmartPointDeserialize<std::unique_ptr<T>> {};
-
-
-}
 
 CONFIG_LOADER_NS_END
 

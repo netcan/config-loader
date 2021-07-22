@@ -15,13 +15,13 @@ template<bool support>
 struct IsSupport {
     static constexpr bool isSupport = support;
 };
+}
 
 template<typename T, typename = void>
-struct PrimitiveDeserializeTraits: IsSupport<false> {};
+struct PrimitiveDeserializeTraits: detail::IsSupport<false> {};
 
 template<typename T, typename = void>
 struct CompoundDeserializeTraits;
-}
 
 CONFIG_LOADER_NS_END
 

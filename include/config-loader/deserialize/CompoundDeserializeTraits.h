@@ -22,7 +22,6 @@
 
 CONFIG_LOADER_NS_BEGIN
 
-namespace detail {
 template<concepts::Reflected T>
 struct CompoundDeserializeTraits<T> {
     static Result deserialize(T& obj, concepts::ParserElem auto node) {
@@ -150,8 +149,6 @@ struct CompoundDeserializeTraits<std::shared_ptr<T>>
 template<typename T>
 struct CompoundDeserializeTraits<std::unique_ptr<T>>
         : SmartPointDeserialize<std::unique_ptr<T>> {};
-
-}
 
 CONFIG_LOADER_NS_END
 

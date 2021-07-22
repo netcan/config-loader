@@ -19,7 +19,6 @@ constexpr bool isHex(std::string_view num) {
             num.substr(0, 2) == "0X");
 }
 }
-
 template<concepts::Arithmetic Number>
 struct PrimitiveDeserializeTraits<Number>
         : detail::IsSupport<true> {

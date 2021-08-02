@@ -12,17 +12,29 @@
 #include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
+namespace detail {
+constexpr bool isHex(std::string_view num) {
+    return (num.substr(0, 2) == "0x" ||
+            num.substr(0, 2) == "0X");
+}
+}
+
 template<typename Integer>
 struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
         : detail::IsSupport<true> {
     static Result deserialize(Integer &num, std::optional<std::string> valueText) {
         if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }
-        std::stringstream ss;
-        ss << *valueText;
-        if (valueText->substr(0, 2) == "0x" ||
-            valueText->substr(0, 2) == "0X") { ss << std::hex; }
-        ss >> num;
-        return ss.fail() ? Result::ERR_EXTRACTING_FIELD : Result::SUCCESS;
+        // do not treat int8_t/uint8_t as char type
+        if constexpr(std::is_same_v<Integer, int8_t> || std::is_same_v<Integer, uint8_t>) {
+            num = std::stol(*valueText, nullptr, detail::isHex(*valueText) ? 16 : 10);
+            return Result::SUCCESS;
+        } else {
+            std::stringstream ss;
+            ss << *valueText;
+            if (detail::isHex(*valueText)) { ss << std::hex; }
+            ss >> num;
+            return ss.fail() ? Result::ERR_EXTRACTING_FIELD : Result::SUCCESS;
+        }
     }
 };
 

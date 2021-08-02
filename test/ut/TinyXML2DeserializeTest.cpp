@@ -129,6 +129,22 @@ SCENARIO("deserialize xml to bool type") {
     }
 }
 
+DEFINE_STRUCT(TestInt8T,
+              (uint8_t) m1,
+               (int8_t) m2);
+SCENARIO("deserialize xml to int8_t type") {
+    auto deserializer = XMLLoader<TestInt8T>();
+    TestInt8T obj;
+    GIVEN("a valid uint8_t") {
+        auto res = deserializer.load(obj, [] {
+            return "<TestBool><m1>48</m1><m2>0</m2></TestBool>";
+        });
+        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(obj.m1 == 48);
+        REQUIRE(obj.m2 == 0); // isn't '0' (aka 48)
+    }
+}
+
 DEFINE_STRUCT(TestInt,
               (int) number);
 

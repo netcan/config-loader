@@ -87,7 +87,7 @@ SCENARIO("deserialize xml to compound STL container") {
     }
 }
 
-DEFINE_SCHEMA(TestBool,
+DEFINE_STRUCT(TestBool,
               (bool) m1);
 
 SCENARIO("deserialize xml to bool type") {

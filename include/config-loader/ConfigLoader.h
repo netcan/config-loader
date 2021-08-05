@@ -7,7 +7,7 @@
 
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/utils/RepeatMacro.h>
-#include <config-loader/core/DefineStruct.h>
+#include <config-loader/core/DefineSchema.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/deserialize/Deserializer.h>

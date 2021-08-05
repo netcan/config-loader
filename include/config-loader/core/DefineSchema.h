@@ -2,8 +2,8 @@
 // Created by netcan on 2021/6/21.
 //
 
-#ifndef CONFIG_LOADER_DEFINESTRUCT_H
-#define CONFIG_LOADER_DEFINESTRUCT_H
+#ifndef CONFIG_LOADER_DEFINESCHEMA_H
+#define CONFIG_LOADER_DEFINESCHEMA_H
 #include <type_traits>
 #include <utility>
 #include <cstddef>
@@ -23,11 +23,11 @@
         }                                     \
     };                                        \
 
-#define DEFINE_STRUCT(st, ...)                                                  \
+#define DEFINE_SCHEMA(st, ...)                                                  \
     struct st {                                                                 \
         template <typename, size_t> struct FIELD;                               \
         static constexpr size_t _field_count_ = GET_ARG_COUNT(__VA_ARGS__);     \
         PASTE(REPEAT_, GET_ARG_COUNT(__VA_ARGS__)) (FIELD_EACH, 0, __VA_ARGS__) \
     }                                                                           \
 
-#endif //CONFIG_LOADER_DEFINESTRUCT_H
+#endif //CONFIG_LOADER_DEFINESCHEMA_H

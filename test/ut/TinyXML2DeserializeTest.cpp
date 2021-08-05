@@ -87,7 +87,7 @@ SCENARIO("deserialize xml to compound STL container") {
     }
 }
 
-DEFINE_STRUCT(TestBool,
+DEFINE_SCHEMA(TestBool,
               (bool) m1);
 
 SCENARIO("deserialize xml to bool type") {
@@ -129,9 +129,9 @@ SCENARIO("deserialize xml to bool type") {
     }
 }
 
-DEFINE_STRUCT(TestInt8T,
+DEFINE_SCHEMA(TestInt8T,
               (uint8_t) m1,
-               (int8_t) m2);
+              (int8_t) m2);
 SCENARIO("deserialize xml to int8_t type") {
     auto deserializer = XMLLoader<TestInt8T>();
     TestInt8T obj;
@@ -145,7 +145,7 @@ SCENARIO("deserialize xml to int8_t type") {
     }
 }
 
-DEFINE_STRUCT(TestInt,
+DEFINE_SCHEMA(TestInt,
               (int) number);
 
 SCENARIO("deserialize xml to a number") {

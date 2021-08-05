@@ -7,25 +7,25 @@
 #include <config-loader/ConfigLoader.h>
 
 // define and reflect a struct
-DEFINE_STRUCT(Point,
+DEFINE_SCHEMA(Point,
               (double) x,
               (double) y);
 
 // nested
-DEFINE_STRUCT(Rect,
+DEFINE_SCHEMA(Rect,
               (Point) p1,
               (Point) p2,
               (uint32_t) color);
 
 // vector and string
-DEFINE_STRUCT(SomeOfPoints,
+DEFINE_SCHEMA(SomeOfPoints,
               (std::string) name,
               (std::vector<Point>) points);
 
 using CONFIG_LOADER_NS::Deserializer;
 using CONFIG_LOADER_NS::XMLLoader;
 
-DEFINE_STRUCT(STLObj,
+DEFINE_SCHEMA(STLObj,
               (std::map<int, int>) m1,
               (std::unordered_map<std::string, Point>) m2,
               (std::map<int, int>) m3,
@@ -33,10 +33,10 @@ DEFINE_STRUCT(STLObj,
               (std::optional<int>) m5,
               (std::vector<int>) m6);
 
-DEFINE_STRUCT(TestVariant,
+DEFINE_SCHEMA(TestVariant,
               (std::variant<Point, int, std::string>) sumType);
 
-DEFINE_STRUCT(TestTree,
+DEFINE_SCHEMA(TestTree,
               (std::string) name,
               (std::vector<std::unique_ptr<TestTree>>) children);
 

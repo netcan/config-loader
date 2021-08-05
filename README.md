@@ -34,17 +34,17 @@ $ ./config_loader_test
 
 ## Quickly start
 
-Firstly use `DEFINE_STRUCT` macro to define the data structure:
+Firstly use `DEFINE_SCHEMA` macro to define the data structure:
 
 ```cpp
 // define and reflect a struct
-DEFINE_STRUCT(Point,                          // struct Point {
+DEFINE_SCHEMA(Point,                          // struct Point {
               (double) x,                     //     double x;
               (double) y);                    //     double y;
                                               // };
 
 // vector and string
-DEFINE_STRUCT(SomeOfPoints,                   // struct SomeOfPoints {
+DEFINE_SCHEMA(SomeOfPoints,                   // struct SomeOfPoints {
               (std::string) name,             //     std::string name;
               (std::vector<Point>) points);   //     std::vector<Point> points;
                                               // };

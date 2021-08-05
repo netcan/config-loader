@@ -34,17 +34,17 @@ $ ./config_loader_test
 ```
 
 ## 快速上手
-使用 `DEFINE_STRUCT` 定义数据结构：
+使用 `DEFINE_SCHEMA` 定义数据结构：
 
 ```cpp
 // define and reflect a struct
-DEFINE_STRUCT(Point,                          // struct Point {
+DEFINE_SCHEMA(Point,                          // struct Point {
               (double) x,                     //     double x;
               (double) y);                    //     double y;
                                               // };
 
 // vector and string
-DEFINE_STRUCT(SomeOfPoints,                   // struct SomeOfPoints {
+DEFINE_SCHEMA(SomeOfPoints,                   // struct SomeOfPoints {
               (std::string) name,             //     std::string name;
               (std::vector<Point>) points);   //     std::vector<Point> points;
                                               // };

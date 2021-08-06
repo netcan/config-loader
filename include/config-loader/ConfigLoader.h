@@ -11,5 +11,6 @@
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/deserialize/Deserializer.h>
+#include <config-loader/serialize/Serializer.h>
 
 #endif //CONFIG_LOADER_CONFIGLOADER_H

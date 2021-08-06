@@ -9,18 +9,28 @@
 CONFIG_LOADER_NS_BEGIN
 
 namespace detail {
-    template<typename T, typename F, size_t... Is>
-    constexpr Result forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
-        using TDECAY = std::decay_t<T>;
-        Result res = Result::SUCCESS;
+template<typename T, typename F, size_t... Is>
+constexpr auto forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
+    using TDECAY = std::decay_t<T>;
+    // for check if `f' has Result value or not(void)
+    struct DummyFieldInfo {
+        int& value();
+        const char* name();
+    };
+
+    if constexpr (std::is_same_v<decltype(f(std::declval<DummyFieldInfo>())), Result>) {
+        Result res{Result::SUCCESS};
         (void) ( ( (res = f(typename TDECAY::template FIELD<T, Is>
-                          (std::forward<T>(obj)))) == Result::SUCCESS) && ... );
+                                    (std::forward<T>(obj)))) == Result::SUCCESS) && ... );
         return res;
+    } else {
+        (f(typename TDECAY::template FIELD<T, Is>(std::forward<T>(obj))), ...);
     }
+}
 }
 
 template<typename T, typename F>
-constexpr Result forEachField(T&& obj, F&& f) {
+constexpr auto forEachField(T&& obj, F&& f) {
     return detail::forEachField(std::forward<T>(obj),
                                 std::forward<F>(f),
                                 std::make_index_sequence<std::decay_t<T>::_field_count_>{});

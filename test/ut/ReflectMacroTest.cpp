@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 #include <config-loader/ConfigLoader.h>
-#include "ReflectedStruct.h"
+#include "UTSchema.h"
 
 using namespace CONFIG_LOADER_NS;
 

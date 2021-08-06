@@ -27,7 +27,7 @@ struct CompoundDeserializeTraits<T
     template<typename ELEM_TYPE>
     static Result deserialize(T& obj, ELEM_TYPE node) {
         if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
-        return CONFIG_LOADER_NS::forEachField(obj, [&node](auto&& fieldInfo) {
+        return forEachField(obj, [&node](auto&& fieldInfo) {
             decltype(auto) fieldName = fieldInfo.name();
             decltype(auto) value = fieldInfo.value();
             auto res = CompoundDeserializeTraits<std::remove_reference_t<decltype(value)>>

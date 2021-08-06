@@ -3,7 +3,7 @@
 //
 
 #include <catch2/catch.hpp>
-#include "ReflectedStruct.h"
+#include "UTSchema.h"
 #include "DeserializeConfig.h"
 #include <config-loader/ConfigLoader.h>
 

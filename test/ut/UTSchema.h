@@ -2,8 +2,8 @@
 // Created by netcan on 2021/07/04.
 //
 
-#ifndef CONFIG_LOADER_REFLECTEDSTRUCT_H
-#define CONFIG_LOADER_REFLECTEDSTRUCT_H
+#ifndef CONFIG_LOADER_UTSCHEMA_H
+#define CONFIG_LOADER_UTSCHEMA_H
 #include <config-loader/ConfigLoader.h>
 
 // define and reflect a struct
@@ -40,4 +40,4 @@ DEFINE_SCHEMA(TestTree,
               (std::string) name,
               (std::vector<std::unique_ptr<TestTree>>) children);
 
-#endif //CONFIG_LOADER_REFLECTEDSTRUCT_H
+#endif //CONFIG_LOADER_UTSCHEMA_H

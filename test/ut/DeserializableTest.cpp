@@ -4,7 +4,7 @@
 
 #include <catch2/catch.hpp>
 #include <config-loader/ConfigLoader.h>
-#include "ReflectedStruct.h"
+#include "UTSchema.h"
 #include "DeserializeConfig.h"
 
 using namespace Catch;

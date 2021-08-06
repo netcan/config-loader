@@ -17,6 +17,13 @@ struct PrimitiveSerializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<I
     }
 };
 
+template<>
+struct PrimitiveSerializeTraits<std::string>
+        : detail::IsSupport<true> {
+    static void dump(std::ostream& out, const std::string& str) {
+        out << "\"" << str << "\"";
+    }
+};
 
 CONFIG_LOADER_NS_END
 #endif //CONFIG_LOADER_PRIMITIVESERIALIZETRAITS_H

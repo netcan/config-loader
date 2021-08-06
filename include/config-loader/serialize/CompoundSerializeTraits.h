@@ -25,7 +25,7 @@ struct CompoundSerializeTraits<T,
             decltype(auto) fieldName = fieldInfo.name();
             decltype(auto) value = fieldInfo.value();
             out << "\n" << detail::indent(depth + 1) << "." << fieldName;
-            CompoundSerializeTraits<std::remove_reference_t<decltype(value)>>
+            CompoundSerializeTraits<std::decay_t<decltype(value)>>
                 ::dump(out, value, depth + 1);
             out << ",";
         });
@@ -36,11 +36,91 @@ struct CompoundSerializeTraits<T,
 template<typename T>
 struct CompoundSerializeTraits<T,
         std::enable_if_t<PrimitiveSerializeTraits<T>::isSupport>> {
-    static void dump(std::ostream& out, const T& obj, size_t depth = 0) {
+    static void dump(std::ostream& out, const T& obj, size_t) {
         out << "{";
         PrimitiveSerializeTraits<T>::dump(out, obj);
         out << "}";
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+template<typename SEQ> // for container like list/vector/deque but not string, code reuse
+struct SeqContainerSerialize {
+    static void dump(std::ostream& out, const SEQ& container, size_t depth) {
+        out << "{";
+        for (auto&& v: container) {
+            CompoundSerializeTraits<std::decay_t<decltype(v)>>::dump(out, v, depth + 1);
+            out << ", ";
+        }
+        out << "\n" << detail::indent(depth) << "}";
+    }
+};
+
+template<typename T> // code reuse
+struct CompoundSerializeTraits<std::vector<T>>
+        : SeqContainerSerialize<std::vector<T>> { };
+
+template<typename T> // code reuse
+struct CompoundSerializeTraits<std::list<T>>
+        : SeqContainerSerialize<std::list<T>> { };
+
+template<typename T> // code reuse
+struct CompoundSerializeTraits<std::deque<T>>
+        : SeqContainerSerialize<std::deque<T>> { };
+
+////////////////////////////////////////////////////////////////////////////////
+template<typename KV> // for kv container like map/unordered_map, code reuse
+struct KVContainerSerialize {
+    static void dump(std::ostream& out, const KV& container, size_t depth) {
+        out << "{";
+        for (auto&& [k, v]: container) {
+            out << "{";
+            CompoundSerializeTraits<std::decay_t<decltype(k)>>::dump(out, k, depth + 1);
+            out << ", ";
+            CompoundSerializeTraits<std::decay_t<decltype(v)>>::dump(out, v, depth + 1);
+            out << "},";
+        }
+        out << "\n" << detail::indent(depth) << "}";
+    }
+};
+
+template<typename K, typename V>
+struct CompoundSerializeTraits<std::map<K, V>>
+        : KVContainerSerialize<std::map<K, V>> {};
+
+template<typename K, typename V>
+struct CompoundSerializeTraits<std::unordered_map<K, V>>
+        : KVContainerSerialize<std::unordered_map<K, V>> {};
+
+////////////////////////////////////////////////////////////////////////////////
+template<typename T> // for optional type
+struct CompoundSerializeTraits<std::optional<T>> {
+    static void dump(std::ostream& out, const std::optional<T>& obj, size_t depth) {
+        out << "{";
+        if (obj.has_value()) {
+            CompoundSerializeTraits<std::decay_t<decltype(*obj)>>::dump(out, *obj, depth + 1);
+        } else {
+            out << "std::nullopt";
+        }
+        out << "}";
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+template<typename T> // for smart pointer like shared_ptr/unique_ptr, code reuse
+struct CompoundSerializeTraits<std::shared_ptr<T>> {
+    static void dump(std::ostream& out, const std::shared_ptr<T>& obj, size_t depth) {
+        if (obj == nullptr) {
+            out << "nullptr";
+        } else {
+            using TDecay = std::decay_t<decltype(*obj)>;
+            out << "std::make_shared<" << getSchemaName<TDecay>()
+                    << ">(" << getSchemaName<TDecay>();
+            CompoundSerializeTraits<TDecay>::dump(out, *obj, depth + 1);
+            out << ")";
+        }
+    }
+};
+
 CONFIG_LOADER_NS_END
 #endif //CONFIG_LOADER_COMPOUNDSERIALIZETRAITS_H

@@ -38,6 +38,6 @@ DEFINE_SCHEMA(TestVariant,
 
 DEFINE_SCHEMA(TestTree,
               (std::string) name,
-              (std::vector<std::unique_ptr<TestTree>>) children);
+              (std::vector<std::shared_ptr<TestTree>>) children);
 
 #endif //CONFIG_LOADER_UTSCHEMA_H

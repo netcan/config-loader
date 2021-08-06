@@ -43,7 +43,23 @@ SCENARIO("dumping data structure") {
         TestTree tree;
         REQUIRE(loadXML2Obj(tree, TREE_CONFIG_PATH) == Result::SUCCESS);
         dumpObj2OStream(std::cout, tree);
-
     }
+}
+
+ALIAS_COMPOUND_TYPE(Tree, (std::map<int, std::shared_ptr<Tree>>));
+
+SCENARIO("dumping alias structure") {
+    std::cout << std::endl
+              << "////////////////////////////////////////////////////////////////////////////////////////"
+              << std::endl;
+
+    Tree tree {
+            { {0}, std::make_shared<Tree>() },
+            { {1}, std::make_shared<Tree>(
+                    Tree {{ {2}, std::make_shared<Tree>() }})
+            },
+            { {3}, std::make_shared<Tree>() },
+    };
+    dumpObj2OStream(std::cout, tree);
 
 }

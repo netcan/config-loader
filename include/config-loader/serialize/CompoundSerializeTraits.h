@@ -36,7 +36,7 @@ struct CompoundSerializeTraits<T,
 template<typename T>
 struct CompoundSerializeTraits<T,
         std::enable_if_t<PrimitiveSerializeTraits<T>::isSupport>> {
-    static void dump(std::ostream& out, const T& obj, size_t) {
+    static void dump(std::ostream& out, const T& obj, size_t = 0) {
         out << "{";
         PrimitiveSerializeTraits<T>::dump(out, obj);
         out << "}";
@@ -46,7 +46,7 @@ struct CompoundSerializeTraits<T,
 ////////////////////////////////////////////////////////////////////////////////
 template<typename SEQ> // for container like list/vector/deque but not string, code reuse
 struct SeqContainerSerialize {
-    static void dump(std::ostream& out, const SEQ& container, size_t depth) {
+    static void dump(std::ostream& out, const SEQ& container, size_t depth = 0) {
         out << "{";
         for (auto&& v: container) {
             CompoundSerializeTraits<std::decay_t<decltype(v)>>::dump(out, v, depth + 1);
@@ -71,7 +71,7 @@ struct CompoundSerializeTraits<std::deque<T>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerSerialize {
-    static void dump(std::ostream& out, const KV& container, size_t depth) {
+    static void dump(std::ostream& out, const KV& container, size_t depth = 0) {
         out << "{";
         for (auto&& [k, v]: container) {
             out << "{";
@@ -95,7 +95,7 @@ struct CompoundSerializeTraits<std::unordered_map<K, V>>
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T> // for optional type
 struct CompoundSerializeTraits<std::optional<T>> {
-    static void dump(std::ostream& out, const std::optional<T>& obj, size_t depth) {
+    static void dump(std::ostream& out, const std::optional<T>& obj, size_t depth = 0) {
         out << "{";
         if (obj.has_value()) {
             CompoundSerializeTraits<std::decay_t<decltype(*obj)>>::dump(out, *obj, depth + 1);
@@ -109,7 +109,7 @@ struct CompoundSerializeTraits<std::optional<T>> {
 ///////////////////////////////////////////////////////////////////////////////
 template<typename T> // for smart pointer like shared_ptr/unique_ptr, code reuse
 struct CompoundSerializeTraits<std::shared_ptr<T>> {
-    static void dump(std::ostream& out, const std::shared_ptr<T>& obj, size_t depth) {
+    static void dump(std::ostream& out, const std::shared_ptr<T>& obj, size_t depth = 0) {
         if (obj == nullptr) {
             out << "nullptr";
         } else {

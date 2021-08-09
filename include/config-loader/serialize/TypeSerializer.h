@@ -5,46 +5,13 @@
 #ifndef CONFIG_LOADER_TYPESERIALIZER_H
 #define CONFIG_LOADER_TYPESERIALIZER_H
 #include <config-loader/ConfigLoaderNS.h>
+#include <config-loader/utils/ConstexprStringUtils.h>
 #include <cstdint>
 #include <vector>
 #include <variant>
 #include <array>
 
 CONFIG_LOADER_NS_BEGIN
-
-template<typename ...>
-struct dump;
-
-namespace detail {
-template<typename T>
-constexpr auto strLength = std::monostate{}; // just for compile error, not select it
-
-template<size_t N>
-constexpr size_t strLength<const char[N]> = N;
-
-template<size_t N>
-constexpr size_t strLength<std::array<char, N>> = N;
-
-template<size_t N>
-struct ConcatFold {
-    template<typename STR>
-    friend decltype(auto) constexpr operator<<(ConcatFold&& self, STR&& str) {
-        for (size_t i = 0; i < strLength<std::remove_reference_t<STR>> - 1; ++i) {
-            self.concatedStr[self.idx++] = str[i];
-        }
-        return std::forward<ConcatFold>(self);
-    }
-
-    std::array<char, N> concatedStr{};
-    size_t idx = 0;
-};
-
-template<typename... STRs>
-constexpr auto concat(STRs&&... strs) {
-    constexpr size_t len = ((strLength<std::remove_reference_t<STRs>> - 1) + ... + 1);
-    return (ConcatFold<len>{} << ... << strs).concatedStr; // left fold
-}
-}
 
 template<typename T> struct TypeSerializer;
 
@@ -74,7 +41,7 @@ template<> struct TypeSerializer<double>
 { static constexpr auto&& name = "double"; };
 
 template<typename T> struct TypeSerializer<std::vector<T>> {
-     static constexpr auto name = detail::concat("std::vector<", TypeSerializer<T>::name, ">");
+     static constexpr auto name = concat("std::vector<", TypeSerializer<T>::name, ">");
 };
 
 // helper

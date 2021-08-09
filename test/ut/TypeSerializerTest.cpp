@@ -8,7 +8,6 @@ using namespace Catch;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("test concat") {
-    using config_loader::detail::concat;
     GIVEN("concat empty string") {
         constexpr auto res = concat();
         static_assert(res.size() == 1);

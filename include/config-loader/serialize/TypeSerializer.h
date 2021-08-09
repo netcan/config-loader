@@ -2,11 +2,12 @@
 // Created by netcan on 2021/08/09.
 //
 
-#ifndef CONFIG_LOADER_TYPESERIALIZERTEST_CPP
+#ifndef CONFIG_LOADER_TYPESERIALIZER_H
 #define CONFIG_LOADER_TYPESERIALIZER_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <cstdint>
 #include <vector>
+#include <variant>
 #include <array>
 
 CONFIG_LOADER_NS_BEGIN
@@ -16,7 +17,7 @@ struct dump;
 
 namespace detail {
 template<typename T>
-constexpr size_t strLength = -1;
+constexpr auto strLength = std::monostate{}; // just for compile error, not select it
 
 template<size_t N>
 constexpr size_t strLength<const char[N]> = N;
@@ -85,4 +86,4 @@ constexpr const char* TypeSerializer_v<T, std::void_t<decltype(TypeSerializer<T>
         = TypeSerializer<T>::name.data();
 
 CONFIG_LOADER_NS_END
-#endif // CONFIG_LOADER_TYPESERIALIZERTEST_CPP
+#endif // CONFIG_LOADER_TYPESERIALIZER_H

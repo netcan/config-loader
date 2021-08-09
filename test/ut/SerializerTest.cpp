@@ -39,6 +39,14 @@ SCENARIO("dumping data structure") {
         dumpObj2OStream(std::cout, stlObj);
     }
 
+    GIVEN("test variant") {
+        {
+            TestVariant obj{ Point { 1, 2 } };
+            dumpObj2OStream(std::cout, obj);
+        }
+
+    }
+
     GIVEN("tree obj") {
         TestTree tree;
         REQUIRE(loadXML2Obj(tree, TREE_CONFIG_PATH) == Result::SUCCESS);

@@ -107,7 +107,7 @@ struct CompoundSerializeTraits<std::optional<T>> {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-template<typename T> // for smart pointer like shared_ptr/unique_ptr, code reuse
+template<typename T> // for shared_ptr
 struct CompoundSerializeTraits<std::shared_ptr<T>> {
     static void dump(std::ostream& out, const std::shared_ptr<T>& obj, size_t depth = 0) {
         if (obj == nullptr) {
@@ -119,6 +119,18 @@ struct CompoundSerializeTraits<std::shared_ptr<T>> {
             CompoundSerializeTraits<TDecay>::dump(out, *obj, depth + 1);
             out << ")";
         }
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+template<typename ...Ts> // for sum type(variant)
+struct CompoundSerializeTraits<std::variant<Ts...>> {
+    static void dump(std::ostream& out, const std::variant<Ts...>& obj, size_t depth = 0) {
+        out << "{" << " std::in_place_index<" << obj.index() << ">, ";
+        std::visit([&](auto&& v) {
+            CompoundSerializeTraits<std::decay_t<decltype(v)>>::dump(out, v, depth + 1);
+        }, obj);
+        out << "}";
     }
 };
 

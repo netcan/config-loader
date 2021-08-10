@@ -37,3 +37,32 @@ SCENARIO("test concat") {
         REQUIRE_THAT(res.data(), Equals("onetwothree"));
     }
 }
+
+SCENARIO("test join") {
+    GIVEN("empty join") {
+        constexpr auto res = join()(", ");
+        static_assert(res.size() == 1);
+    }
+
+    GIVEN("join a string") {
+        constexpr auto res = join("one")(", ");
+        static_assert(res.size() == 4);
+        REQUIRE_THAT(res.data(), Equals("one"));
+    }
+    GIVEN("join two string") {
+        constexpr auto res = join("one", "two")(", ");
+        static_assert(res.size() == 9);
+        REQUIRE_THAT(res.data(), Equals("one, two"));
+    }
+    GIVEN("join three string") {
+        constexpr auto res = join("one", "two", "three")(", ");
+        static_assert(res.size() == 16);
+        REQUIRE_THAT(res.data(), Equals("one, two, three"));
+    }
+
+    GIVEN("mixin join char[N]/array<char, N>") {
+        constexpr auto res = join("one", join("two", "three")(","))(", ");
+        static_assert(res.size() == 15);
+        REQUIRE_THAT(res.data(), Equals("one, two,three"));
+    }
+}

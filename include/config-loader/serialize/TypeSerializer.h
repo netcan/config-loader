@@ -57,7 +57,7 @@ TYPE_SERIALIZER((std::optional<T>),
 
 template<typename... Ts>
 TYPE_SERIALIZER((std::variant<Ts...>),
-                concat("std::variant<", TypeSerializer<Ts>::name..., ">"));
+                concat("std::variant<", join(TypeSerializer<Ts>::name...)(", "), ">"));
 
 template<typename T>
 TYPE_SERIALIZER((std::shared_ptr<T>),

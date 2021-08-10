@@ -126,10 +126,10 @@ SCENARIO("test TypeDeserializer") {
     }
 
     GIVEN("variant") {
-//        REQUIRE_THAT((TypeSerializer_v<std::variant<int8_t, uint8_t, int16_t, uint16_t,
-//                    int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>>),
-//                     Equals("std::variant<int8_t, uint8_t, int16_t, uint16_t,"
-//                            " int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>"));
+        REQUIRE_THAT((TypeSerializer_v<std::variant<int8_t, uint8_t, int16_t, uint16_t,
+                    int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>>),
+                     Equals("std::variant<int8_t, uint8_t, int16_t, uint16_t,"
+                            " int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>"));
     }
 
 }

@@ -6,51 +6,75 @@
 #define CONFIG_LOADER_TYPESERIALIZER_H
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/utils/ConstexprStringUtils.h>
+#include <config-loader/utils/RepeatMacro.h>
 #include <cstdint>
+#include <string>
+#include <list>
 #include <vector>
+#include <map>
+#include <unordered_map>
 #include <variant>
 #include <array>
 
 CONFIG_LOADER_NS_BEGIN
-
 template<typename T> struct TypeSerializer;
 
-template<> struct TypeSerializer<int8_t>
-{ static constexpr auto&& name = "int8_t"; };
-template<> struct TypeSerializer<uint8_t>
-{ static constexpr auto&& name = "uint8_t"; };
+#define TYPE_SERIALIZER(_type, _typeName)                 \
+    struct TypeSerializer<PARE _type>                     \
+    { static constexpr decltype(auto) name = _typeName; }
 
-template<> struct TypeSerializer<int16_t>
-{ static constexpr auto&& name = "int16_t"; };
-template<> struct TypeSerializer<uint16_t>
-{ static constexpr auto&& name = "uint16_t"; };
+template<> TYPE_SERIALIZER((int8_t), "int8_t");
+template<> TYPE_SERIALIZER((uint8_t), "uint8_t");
+template<> TYPE_SERIALIZER((int16_t), "int16_t");
+template<> TYPE_SERIALIZER((uint16_t), "uint16_t");
+template<> TYPE_SERIALIZER((int32_t), "int32_t");
+template<> TYPE_SERIALIZER((uint32_t), "uint32_t");
+template<> TYPE_SERIALIZER((int64_t), "int64_t");
+template<> TYPE_SERIALIZER((uint64_t), "uint64_t");
+template<> TYPE_SERIALIZER((float), "float");
+template<> TYPE_SERIALIZER((double), "double");
+template<> TYPE_SERIALIZER((std::string), "std::string");
 
-template<> struct TypeSerializer<int32_t>
-{ static constexpr auto&& name = "int32_t"; };
-template<> struct TypeSerializer<uint32_t>
-{ static constexpr auto&& name = "uint32_t"; };
+template<typename T>
+TYPE_SERIALIZER((std::vector<T>),
+                    concat("std::vector<", TypeSerializer<T>::name, ">"));
+template<typename T>
+TYPE_SERIALIZER((std::list<T>),
+                concat("std::list<", TypeSerializer<T>::name, ">"));
 
-template<> struct TypeSerializer<int64_t>
-{ static constexpr auto&& name = "int64_t"; };
-template<> struct TypeSerializer<uint64_t>
-{ static constexpr auto&& name = "uint64_t"; };
+template<typename K, typename V>
+TYPE_SERIALIZER((std::map<K, V>),
+                concat("std::map<", TypeSerializer<K>::name,
+                       ", ", TypeSerializer<V>::name, ">"));
+template<typename K, typename V>
+TYPE_SERIALIZER((std::unordered_map<K, V>),
+                concat("std::unordered_map<", TypeSerializer<K>::name,
+                       ", ", TypeSerializer<V>::name, ">"));
 
-template<> struct TypeSerializer<float>
-{ static constexpr auto&& name = "float"; };
-template<> struct TypeSerializer<double>
-{ static constexpr auto&& name = "double"; };
+template<typename T>
+TYPE_SERIALIZER((std::optional<T>),
+                concat("std::optional<", TypeSerializer<T>::name, ">"));
 
-template<typename T> struct TypeSerializer<std::vector<T>> {
-     static constexpr auto name = concat("std::vector<", TypeSerializer<T>::name, ">");
-};
+template<typename... Ts>
+TYPE_SERIALIZER((std::variant<Ts...>),
+                concat("std::variant<", TypeSerializer<Ts>::name..., ">"));
 
+template<typename T>
+TYPE_SERIALIZER((std::shared_ptr<T>),
+                concat("std::shared_ptr<", TypeSerializer<T>::name, ">"));
+
+template<typename T>
+TYPE_SERIALIZER((std::unique_ptr<T>),
+                concat("std::unique_ptr<", TypeSerializer<T>::name, ">"));
+
+#undef TYPE_SERIALIZER
 // helper
 template<typename T, typename = void>
 constexpr const char* TypeSerializer_v = TypeSerializer<T>::name;
 
 template<typename T>
-constexpr const char* TypeSerializer_v<T, std::void_t<decltype(TypeSerializer<T>::name.data())>>
-        = TypeSerializer<T>::name.data();
+constexpr const char* TypeSerializer_v<T, std::void_t<decltype(TypeSerializer<T>::name.data())>> =
+        TypeSerializer<T>::name.data();
 
 CONFIG_LOADER_NS_END
 #endif // CONFIG_LOADER_TYPESERIALIZER_H

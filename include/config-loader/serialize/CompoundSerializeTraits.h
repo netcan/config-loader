@@ -8,6 +8,7 @@
 #include <config-loader/serialize/SerializeTraitsDecl.h>
 #include <config-loader/utils/CommonTraits.h>
 #include <config-loader/core/ReflectedTraits.h>
+#include <config-loader/serialize/TypeSerializer.h>
 CONFIG_LOADER_NS_BEGIN
 namespace detail {
 inline std::string indent(size_t depth) {
@@ -44,7 +45,7 @@ struct CompoundSerializeTraits<T,
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-template<typename SEQ> // for container like list/vector/deque but not string, code reuse
+template<typename SEQ> // for container like list/vector but not string, code reuse
 struct SeqContainerSerialize {
     static void dump(std::ostream& out, const SEQ& container, size_t depth = 0) {
         out << "{";
@@ -63,10 +64,6 @@ struct CompoundSerializeTraits<std::vector<T>>
 template<typename T> // code reuse
 struct CompoundSerializeTraits<std::list<T>>
         : SeqContainerSerialize<std::list<T>> { };
-
-template<typename T> // code reuse
-struct CompoundSerializeTraits<std::deque<T>>
-        : SeqContainerSerialize<std::deque<T>> { };
 
 ////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse

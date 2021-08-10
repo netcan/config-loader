@@ -17,6 +17,11 @@ template<size_t N>
 constexpr size_t strLength<std::array<char, N>> = N;
 
 template<size_t N>
+constexpr size_t strLength<const std::array<char, N>>
+               = strLength<std::array<char, N>>;
+
+namespace detail {
+template<size_t N>
 struct ConcatFold {
     template<typename STR>
     friend decltype(auto) constexpr operator<<(ConcatFold&& self, STR&& str) {
@@ -29,11 +34,12 @@ struct ConcatFold {
     std::array<char, N> concatedStr{};
     size_t idx = 0;
 };
+}
 
 template<typename... STRs>
 constexpr auto concat(STRs&&... strs) {
     constexpr size_t len = ((strLength<std::remove_reference_t<STRs>> - 1) + ... + 1);
-    return (ConcatFold<len>{} << ... << strs).concatedStr; // left fold
+    return (detail::ConcatFold<len>{} << ... << strs).concatedStr; // left fold
 }
 
 CONFIG_LOADER_NS_END

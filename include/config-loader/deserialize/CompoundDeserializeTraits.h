@@ -10,7 +10,6 @@
 #include <config-loader/utils/Log.h>
 #include <config-loader/Result.h>
 #include <list>
-#include <deque>
 #include <map>
 #include <vector>
 #include <memory>
@@ -49,7 +48,7 @@ struct CompoundDeserializeTraits<T
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-template<typename SEQ> // for container like list/vector/deque but not string, code reuse
+template<typename SEQ> // for container like list/vector but not string, code reuse
 struct SeqContainerDeserialize {
     template<typename ELEM_TYPE>
     static Result deserialize(SEQ& container, ELEM_TYPE node) {
@@ -71,10 +70,6 @@ struct CompoundDeserializeTraits<std::vector<T>>
 template<typename T> // code reuse
 struct CompoundDeserializeTraits<std::list<T>>
         : SeqContainerDeserialize<std::list<T>> { };
-
-template<typename T> // code reuse
-struct CompoundDeserializeTraits<std::deque<T>>
-        : SeqContainerDeserialize<std::deque<T>> { };
 
 ////////////////////////////////////////////////////////////////////////////////
 template<typename KV> // for kv container like map/unordered_map, code reuse

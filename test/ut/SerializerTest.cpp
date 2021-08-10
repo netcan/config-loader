@@ -44,7 +44,16 @@ SCENARIO("dumping data structure") {
             TestVariant obj{ Point { 1, 2 } };
             dumpObj2OStream(std::cout, obj);
         }
-
+        {
+            std::cout << std::endl;
+            TestVariant obj{ 0x1234 };
+            dumpObj2OStream(std::cout, obj);
+        }
+        {
+            std::cout << std::endl;
+            TestVariant obj{ "hello world" };
+            dumpObj2OStream(std::cout, obj);
+        }
     }
 
     GIVEN("tree obj") {

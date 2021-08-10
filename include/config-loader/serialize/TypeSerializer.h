@@ -17,11 +17,16 @@
 #include <array>
 
 CONFIG_LOADER_NS_BEGIN
-template<typename T> struct TypeSerializer;
+template<typename T, typename = void> struct TypeSerializer;
 
 #define TYPE_SERIALIZER(_type, _typeName)                 \
     struct TypeSerializer<PARE _type>                     \
     { static constexpr decltype(auto) name = _typeName; }
+
+template<typename T>
+struct TypeSerializer<T, std::void_t<decltype(&T::_schema_name_)>> {
+    static constexpr decltype(auto) name = T::_schema_name_;
+};
 
 template<> TYPE_SERIALIZER((int8_t), "int8_t");
 template<> TYPE_SERIALIZER((uint8_t), "uint8_t");

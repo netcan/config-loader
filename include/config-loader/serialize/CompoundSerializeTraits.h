@@ -106,15 +106,15 @@ struct CompoundSerializeTraits<std::optional<T>> {
 ///////////////////////////////////////////////////////////////////////////////
 template<typename T> // for shared_ptr
 struct CompoundSerializeTraits<std::shared_ptr<T>> {
-    static void dump(std::ostream& out, const std::shared_ptr<T>& obj, size_t depth = 0) {
+    using SPType = std::shared_ptr<T>;
+    static void dump(std::ostream& out, const SPType& obj, size_t depth = 0) {
         if (obj == nullptr) {
             out << "nullptr";
         } else {
-            using TDecay = std::decay_t<decltype(*obj)>;
-            out << "std::make_shared<" << getSchemaName<TDecay>()
-                    << ">(" << getSchemaName<TDecay>();
-            CompoundSerializeTraits<TDecay>::dump(out, *obj, depth + 1);
-            out << ")";
+            using ELEM_TYPE = typename SPType::element_type;
+            out << TypeSerializer_v<SPType> << "{new " << TypeSerializer_v<ELEM_TYPE>;
+            CompoundSerializeTraits<ELEM_TYPE>::dump(out, *obj, depth + 1);
+            out << "}";
         }
     }
 };
@@ -123,9 +123,11 @@ struct CompoundSerializeTraits<std::shared_ptr<T>> {
 template<typename ...Ts> // for sum type(variant)
 struct CompoundSerializeTraits<std::variant<Ts...>> {
     static void dump(std::ostream& out, const std::variant<Ts...>& obj, size_t depth = 0) {
-        out << "{" << " std::in_place_index<" << obj.index() << ">, ";
+        out << "{";
         std::visit([&](auto&& v) {
-            CompoundSerializeTraits<std::decay_t<decltype(v)>>::dump(out, v, depth + 1);
+            using ValueType = std::decay_t<decltype(v)>;
+            out << TypeSerializer_v<ValueType>;
+            CompoundSerializeTraits<ValueType>::dump(out, v, depth + 1);
         }, obj);
         out << "}";
     }

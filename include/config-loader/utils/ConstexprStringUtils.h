@@ -59,7 +59,6 @@ struct JoinStringFold {
     DELIM_TYPE delimiter;
     size_t idx = 0;
 };
-
 };
 
 template<typename... STRs>

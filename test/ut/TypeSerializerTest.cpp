@@ -4,10 +4,11 @@
 
 #include <catch2/catch.hpp>
 #include <config-loader/serialize/TypeSerializer.h>
+#include "UTSchema.h"
 using namespace Catch;
 using namespace CONFIG_LOADER_NS;
 
-SCENARIO("test TypeDeserializer") {
+SCENARIO("test builtin TypeDeserializer") {
     GIVEN("vector") {
         REQUIRE_THAT(TypeSerializer_v<std::vector<int>>,
                      Equals("std::vector<int32_t>"));
@@ -131,5 +132,11 @@ SCENARIO("test TypeDeserializer") {
                      Equals("std::variant<int8_t, uint8_t, int16_t, uint16_t,"
                             " int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>"));
     }
+}
 
+SCENARIO("test UTSchema TypeDeserializer") {
+    REQUIRE_THAT((TypeSerializer_v<Point>),
+                 Equals("Point"));
+    REQUIRE_THAT((TypeSerializer_v<std::vector<Point>>),
+                 Equals("std::vector<Point>"));
 }

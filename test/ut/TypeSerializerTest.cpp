@@ -11,126 +11,126 @@ using namespace CONFIG_LOADER_NS;
 SCENARIO("test builtin TypeDeserializer") {
     GIVEN("vector") {
         REQUIRE_THAT(TypeSerializer_v<std::vector<int>>,
-                     Equals("std::vector<int32_t>"));
+                     Equals("vector<int32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<uint32_t>>,
-                     Equals("std::vector<uint32_t>"));
+                     Equals("vector<uint32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<int8_t>>,
-                     Equals("std::vector<int8_t>"));
+                     Equals("vector<int8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<uint8_t>>,
-                     Equals("std::vector<uint8_t>"));
+                     Equals("vector<uint8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<short>>,
-                     Equals("std::vector<int16_t>"));
+                     Equals("vector<int16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<unsigned short>>,
-                     Equals("std::vector<uint16_t>"));
+                     Equals("vector<uint16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<double>>,
-                     Equals("std::vector<double>"));
+                     Equals("vector<double>"));
         REQUIRE_THAT(TypeSerializer_v<std::vector<float>>,
-                     Equals("std::vector<float>"));
+                     Equals("vector<float>"));
 
         REQUIRE_THAT(TypeSerializer_v<std::vector<std::vector<int>>>,
-                     Equals("std::vector<std::vector<int32_t>>"));
+                     Equals("vector<vector<int32_t>>"));
     }
 
     GIVEN("list") {
         REQUIRE_THAT(TypeSerializer_v<std::list<int>>,
-                     Equals("std::list<int32_t>"));
+                     Equals("list<int32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<uint32_t>>,
-                     Equals("std::list<uint32_t>"));
+                     Equals("list<uint32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<int8_t>>,
-                     Equals("std::list<int8_t>"));
+                     Equals("list<int8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<uint8_t>>,
-                     Equals("std::list<uint8_t>"));
+                     Equals("list<uint8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<short>>,
-                     Equals("std::list<int16_t>"));
+                     Equals("list<int16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<unsigned short>>,
-                     Equals("std::list<uint16_t>"));
+                     Equals("list<uint16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<double>>,
-                     Equals("std::list<double>"));
+                     Equals("list<double>"));
         REQUIRE_THAT(TypeSerializer_v<std::list<float>>,
-                     Equals("std::list<float>"));
+                     Equals("list<float>"));
 
         REQUIRE_THAT(TypeSerializer_v<std::list<std::list<int>>>,
-                     Equals("std::list<std::list<int32_t>>"));
+                     Equals("list<list<int32_t>>"));
     }
 
     GIVEN("optional") {
         REQUIRE_THAT(TypeSerializer_v<std::optional<int>>,
-                     Equals("std::optional<int32_t>"));
+                     Equals("optional<int32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<uint32_t>>,
-                     Equals("std::optional<uint32_t>"));
+                     Equals("optional<uint32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<int8_t>>,
-                     Equals("std::optional<int8_t>"));
+                     Equals("optional<int8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<uint8_t>>,
-                     Equals("std::optional<uint8_t>"));
+                     Equals("optional<uint8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<short>>,
-                     Equals("std::optional<int16_t>"));
+                     Equals("optional<int16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<unsigned short>>,
-                     Equals("std::optional<uint16_t>"));
+                     Equals("optional<uint16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<double>>,
-                     Equals("std::optional<double>"));
+                     Equals("optional<double>"));
         REQUIRE_THAT(TypeSerializer_v<std::optional<float>>,
-                     Equals("std::optional<float>"));
+                     Equals("optional<float>"));
 
         REQUIRE_THAT(TypeSerializer_v<std::optional<std::optional<int>>>,
-                     Equals("std::optional<std::optional<int32_t>>"));
+                     Equals("optional<optional<int32_t>>"));
     }
 
     GIVEN("shared_ptr") {
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<int>>,
-                     Equals("std::shared_ptr<int32_t>"));
+                     Equals("shared_ptr<int32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<uint32_t>>,
-                     Equals("std::shared_ptr<uint32_t>"));
+                     Equals("shared_ptr<uint32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<int8_t>>,
-                     Equals("std::shared_ptr<int8_t>"));
+                     Equals("shared_ptr<int8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<uint8_t>>,
-                     Equals("std::shared_ptr<uint8_t>"));
+                     Equals("shared_ptr<uint8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<short>>,
-                     Equals("std::shared_ptr<int16_t>"));
+                     Equals("shared_ptr<int16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<unsigned short>>,
-                     Equals("std::shared_ptr<uint16_t>"));
+                     Equals("shared_ptr<uint16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<double>>,
-                     Equals("std::shared_ptr<double>"));
+                     Equals("shared_ptr<double>"));
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<float>>,
-                     Equals("std::shared_ptr<float>"));
+                     Equals("shared_ptr<float>"));
 
         REQUIRE_THAT(TypeSerializer_v<std::shared_ptr<std::shared_ptr<int>>>,
-                     Equals("std::shared_ptr<std::shared_ptr<int32_t>>"));
+                     Equals("shared_ptr<shared_ptr<int32_t>>"));
     }
 
     GIVEN("unique_ptr") {
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<int>>,
-                     Equals("std::unique_ptr<int32_t>"));
+                     Equals("unique_ptr<int32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<uint32_t>>,
-                     Equals("std::unique_ptr<uint32_t>"));
+                     Equals("unique_ptr<uint32_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<int8_t>>,
-                     Equals("std::unique_ptr<int8_t>"));
+                     Equals("unique_ptr<int8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<uint8_t>>,
-                     Equals("std::unique_ptr<uint8_t>"));
+                     Equals("unique_ptr<uint8_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<short>>,
-                     Equals("std::unique_ptr<int16_t>"));
+                     Equals("unique_ptr<int16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<unsigned short>>,
-                     Equals("std::unique_ptr<uint16_t>"));
+                     Equals("unique_ptr<uint16_t>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<double>>,
-                     Equals("std::unique_ptr<double>"));
+                     Equals("unique_ptr<double>"));
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<float>>,
-                     Equals("std::unique_ptr<float>"));
+                     Equals("unique_ptr<float>"));
 
         REQUIRE_THAT(TypeSerializer_v<std::unique_ptr<std::unique_ptr<int>>>,
-                     Equals("std::unique_ptr<std::unique_ptr<int32_t>>"));
+                     Equals("unique_ptr<unique_ptr<int32_t>>"));
     }
 
     GIVEN("map/unordered_map") {
         REQUIRE_THAT((TypeSerializer_v<std::map<std::string, int>>),
-                     Equals("std::map<std::string, int32_t>"));
+                     Equals("map<string, int32_t>"));
         REQUIRE_THAT((TypeSerializer_v<std::unordered_map<std::string, int>>),
-                     Equals("std::unordered_map<std::string, int32_t>"));
+                     Equals("unordered_map<string, int32_t>"));
     }
 
     GIVEN("variant") {
         REQUIRE_THAT((TypeSerializer_v<std::variant<int8_t, uint8_t, int16_t, uint16_t,
                     int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>>),
-                     Equals("std::variant<int8_t, uint8_t, int16_t, uint16_t,"
-                            " int32_t, uint32_t, int64_t, uint64_t, float, double, std::string>"));
+                     Equals("variant<int8_t, uint8_t, int16_t, uint16_t,"
+                            " int32_t, uint32_t, int64_t, uint64_t, float, double, string>"));
     }
 }
 
@@ -138,5 +138,5 @@ SCENARIO("test UTSchema TypeDeserializer") {
     REQUIRE_THAT((TypeSerializer_v<Point>),
                  Equals("Point"));
     REQUIRE_THAT((TypeSerializer_v<std::vector<Point>>),
-                 Equals("std::vector<Point>"));
+                 Equals("vector<Point>"));
 }

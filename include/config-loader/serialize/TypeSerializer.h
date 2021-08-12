@@ -38,39 +38,39 @@ template<> TYPE_SERIALIZER((int64_t), "int64_t");
 template<> TYPE_SERIALIZER((uint64_t), "uint64_t");
 template<> TYPE_SERIALIZER((float), "float");
 template<> TYPE_SERIALIZER((double), "double");
-template<> TYPE_SERIALIZER((std::string), "std::string");
+template<> TYPE_SERIALIZER((std::string), "string");
 
 template<typename T>
 TYPE_SERIALIZER((std::vector<T>),
-                    concat("std::vector<", TypeSerializer<T>::name, ">"));
+                    concat("vector<", TypeSerializer<T>::name, ">"));
 template<typename T>
 TYPE_SERIALIZER((std::list<T>),
-                concat("std::list<", TypeSerializer<T>::name, ">"));
+                concat("list<", TypeSerializer<T>::name, ">"));
 
 template<typename K, typename V>
 TYPE_SERIALIZER((std::map<K, V>),
-                concat("std::map<", TypeSerializer<K>::name,
+                concat("map<", TypeSerializer<K>::name,
                        ", ", TypeSerializer<V>::name, ">"));
 template<typename K, typename V>
 TYPE_SERIALIZER((std::unordered_map<K, V>),
-                concat("std::unordered_map<", TypeSerializer<K>::name,
+                concat("unordered_map<", TypeSerializer<K>::name,
                        ", ", TypeSerializer<V>::name, ">"));
 
 template<typename T>
 TYPE_SERIALIZER((std::optional<T>),
-                concat("std::optional<", TypeSerializer<T>::name, ">"));
+                concat("optional<", TypeSerializer<T>::name, ">"));
 
 template<typename... Ts>
 TYPE_SERIALIZER((std::variant<Ts...>),
-                concat("std::variant<", join(TypeSerializer<Ts>::name...)(", "), ">"));
+                concat("variant<", join(TypeSerializer<Ts>::name...)(", "), ">"));
 
 template<typename T>
 TYPE_SERIALIZER((std::shared_ptr<T>),
-                concat("std::shared_ptr<", TypeSerializer<T>::name, ">"));
+                concat("shared_ptr<", TypeSerializer<T>::name, ">"));
 
 template<typename T>
 TYPE_SERIALIZER((std::unique_ptr<T>),
-                concat("std::unique_ptr<", TypeSerializer<T>::name, ">"));
+                concat("unique_ptr<", TypeSerializer<T>::name, ">"));
 
 #undef TYPE_SERIALIZER
 // helper

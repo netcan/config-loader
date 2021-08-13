@@ -19,13 +19,13 @@ constexpr bool isHex(std::string_view num) {
 }
 }
 
-template<typename Integer>
-struct PrimitiveDeserializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
+template<typename Number>
+struct PrimitiveDeserializeTraits<Number, std::enable_if_t<std::is_arithmetic_v<Number>>>
         : detail::IsSupport<true> {
-    static Result deserialize(Integer &num, std::optional<std::string> valueText) {
+    static Result deserialize(Number &num, std::optional<std::string> valueText) {
         if (! valueText.has_value()) { return Result::ERR_EXTRACTING_FIELD; }
         // do not treat int8_t/uint8_t as char type
-        if constexpr(std::is_same_v<Integer, int8_t> || std::is_same_v<Integer, uint8_t>) {
+        if constexpr(std::is_same_v<Number, int8_t> || std::is_same_v<Number, uint8_t>) {
             num = std::stol(*valueText, nullptr, detail::isHex(*valueText) ? 16 : 10);
             return Result::SUCCESS;
         } else {

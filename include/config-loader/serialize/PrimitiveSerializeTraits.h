@@ -9,11 +9,16 @@
 #include <config-loader/utils/CommonTraits.h>
 CONFIG_LOADER_NS_BEGIN
 
-template<typename Integer>
-struct PrimitiveSerializeTraits<Integer, std::enable_if_t<std::is_arithmetic_v<Integer>>>
+template<typename Number>
+struct PrimitiveSerializeTraits<Number, std::enable_if_t<std::is_arithmetic_v<Number>>>
         : detail::IsSupport<true> {
-    static void dump(std::ostream& out, Integer integer) {
-        out << integer;
+    static void dump(std::ostream& out, Number number) {
+        // do not treat int8_t/uint8_t as char type
+        if constexpr(std::is_same_v<Number, int8_t> || std::is_same_v<Number, uint8_t>) {
+            out << +number;
+        } else {
+            out << number;
+        }
     }
 };
 

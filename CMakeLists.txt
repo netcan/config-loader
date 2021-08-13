@@ -24,7 +24,7 @@ include(third-party/ThirdParty.cmake)
 
 set(CONFIG_LOADER_INC
         include/config-loader/utils/RepeatMacro.h
-        include/config-loader/core/DefineStruct.h
+        include/config-loader/core/DefineSchema.h
         include/config-loader/core/ReflectedTraits.h
         include/config-loader/ConfigLoaderNS.h
         include/config-loader/core/ForEachField.h
@@ -46,7 +46,6 @@ set(CONFIG_LOADER_INC
         include/config-loader/concept/Parser.h
         include/config-loader/concept/Basic.h
         include/config-loader/concept/Parser.h
-        include/config-loader/parsers/UnsupportedParser.h
         include/config-loader/serialize/Serializer.h
         include/config-loader/serialize/SerializeTraits.h
         include/config-loader/serialize/SerializeTraitsDecl.h

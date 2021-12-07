@@ -9,6 +9,9 @@
 #include <config-loader/Result.h>
 #include <config-loader/utils/Assertion.h>
 #include <config-loader/parsers/UnsupportedParser.h>
+#include <memory>
+#include <optional>
+#include <string>
 
 #if HAS_JSONCPP
 #include <json/json.h>

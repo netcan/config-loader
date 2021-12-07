@@ -8,6 +8,8 @@
 #include <config-loader/utils/Assertion.h>
 #include <config-loader/parsers/UnsupportedParser.h>
 #include <config-loader/Result.h>
+#include <optional>
+#include <string_view>
 
 #if HAS_YAMLCPP
 #include <yaml-cpp/yaml.h>

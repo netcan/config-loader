@@ -5,6 +5,9 @@
 #ifndef CONFIG_LOADER_FOREACHFIELD_H
 #define CONFIG_LOADER_FOREACHFIELD_H
 #include <config-loader/Result.h>
+#include <cstddef>
+#include <type_traits>
+#include <utility>
 
 CONFIG_LOADER_NS_BEGIN
 

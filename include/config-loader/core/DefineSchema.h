@@ -27,23 +27,23 @@
     struct st {                                                                 \
         template <typename, size_t> struct FIELD;                               \
         static constexpr size_t _field_count_ = GET_ARG_COUNT(__VA_ARGS__);     \
-        static constexpr decltype(auto) _schema_name_ = #st;                    \
+        static constexpr decltype(#st) _schema_name_ = #st;                     \
         PASTE(REPEAT_, GET_ARG_COUNT(__VA_ARGS__)) (FIELD_EACH, 0, __VA_ARGS__) \
     }                                                                           \
 
-#define ALIAS_COMPOUND_TYPE(_alias, _compoundType)               \
-    struct _alias: PARE _compoundType {                          \
-        static constexpr decltype(auto) _schema_name_ = #_alias; \
-        using self = PARE _compoundType;                         \
-        using self::self;                                        \
-    };                                                           \
-    CONFIG_LOADER_NS_BEGIN                                       \
-    template<>                                                   \
-    struct CompoundDeserializeTraits<_alias>:                    \
-        CompoundDeserializeTraits<_alias::self>{ };              \
-    template<>                                                   \
-    struct CompoundSerializeTraits<_alias>:                      \
-        CompoundSerializeTraits<_alias::self>{ };                \
-    CONFIG_LOADER_NS_END                                         \
+#define ALIAS_COMPOUND_TYPE(_alias, _compoundType)                  \
+    struct _alias: PARE _compoundType {                             \
+        static constexpr decltype(#_alias) _schema_name_ = #_alias; \
+        using self = PARE _compoundType;                            \
+        using self::self;                                           \
+    };                                                              \
+    CONFIG_LOADER_NS_BEGIN                                          \
+    template<>                                                      \
+    struct CompoundDeserializeTraits<_alias>:                       \
+        CompoundDeserializeTraits<_alias::self>{ };                 \
+    template<>                                                      \
+    struct CompoundSerializeTraits<_alias>:                         \
+        CompoundSerializeTraits<_alias::self>{ };                   \
+    CONFIG_LOADER_NS_END                                            \
 
 #endif //CONFIG_LOADER_DEFINESCHEMA_H

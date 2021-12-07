@@ -4,6 +4,7 @@
 
 #ifndef CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
 #define CONFIG_LOADER_PRIMITIVEDESERIALIZETRAITS_H
+#include <config-loader/Result.h>
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/concept/Basic.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>

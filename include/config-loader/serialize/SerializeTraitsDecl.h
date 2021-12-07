@@ -4,6 +4,7 @@
 
 #ifndef CONFIG_LOADER_SERIALIZETRAITSDECL_H
 #define CONFIG_LOADER_SERIALIZETRAITSDECL_H
+#include <config-loader/utils/CommonTraits.h>
 #include <config-loader/ConfigLoaderNS.h>
 CONFIG_LOADER_NS_BEGIN
 template<typename T, typename = void>

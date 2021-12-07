@@ -7,6 +7,8 @@
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/serialize/SerializeTraitsDecl.h>
 #include <config-loader/utils/CommonTraits.h>
+#include <string>
+#include <type_traits>
 CONFIG_LOADER_NS_BEGIN
 
 template<typename Number>

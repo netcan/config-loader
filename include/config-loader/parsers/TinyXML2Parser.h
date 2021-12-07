@@ -7,6 +7,9 @@
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/Result.h>
 #include <config-loader/parsers/UnsupportedParser.h>
+#include <optional>
+#include <string>
+#include <string_view>
 
 #ifdef HAS_TINYXML2
 #include <tinyxml2.h>

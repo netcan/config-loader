@@ -8,10 +8,12 @@
 #include <config-loader/utils/ConstexprStringUtils.h>
 #include <config-loader/utils/RepeatMacro.h>
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <list>
 #include <vector>
 #include <map>
+#include <memory>
 #include <unordered_map>
 #include <variant>
 #include <array>
@@ -21,11 +23,11 @@ template<typename T, typename = void> struct TypeSerializer;
 
 #define TYPE_SERIALIZER(_type, _typeName)                 \
     struct TypeSerializer<PARE _type>                     \
-    { static constexpr decltype(auto) name = _typeName; }
+    { static constexpr decltype(_typeName) name = _typeName; }
 
 template<typename T>
 struct TypeSerializer<T, std::void_t<decltype(&T::_schema_name_)>> {
-    static constexpr decltype(auto) name = T::_schema_name_;
+    static constexpr decltype(T::_schema_name_) name = T::_schema_name_;
 };
 
 template<> TYPE_SERIALIZER((int8_t), "int8_t");
@@ -75,10 +77,10 @@ TYPE_SERIALIZER((std::unique_ptr<T>),
 #undef TYPE_SERIALIZER
 // helper
 template<typename T, typename = void>
-constexpr const char* TypeSerializer_v = TypeSerializer<T>::name;
+inline constexpr const char* TypeSerializer_v = TypeSerializer<T>::name;
 
 template<typename T>
-constexpr const char* TypeSerializer_v<T, std::void_t<decltype(TypeSerializer<T>::name.data())>> =
+inline constexpr const char* TypeSerializer_v<T, std::void_t<decltype(TypeSerializer<T>::name.data())>> =
         TypeSerializer<T>::name.data();
 
 CONFIG_LOADER_NS_END

@@ -17,7 +17,7 @@ Future plans:
 Build
 
 ```shell
-$ git clone --depth=1 --recursive https://github.com/netcan/config-loader.git
+$ git clone --recursive https://github.com/netcan/config-loader.git
 $ cd config-loader
 $ mkdir build
 $ cd build

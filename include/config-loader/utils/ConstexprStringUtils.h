@@ -5,15 +5,18 @@
 #ifndef CONFIG_LOADER_CONSTEXPRSTRINGUTILS_H
 #define CONFIG_LOADER_CONSTEXPRSTRINGUTILS_H
 #include <config-loader/ConfigLoaderNS.h>
+#include <cstddef>
+#include <type_traits>
+#include <array>
 CONFIG_LOADER_NS_BEGIN
 template<typename T> constexpr auto strLength =
         strLength<std::remove_cv_t<std::remove_reference_t<T>>>;
 
 template<size_t N>
-constexpr size_t strLength<char[N]> = N - 1;
+inline constexpr size_t strLength<char[N]> = N - 1;
 
 template<size_t N>
-constexpr size_t strLength<std::array<char, N>> = N - 1;
+inline constexpr size_t strLength<std::array<char, N>> = N - 1;
 
 template<typename STR>
 constexpr auto copy(STR&& src, char* dest) -> decltype(strLength<STR>) {

@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_RESULT_H
 #define CONFIG_LOADER_RESULT_H
 #include <config-loader/ConfigLoaderNS.h>
+#include <cstdint>
 
 CONFIG_LOADER_NS_BEGIN
 

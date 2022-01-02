@@ -5,10 +5,10 @@
 #ifdef HAS_JSONCPP
 #include <catch2/catch.hpp>
 #include <json/json.h>
-#include <config-loader/utils/ConfigPath.h>
 #include "DeserializeConfig.h"
+#include <config-loader/ConfigLoader.h>
 
-using namespace CONFIG_LOADER_NS;
+using CONFIG_LOADER_NS::getFileContent;
 using namespace Catch;
 
 static void checkPoint(const Json::Value& root, double x, double y) {

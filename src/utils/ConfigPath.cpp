@@ -1,10 +1,10 @@
 //
 // Created by netcan on 2021/07/07.
 //
-#include <config-loader/utils/ConfigPath.h>
 #include <fstream>
 #include <cstring>
 #include <filesystem>
+#include <config-loader/ConfigLoaderNS.h>
 
 CONFIG_LOADER_NS_BEGIN
 

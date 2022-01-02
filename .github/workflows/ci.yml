@@ -2,13 +2,13 @@ name: config-loader ci
 on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  gcc-build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: setup gcc
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: latest
 
       - uses: actions/checkout@master
         with:
@@ -16,10 +16,32 @@ jobs:
 
       - name: build
         run: |
-          mkdir build-debug
-          cmake -H. -Bbuild-debug -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-debug
+          mkdir build
+          CXX=g++ cmake -H. -Bbuild
+          cmake --build build
       - name: test
         run: |
-          cd build-debug/bin
+          cd build/bin
+          ./config_loader_test
+
+  clang-build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: latest
+
+      - uses: actions/checkout@master
+        with:
+          submodules: recursive
+
+      - name: build
+        run: |
+          mkdir build
+          CXX=clang++ cmake -H. -Bbuild
+          cmake --build build
+      - name: test
+        run: |
+          cd build/bin
           ./config_loader_test

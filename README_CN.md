@@ -50,11 +50,11 @@ DEFINE_SCHEMA(SomeOfPoints,                   // struct SomeOfPoints {
                                               // };
 ```
 
-提供配置文件，按需加载：
+提供配置文件，使用`loadXML2Obj/loadJSON2Obj/loadYAML2Obj`等接口：
 
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = JsonLoader<SomeOfPoints>().load(someOfPoints, [] {
+auto res = loadJSON2Obj(someOfPoints, [] {
     return R"(
         {
             "name": "Some of points",
@@ -74,19 +74,7 @@ REQUIRE(someOfPoints.points.size() == 3);
 又或者，通过XML配置文件。
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
-    return R"(
-        <?xml version="1.0" encoding="UTF-8"?>
-        <some_of_points>
-            <name>Some of points</name>
-            <points>
-                <value><x>1.2</x><y>3.4</y></value>
-                <value><x>5.6</x><y>7.8</y></value>
-                <value><x>2.2</x><y>3.3</y></value>
-            </points>
-        </some_of_points>
-    )";
-});
+auto res = loadXML2Obj(someOfPoints, "configs/xml/SomeOfPoints.xml");
 REQUIRE(res == Result::SUCCESS);
 REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
@@ -95,7 +83,7 @@ REQUIRE(someOfPoints.points.size() == 3);
 通过YAML配置文件。
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
+auto res = loadYAML2Obj(someOfPoints, [] {
 return R"(
         name: Some of points
         points:
@@ -110,32 +98,6 @@ return R"(
 REQUIRE(res == Result::SUCCESS);
 REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
-```
-
-有时候，你的软件系统需要一个统一的配置管理模块，管理 所有的数据结构 与 对应的配置文件，这时可以通过组合各个 `Loader` 来定义管理者。
-
-```cpp
-inline Deserializer ConfigLoaderManager {
-    JsonLoader<Point>("/etc/configs/Point.json"_path),
-    XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
-    YamlLoader<SomeOfPoints>() // 按需提供配置文件
-};
-```
-
-同样地，使用`load`接口按需加载，`ConfigLoaderManager`会自动根据 配置的路径 与 给定的数据结构 进行解析。你的IDE应该能够获得所有的 `load` 接口。
-
-```text
- 82     Deserializer ConfigLoaderManager(
- 83             JsonLoader<Point>("/etc/configs/Point.json"_path),
- 84             XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
- 85             JsonLoader<SomeOfPoints>()
- 86     );
- 87     ConfigLoaderManager.l
- 88                         load(Rect &obj)~                                   f [LS]
- 89                         load(Point &obj)~                                  f [LS]
- 90 }                       load(SomeOfPoints &obj, GET_CONTENT &&getContent)~ f [LS]
-~                           load(Rect &obj, GET_CONTENT &&getContent)~         f [LS]
-~                           load(Point &obj, GET_CONTENT &&getContent)~        f [LS]
 ```
 
 ## 注意事项

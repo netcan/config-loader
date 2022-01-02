@@ -50,18 +50,18 @@ DEFINE_SCHEMA(SomeOfPoints,                   // struct SomeOfPoints {
                                               // };
 ```
 
-Provide configuration files, load on demand:
+Provide configuration files, using `loadXML2Obj/loadJSON2Obj/loadYAML2Obj` interfaces:
 
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = JsonLoader<SomeOfPoints>().load(someOfPoints, [] {
+auto res = loadJSON2Obj(someOfPoints, [] {
     return R"(
         {
             "name": "Some of points",
             "points":[
-                {"x": 1.2, "y": 3.4 },
-                {"x": 5.6, "y": 7.8 },
-                {"x": 2.2, "y": 3.3 }
+                { "x": 1.2, "y": 3.4 },
+                { "x": 5.6, "y": 7.8 },
+                { "x": 2.2, "y": 3.3 }
             ]
         }
     )";
@@ -74,19 +74,7 @@ REQUIRE(someOfPoints.points.size() == 3);
 Or, through an XML configuration file.
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
-    return R"(
-        <?xml version="1.0" encoding="UTF-8"?>
-        <some_of_points>
-            <name>Some of points</name>
-            <points>
-                <value><x>1.2</x><y>3.4</y></value>
-                <value><x>5.6</x><y>7.8</y></value>
-                <value><x>2.2</x><y>3.3</y></value>
-            </points>
-        </some_of_points>
-    )";
-});
+auto res = loadXML2Obj(someOfPoints, "configs/xml/SomeOfPoints.xml");
 REQUIRE(res == Result::SUCCESS);
 REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
@@ -95,7 +83,7 @@ REQUIRE(someOfPoints.points.size() == 3);
 Through a YAML configuration file.
 ```cpp
 SomeOfPoints someOfPoints;
-auto res = XMLLoader<SomeOfPoints>().load(someOfPoints, [] {
+auto res = loadYAML2Obj(someOfPoints, [] {
 return R"(
         name: Some of points
         points:
@@ -110,32 +98,6 @@ return R"(
 REQUIRE(res == Result::SUCCESS);
 REQUIRE_THAT(someOfPoints.name, Equals("Some of points"));
 REQUIRE(someOfPoints.points.size() == 3);
-```
-
-Sometimes, your software system needs a unified configuration management module to manage all data structures and corresponding configuration files. At this time, you can define the manager by composing each `Loader`.
-
-```cpp
-inline Deserializer ConfigLoaderManager {
-    JsonLoader<Point>("/etc/configs/Point.json"_path),
-    XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
-    YamlLoader<SomeOfPoints>() // Provide config file on demand
-};
-```
-
-Similarly, use the `load` interface to load on demand, and `ConfigLoaderManager` will automatically parse it according to the configured path and the given data structure. Your IDE should be able to get all the `load` interfaces.
-
-```text
- 82     Deserializer ConfigLoaderManager(
- 83             JsonLoader<Point>("/etc/configs/Point.json"_path),
- 84             XMLLoader<Rect>("/etc/configs/Rect.xml"_path),
- 85             JsonLoader<SomeOfPoints>()
- 86     );
- 87     ConfigLoaderManager.l
- 88                         load(Rect &obj)~                                   f [LS]
- 89                         load(Point &obj)~                                  f [LS]
- 90 }                       load(SomeOfPoints &obj, GET_CONTENT &&getContent)~ f [LS]
-~                           load(Rect &obj, GET_CONTENT &&getContent)~         f [LS]
-~                           load(Point &obj, GET_CONTENT &&getContent)~        f [LS]
 ```
 
 ## Notice

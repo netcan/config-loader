@@ -31,8 +31,7 @@ SCENARIO("deserialize yaml to struct") {
 
     GIVEN("a nest rect config that missing p1/p2") {
         Rect rect;
-        auto deserializer = YamlLoader<Rect>();
-        auto res = deserializer.load(rect, [] {
+        auto res = loadYAML2Obj(rect, [] {
             return R"("color": 12345678)";
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
@@ -82,11 +81,10 @@ SCENARIO("deserialize yaml to compound STL container") {
 }
 
 SCENARIO("deserialize yaml to sum type(std::variant)") {
-    auto deserializer = YamlLoader<TestVariant>();
     TestVariant obj;
 
     GIVEN("a string") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"( sumType: hello world! )";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -97,7 +95,7 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
     }
 
     GIVEN("a int") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"( sumType: 987654 )";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -107,7 +105,7 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
     }
 
     GIVEN("a point") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"(
                 sumType:
                   x: 1.2
@@ -123,7 +121,7 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
     }
 
     GIVEN("a invalid object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"(
                 sumType:
                   x: 1.2
@@ -133,20 +131,20 @@ SCENARIO("deserialize yaml to sum type(std::variant)") {
     }
 
     GIVEN("a invalid type") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"( sumType: [1,2,3] )";
         });
         REQUIRE(res == Result::ERR_TYPE);
     }
     GIVEN("a null type type") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"( dummy: true )";
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
     }
 
     GIVEN("a empty object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadYAML2Obj(obj, [] {
             return R"( sumType: [] )";
         });
         REQUIRE(res == Result::ERR_TYPE);

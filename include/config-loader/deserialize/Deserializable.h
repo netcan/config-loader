@@ -16,8 +16,8 @@ CONFIG_LOADER_NS_BEGIN
 struct UnsupportedParser;
 
 namespace detail {
-template<typename T, typename PARSER, typename DEFAULT_PATH>
-struct DeserializableWithLoader {
+template<typename T, typename PARSER>
+struct Deserializer {
     template<typename GET_CONTENT, // for test
             std::enable_if_t<std::is_invocable_v<GET_CONTENT>>* = nullptr>
     static Result load(T& obj, GET_CONTENT&& loader) {
@@ -39,8 +39,8 @@ struct DeserializableWithLoader {
     }
 };
 
-template<typename T, typename DEFAULT_PATH>
-struct DeserializableWithLoader<T, UnsupportedParser, DEFAULT_PATH>  {
+template<typename T>
+struct Deserializer<T, UnsupportedParser>  {
     template<typename LOADER>
     static Result load(T&, LOADER&&) {
         return Result::ERR_UNSUPPORTED_PARSER;
@@ -48,57 +48,24 @@ struct DeserializableWithLoader<T, UnsupportedParser, DEFAULT_PATH>  {
 };
 }
 
-template<typename T, typename PARSER, typename DEFAULT_PATH = decltype(""_path), bool = DEFAULT_PATH::isEmpty>
-struct Deserializable: private detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {
-    // import load with getContent func obj
-    using detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH>::load;
-
-    // load from default path if not empty
-    static Result load(T& obj) {
-        return load(obj, DEFAULT_PATH::value);
-    }
-};
-
-// if default path is empty, only provide load with getContent
-template<typename T, typename PARSER, typename DEFAULT_PATH>
-struct Deserializable<T, PARSER, DEFAULT_PATH, true>
-        : detail::DeserializableWithLoader<T, PARSER, DEFAULT_PATH> {};
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // xml helper
-template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto XMLLoader(CONFIG_CONTENT = {}) {
-    return Deserializable<T, TinyXML2Parser, CONFIG_CONTENT>{};
-}
-
-template<typename T>
-Result loadXML2Obj(T& obj, std::string_view path) {
-    return Deserializable<T, TinyXML2Parser>::load(obj, path);
+template<typename T, typename Content>
+Result loadXML2Obj(T& obj, Content content) {
+    return detail::Deserializer<T, TinyXML2Parser>::load(obj, content);
 }
 
 // json helper
-template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto JsonLoader(CONFIG_CONTENT = {}) {
-    return Deserializable<T, JsonCppParser, CONFIG_CONTENT>{};
-}
-
-template<typename T>
-Result loadJSON2Obj(T& obj, std::string_view path) {
-    return Deserializable<T, JsonCppParser>::load(obj, path);
+template<typename T, typename Content>
+Result loadJSON2Obj(T& obj, Content content) {
+    return detail::Deserializer<T, JsonCppParser>::load(obj, content);
 }
 
 // yaml helper
-template<typename T, typename CONFIG_CONTENT = decltype(""_path)>
-constexpr auto YamlLoader(CONFIG_CONTENT = {}) {
-    return Deserializable<T, YamlCppParser, CONFIG_CONTENT>{};
+template<typename T, typename Content>
+Result loadYAML2Obj(T& obj, Content content) {
+    return detail::Deserializer<T, YamlCppParser>::load(obj, content);
 }
-
-template<typename T>
-Result loadYAML2Obj(T& obj, std::string_view path) {
-    return Deserializable<T, YamlCppParser>::load(obj, path);
-}
-
 CONFIG_LOADER_NS_END
 
 #endif //CONFIG_LOADER_DESERIALIZABLE_H

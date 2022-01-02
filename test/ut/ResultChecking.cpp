@@ -9,14 +9,9 @@
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("Error checking") {
-    Deserializer deserializer(
-            XMLLoader<Point>(),
-            XMLLoader<Rect>(),
-            XMLLoader<SomeOfPoints>()
-    );
     WHEN("a empty config") {
         Point point;
-        auto res = deserializer.load(point, [] {
+        auto res = loadXML2Obj(point, [] {
             return "";
         });
         REQUIRE(res == Result::ERR_EMPTY_CONTENT);
@@ -24,7 +19,7 @@ SCENARIO("Error checking") {
 
     WHEN("a ill-format config") {
         Point point;
-        auto res = deserializer.load(point, [] {
+        auto res = loadXML2Obj(point, [] {
             return "<eeeeeeeeeeeeee";
         });
         REQUIRE(res == Result::ERR_ILL_FORMED);
@@ -33,7 +28,7 @@ SCENARIO("Error checking") {
     WHEN("a lacking field config") {
         {
             Point point;
-            auto res = deserializer.load(point, [] {
+            auto res = loadXML2Obj(point, [] {
                 return R"(
                     <?xml version="1.0" encoding="UTF-8"?>
                     <point>
@@ -46,7 +41,7 @@ SCENARIO("Error checking") {
 
         {
             SomeOfPoints someOfPoints;
-            auto res = deserializer.load(someOfPoints, [] {
+            auto res = loadXML2Obj(someOfPoints, [] {
                 return R"(
                     <?xml version="1.0" encoding="UTF-8"?>
                     <some_of_points>
@@ -65,7 +60,7 @@ SCENARIO("Error checking") {
 
     WHEN("a err extracting field config") {
         Point point;
-        auto res = deserializer.load(point, [] {
+        auto res = loadXML2Obj(point, [] {
             return R"(
                     <?xml version="1.0" encoding="UTF-8"?>
                     <point>

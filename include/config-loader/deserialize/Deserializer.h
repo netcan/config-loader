@@ -9,6 +9,7 @@
 #include <config-loader/parsers/TinyXML2Parser.h>
 #include <config-loader/parsers/JsonCppParser.h>
 #include <config-loader/parsers/YamlCppParser.h>
+#include <concepts>
 
 CONFIG_LOADER_NS_BEGIN
 
@@ -19,8 +20,7 @@ std::string getFileContent(const char* path);
 namespace detail {
 template<typename T, typename PARSER>
 struct Deserializer {
-    template<typename GET_CONTENT, // for test
-            std::enable_if_t<std::is_invocable_v<GET_CONTENT>>* = nullptr>
+    template<std::invocable GET_CONTENT>
     static Result load(T& obj, GET_CONTENT&& loader) {
         std::string content(loader());
         if (content.empty()) { return Result::ERR_EMPTY_CONTENT; }

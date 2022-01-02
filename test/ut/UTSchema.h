@@ -22,9 +22,6 @@ DEFINE_SCHEMA(SomeOfPoints,
               (std::string) name,
               (std::vector<Point>) points);
 
-using CONFIG_LOADER_NS::Deserializer;
-using CONFIG_LOADER_NS::XMLLoader;
-
 DEFINE_SCHEMA(STLObj,
               (std::map<int, int>) m1,
               (std::unordered_map<std::string, Point>) m2,

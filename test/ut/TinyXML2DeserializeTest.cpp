@@ -31,8 +31,7 @@ SCENARIO("deserialize xml to struct") {
 
     GIVEN("a nest rect config that missing p1/p2") {
         Rect rect;
-        auto deserializer = XMLLoader<Rect>();
-        auto res = deserializer.load(rect, [] {
+        auto res = loadXML2Obj(rect, [] {
             return R"(
                 <?xml version="1.0" encoding="UTF-8"?>
                 <rect>
@@ -91,38 +90,37 @@ DEFINE_SCHEMA(TestBool,
               (bool) m1);
 
 SCENARIO("deserialize xml to bool type") {
-    auto deserializer = XMLLoader<TestBool>();
     TestBool obj;
     GIVEN("a valid bool") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>true</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>True</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>1</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>false</m1></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(! obj.m1);
     }
     GIVEN("a invalid bool") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>unknown</m1></TestBool>";
         });
         REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
@@ -133,10 +131,9 @@ DEFINE_SCHEMA(TestInt8T,
               (uint8_t) m1,
               (int8_t) m2);
 SCENARIO("deserialize xml to int8_t type") {
-    auto deserializer = XMLLoader<TestInt8T>();
     TestInt8T obj;
     GIVEN("a valid uint8_t") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestBool><m1>48</m1><m2>0</m2></TestBool>";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -149,17 +146,16 @@ DEFINE_SCHEMA(TestInt,
               (int) number);
 
 SCENARIO("deserialize xml to a number") {
-    auto deserializer = XMLLoader<TestInt>();
     TestInt obj;
     GIVEN("a HEX number") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestInt><number>0X12</number></TestInt>";
         });
         REQUIRE(res == Result::SUCCESS);
         REQUIRE(obj.number == 0x12);
     }
     GIVEN("a hex number") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestInt><number>0x12</number></TestInt>";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -167,7 +163,7 @@ SCENARIO("deserialize xml to a number") {
     }
 
     GIVEN("a hex number") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return "<TestInt><number>0x</number></TestInt>";
         });
         REQUIRE(res == Result::ERR_EXTRACTING_FIELD);
@@ -176,10 +172,9 @@ SCENARIO("deserialize xml to a number") {
 }
 
 SCENARIO("deserialize xml to sum type(std::variant)") {
-    auto deserializer = XMLLoader<TestVariant>();
     TestVariant obj;
     GIVEN("a string") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                 <TestVariant>
                     <sumType>hello world!</sumType>
@@ -194,7 +189,7 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 
     GIVEN("a int") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                  <TestVariant>
                      <sumType>987654</sumType>
@@ -208,7 +203,7 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 
     GIVEN("a point") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                  <TestVariant>
                      <sumType>
@@ -226,7 +221,7 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 
     GIVEN("a missing field") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                  <TestVariant>
                  </TestVariant>
@@ -236,7 +231,7 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 
     GIVEN("a invalid object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                  <TestVariant>
                      <sumType>
@@ -249,7 +244,7 @@ SCENARIO("deserialize xml to sum type(std::variant)") {
     }
 
     GIVEN("a empty object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadXML2Obj(obj, [] {
             return R"(
                  <TestVariant>
                      <sumType>

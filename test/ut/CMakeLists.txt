@@ -4,7 +4,7 @@ add_executable(config_loader_test
         UTSchema.h
         ConfigPathTest.cpp
         UtilsTest.cpp
-        DeserializableTest.cpp
+        DeserializerTest.cpp
         ResultChecking.cpp
         TinyXML2Test.cpp
         TinyXML2DeserializeTest.cpp
@@ -12,7 +12,6 @@ add_executable(config_loader_test
         JsonCppDeserializeTest.cpp
         YamlCppDeserializeTest.cpp
         YamlCppTest.cpp
-        MixinDeserializeTest.cpp
         DeserializeConfig.h
         SerializerTest.cpp TypeSerializerTest.cpp ConstexprStringTest.cpp)
 

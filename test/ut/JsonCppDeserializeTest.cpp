@@ -31,8 +31,7 @@ SCENARIO("deserialize json to struct") {
 
     GIVEN("a nest rect config that missing p1/p2") {
         Rect rect;
-        auto deserializer = JsonLoader<Rect>();
-        auto res = deserializer.load(rect, [] {
+        auto res = loadJSON2Obj(rect, [] {
             return R"({ "color": 12345678 })";
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
@@ -83,11 +82,10 @@ SCENARIO("deserialize json to compound STL container") {
 }
 
 SCENARIO("deserialize json to sum type(std::variant)") {
-    auto deserializer = JsonLoader<TestVariant>();
     TestVariant obj;
 
     GIVEN("a string") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"({ "sumType": "hello world!" })";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -98,7 +96,7 @@ SCENARIO("deserialize json to sum type(std::variant)") {
     }
 
     GIVEN("a int") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": 987654 } )";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -108,7 +106,7 @@ SCENARIO("deserialize json to sum type(std::variant)") {
     }
 
     GIVEN("a point") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": { "x": 1.2, "y": 3.4 } } )";
         });
         REQUIRE(res == Result::SUCCESS);
@@ -120,26 +118,26 @@ SCENARIO("deserialize json to sum type(std::variant)") {
     }
 
     GIVEN("a invalid object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": { "x": 1.2 } } )";
         });
         REQUIRE(res == Result::ERR_TYPE);
     }
 
     GIVEN("a invalid type") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": [1,2,3] } )";
         });
         REQUIRE(res == Result::ERR_TYPE);
     }
     GIVEN("a null type type") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": null } )";
         });
         REQUIRE(res == Result::ERR_MISSING_FIELD);
     }
     GIVEN("a empty object") {
-        auto res = deserializer.load(obj, [] {
+        auto res = loadJSON2Obj(obj, [] {
             return R"( { "sumType": {} } )";
         });
         REQUIRE(res == Result::ERR_TYPE);

@@ -28,10 +28,8 @@ set(CONFIG_LOADER_INC
         include/config-loader/core/ReflectedTraits.h
         include/config-loader/ConfigLoaderNS.h
         include/config-loader/core/ForEachField.h
-        include/config-loader/deserialize/Deserializable.h
         include/config-loader/ConfigLoader.h
         include/config-loader/Result.h
-        include/config-loader/utils/ConfigPath.h
         include/config-loader/deserialize/DeserializeTraitsDecl.h
         include/config-loader/deserialize/DeserializeTraits.h
         include/config-loader/deserialize/CompoundDeserializeTraits.h

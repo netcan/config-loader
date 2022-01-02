@@ -5,7 +5,6 @@
 #ifndef CONFIG_LOADER_DESERIALIZER_H
 #define CONFIG_LOADER_DESERIALIZER_H
 #include <config-loader/Result.h>
-#include <config-loader/utils/ConfigPath.h>
 #include <config-loader/deserialize/DeserializeTraits.h>
 #include <config-loader/parsers/TinyXML2Parser.h>
 #include <config-loader/parsers/JsonCppParser.h>
@@ -14,6 +13,8 @@
 CONFIG_LOADER_NS_BEGIN
 
 struct UnsupportedParser;
+
+std::string getFileContent(const char* path);
 
 namespace detail {
 template<typename T, typename PARSER>

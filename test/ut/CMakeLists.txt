@@ -2,7 +2,6 @@ add_executable(config_loader_test
         ReflectMacroTest.cpp
         CatchMain.cpp
         UTSchema.h
-        ConfigPathTest.cpp
         UtilsTest.cpp
         DeserializerTest.cpp
         ResultChecking.cpp

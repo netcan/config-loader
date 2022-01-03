@@ -14,6 +14,7 @@
     template <typename T>                     \
     struct FIELD<T, i> {                      \
         T& obj;                               \
+        FIELD(T& obj): obj(obj) {}            \
         auto value() -> decltype(auto) {      \
             return (obj.STRIP(arg));          \
         }                                     \

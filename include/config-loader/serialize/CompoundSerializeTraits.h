@@ -7,8 +7,9 @@
 #include <config-loader/ConfigLoaderNS.h>
 #include <config-loader/serialize/SerializeTraitsDecl.h>
 #include <config-loader/utils/CommonTraits.h>
-#include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/serialize/TypeSerializer.h>
+#include <config-loader/concept/Parser.h>
+#include <config-loader/concept/Basic.h>
 CONFIG_LOADER_NS_BEGIN
 namespace detail {
 inline std::string indent(size_t depth) {
@@ -17,9 +18,8 @@ inline std::string indent(size_t depth) {
 }
 }
 
-template<typename T>
-struct CompoundSerializeTraits<T,
-        std::enable_if_t<IsReflected_v<T>>> {
+template<concepts::Reflected T>
+struct CompoundSerializeTraits<T> {
     static void dump(std::ostream& out, const T& obj, size_t depth = 0) {
         out << "{";
         forEachField(obj, [&out, depth](auto&& fieldInfo) {

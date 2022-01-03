@@ -17,7 +17,7 @@ concept ParserElem = requires(const ELEM_TYPE elem) {
     { elem.getValueText() } -> std::same_as<std::optional<std::string>>;
     { elem.getKeyName()   } -> std::same_as<const char*>;
     requires requires (Result (&f)(ELEM_TYPE&&)) {
-        { elem.forEachElement(f) } ->std::same_as<Result>;
+        elem.forEachElement(f);
     };
 };
 

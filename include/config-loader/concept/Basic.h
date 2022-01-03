@@ -5,13 +5,14 @@
 #ifndef CONFIG_LOADER_BASIC_H
 #define CONFIG_LOADER_BASIC_H
 #include <concepts>
-#include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
 
 CONFIG_LOADER_NS_BEGIN
 namespace concepts {
 template<typename T>
-concept Reflected = IsReflected_v<T>;
+concept Reflected = requires(T obj) {
+    obj._field_count_;
+};
 
 template<typename T>
 concept Primitive = PrimitiveDeserializeTraits<T>::isSupport;

@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_FOREACHFIELD_H
 #define CONFIG_LOADER_FOREACHFIELD_H
 #include <config-loader/Result.h>
+#include <config-loader/concept/Basic.h>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -12,16 +13,16 @@
 CONFIG_LOADER_NS_BEGIN
 
 namespace detail {
-template<typename T, typename F, size_t... Is>
+struct DummyFieldInfo {
+    int& value();
+    const char* name();
+};
+
+template<concepts::Reflected T, std::invocable<detail::DummyFieldInfo> F, size_t... Is>
 constexpr auto forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
     using TDECAY = std::decay_t<T>;
     // for check if `f' has Result value or not(void)
-    struct DummyFieldInfo {
-        int& value();
-        const char* name();
-    };
-
-    if constexpr (std::is_same_v<decltype(f(std::declval<DummyFieldInfo>())), Result>) {
+    if constexpr (std::same_as<decltype(f(std::declval<DummyFieldInfo>())), Result>) {
         Result res{Result::SUCCESS};
         (void) ( ( (res = f(typename TDECAY::template FIELD<T, Is>
                                     (std::forward<T>(obj)))) == Result::SUCCESS) && ... );
@@ -32,7 +33,7 @@ constexpr auto forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
 }
 }
 
-template<typename T, typename F>
+template<concepts::Reflected T, std::invocable<detail::DummyFieldInfo> F>
 constexpr auto forEachField(T&& obj, F&& f) {
     return detail::forEachField(std::forward<T>(obj),
                                 std::forward<F>(f),

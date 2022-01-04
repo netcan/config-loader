@@ -7,6 +7,7 @@
 #include <config-loader/ConfigLoader.h>
 
 // define and reflect a struct
+
 DEFINE_SCHEMA(Point,
               (double) x,
               (double) y);

@@ -2,7 +2,7 @@
 // Created by netcan on 2021/07/08.
 //
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <config-loader/ConfigLoader.h>
 #include "UTSchema.h"
 

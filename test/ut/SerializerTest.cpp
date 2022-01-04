@@ -1,7 +1,7 @@
 //
 // Created by netcan on 2021/08/06.
 //
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <config-loader/ConfigLoader.h>
 #include "UTSchema.h"
 #include "DeserializeConfig.h"

@@ -4,8 +4,10 @@ project(config_loader)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+endif()
 
 message(CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
 
@@ -52,7 +54,7 @@ set(CONFIG_LOADER_INC
 
 add_library(config-loader STATIC
         ${CONFIG_LOADER_INC}
-        src/utils/ConfigPath.cpp)
+        src/utils/GetFileContent.cpp)
 
 target_include_directories(config-loader
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -2,9 +2,11 @@
 // Created by netcan on 2021/08/10.
 //
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include <config-loader/utils/ConstexprStringUtils.h>
 using namespace Catch;
+using namespace Catch::Matchers;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("test concat") {

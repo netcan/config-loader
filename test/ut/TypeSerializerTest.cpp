@@ -2,10 +2,12 @@
 // Created by netcan on 2021/08/09.
 //
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include <config-loader/serialize/TypeSerializer.h>
 #include "UTSchema.h"
 using namespace Catch;
+using namespace Catch::Matchers;
 using namespace CONFIG_LOADER_NS;
 
 SCENARIO("test builtin TypeDeserializer") {

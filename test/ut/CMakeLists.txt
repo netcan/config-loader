@@ -1,6 +1,5 @@
 add_executable(config_loader_test
         ReflectMacroTest.cpp
-        CatchMain.cpp
         UTSchema.h
         UtilsTest.cpp
         DeserializerTest.cpp
@@ -14,7 +13,7 @@ add_executable(config_loader_test
         DeserializeConfig.h
         SerializerTest.cpp TypeSerializerTest.cpp ConstexprStringTest.cpp)
 
-target_link_libraries(config_loader_test PRIVATE config-loader Catch2::Catch2 ${THIRD_PARTY_LIBRARIES})
+target_link_libraries(config_loader_test PRIVATE config-loader Catch2WithMain ${THIRD_PARTY_LIBRARIES})
 
 add_custom_target(copy_configs
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/configs ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configs)

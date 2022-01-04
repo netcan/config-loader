@@ -3,11 +3,12 @@
 //
 
 #ifdef HAS_TINYXML2
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include <tinyxml2.h>
-#include <iostream>
 #include "DeserializeConfig.h"
 using namespace Catch;
+using namespace Catch::Matchers;
 using namespace tinyxml2;
 
 static void checkPoint(XMLElement* point, double x, double y) {

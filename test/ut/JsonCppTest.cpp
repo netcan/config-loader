@@ -3,13 +3,15 @@
 //
 
 #ifdef HAS_JSONCPP
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include <json/json.h>
 #include "DeserializeConfig.h"
 #include <config-loader/ConfigLoader.h>
 
 using CONFIG_LOADER_NS::getFileContent;
 using namespace Catch;
+using namespace Catch::Matchers;
 
 static void checkPoint(const Json::Value& root, double x, double y) {
     REQUIRE(root.isObject());

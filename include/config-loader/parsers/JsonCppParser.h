@@ -24,7 +24,7 @@ struct JsonCppParser {
     Result parse(std::string_view content) {
         Json::CharReaderBuilder builder;
         std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-        return reader->parse(content.begin(), content.end(),
+        return reader->parse(content.data(), content.data() + content.size(),
                              &root , nullptr)
                ? Result::SUCCESS
                : Result::ERR_ILL_FORMED;

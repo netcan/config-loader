@@ -3,3 +3,6 @@
 /build/
 /.cache/
 compile_commands.json
+/.vs
+/CMakeSettings.json
+/out

@@ -9,6 +9,10 @@ set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fs
 set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 endif()
 
+# if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+# set(CMAKE_CXX_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+# endif()
+
 message(CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
 
 ###############################################################################

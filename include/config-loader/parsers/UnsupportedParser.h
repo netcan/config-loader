@@ -13,7 +13,7 @@ CONFIG_LOADER_NS_BEGIN
 struct UnsupportedParser { };
 namespace concepts {
 template<>
-constexpr bool enable_parser<UnsupportedParser> = true;
+inline constexpr bool enable_parser<UnsupportedParser> = true;
 }
 
 static_assert(concepts::Parser<UnsupportedParser>);

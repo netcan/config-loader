@@ -90,6 +90,4 @@ using JsonCppParser = UnsupportedParser;
 #endif
 
 CONFIG_LOADER_NS_END
-
-
 #endif //CONFIG_LOADER_JSONCPPPARSER_H

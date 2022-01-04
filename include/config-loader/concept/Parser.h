@@ -21,12 +21,16 @@ concept ParserElem = requires(const ELEM_TYPE elem) {
     };
 };
 
+template<typename P>
+constexpr bool enable_parser = false;
+
 template <typename P>
-concept Parser = requires(P parser, std::string_view content) {
+concept Parser = enable_parser<P> || requires(P p, std::string_view content) {
+    requires std::default_initializable<P>;
     typename P::ElemType;
     requires ParserElem<typename P::ElemType>;
-    { parser.parse(content)   } -> std::same_as<Result>;
-    { parser.toRootElemType() } -> std::same_as<typename P::ElemType>;
+    { p.parse(content)   } -> std::same_as<Result>;
+    { p.toRootElemType() } -> std::same_as<typename P::ElemType>;
 };
 
 };

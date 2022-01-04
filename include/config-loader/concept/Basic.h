@@ -4,14 +4,19 @@
 
 #ifndef CONFIG_LOADER_BASIC_H
 #define CONFIG_LOADER_BASIC_H
-#include <concepts>
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
+#include <concepts>
+#include <string_view>
 
 CONFIG_LOADER_NS_BEGIN
 namespace concepts {
 template<typename T>
 concept Reflected = requires(T obj) {
-    obj._field_count_;
+    { obj._field_count_ } -> std::convertible_to<size_t>;
+    requires (obj._field_count_ == 0) ||
+             (obj._field_count_ > 0 && requires {
+                typename std::decay_t<T>::template FIELD<T, 0>;
+             });
 };
 
 template<typename T>

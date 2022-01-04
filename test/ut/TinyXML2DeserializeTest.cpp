@@ -94,10 +94,9 @@ DEFINE_SCHEMA(TestBool,
 SCENARIO("deserialize xml to bool type") {
     TestBool obj;
     GIVEN("a valid bool") {
-        auto res = loadXML2Obj(obj, [] {
-            return "<TestBool><m1>true</m1></TestBool>";
-        });
-        REQUIRE(res == Result::SUCCESS);
+        REQUIRE(loadXML2Obj(obj, [] {
+          return "<TestBool><m1>true</m1></TestBool>";
+        }) == Result::SUCCESS);
         REQUIRE(obj.m1);
     }
     GIVEN("a valid bool") {

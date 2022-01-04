@@ -13,59 +13,61 @@
 
 CONFIG_LOADER_NS_BEGIN
 
-struct UnsupportedParser;
-
 std::string getFileContent(const char* path);
 
 namespace detail {
-template<typename T, typename PARSER>
-struct Deserializer {
-    template<std::invocable GET_CONTENT>
-    static Result load(T& obj, GET_CONTENT&& loader) {
+template<concepts::Parser P>
+struct Load2Obj {
+    template<typename T, std::invocable GET_CONTENT>
+    Result operator()(T& obj, GET_CONTENT&& loader) const {
         std::string content(loader());
         if (content.empty()) { return Result::ERR_EMPTY_CONTENT; }
 
-        PARSER parser;
+        P parser;
         CFL_EXPECT_SUCC(parser.parse(content.data()));
 
-        auto firstElem = parser.toRootElemType();
-        if (! firstElem.isValid()) { return Result::ERR_MISSING_FIELD; }
-        return CompoundDeserializeTraits<T>::deserialize(obj, firstElem);
+        auto rootElem = parser.toRootElemType();
+        if (! rootElem.isValid()) { return Result::ERR_MISSING_FIELD; }
+        return CompoundDeserializeTraits<T>::deserialize(obj, rootElem);
     }
 
-    static Result load(T& obj, std::string_view path) {
-        return load(obj, [&path] {
+    template<typename T>
+    Result operator()(T& obj, std::string_view path) const {
+        return (*this)(obj, [&path] {
             return getFileContent(path.data());
         });
     }
 };
 
-template<typename T>
-struct Deserializer<T, UnsupportedParser>  {
-    template<typename LOADER>
-    static Result load(T&, LOADER&&) {
+template<>
+struct Load2Obj<UnsupportedParser> {
+    template<typename T, typename LOADER>
+    Result operator()(T&, LOADER&&) const {
         return Result::ERR_UNSUPPORTED_PARSER;
     }
 };
+
+template<concepts::Parser P>
+inline constexpr Load2Obj<P> load2Obj;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // xml helper
 template<typename T, typename Content>
 Result loadXML2Obj(T& obj, Content content) {
-    return detail::Deserializer<T, TinyXML2Parser>::load(obj, content);
+    return detail::load2Obj<TinyXML2Parser>(obj, content);
 }
 
 // json helper
 template<typename T, typename Content>
 Result loadJSON2Obj(T& obj, Content content) {
-    return detail::Deserializer<T, JsonCppParser>::load(obj, content);
+    return detail::load2Obj<JsonCppParser>(obj, content);
 }
 
 // yaml helper
 template<typename T, typename Content>
 Result loadYAML2Obj(T& obj, Content content) {
-    return detail::Deserializer<T, YamlCppParser>::load(obj, content);
+    return detail::load2Obj<YamlCppParser>(obj, content);
 }
 
 CONFIG_LOADER_NS_END

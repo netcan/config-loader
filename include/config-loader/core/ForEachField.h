@@ -13,6 +13,7 @@
 CONFIG_LOADER_NS_BEGIN
 
 namespace detail {
+// for check if `f' has Result value or not(void)
 struct DummyFieldInfo {
     int& value();
     const char* name();
@@ -21,7 +22,6 @@ struct DummyFieldInfo {
 template<concepts::Reflected T, std::invocable<detail::DummyFieldInfo> F, size_t... Is>
 constexpr auto forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
     using TDECAY = std::decay_t<T>;
-    // for check if `f' has Result value or not(void)
     if constexpr (std::same_as<decltype(f(std::declval<DummyFieldInfo>())), Result>) {
         Result res{Result::SUCCESS};
         (void) ( ( (res = f(typename TDECAY::template FIELD<T, Is>

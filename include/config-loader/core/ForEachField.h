@@ -12,14 +12,15 @@
 CONFIG_LOADER_NS_BEGIN
 
 namespace detail {
+// for check if `f' has Result value or not(void)
+struct DummyFieldInfo {
+    int& value();
+    const char* name();
+};
+
 template<typename T, typename F, size_t... Is>
 constexpr auto forEachField(T &&obj, F &&f, std::index_sequence<Is...>) {
     using TDECAY = std::decay_t<T>;
-    // for check if `f' has Result value or not(void)
-    struct DummyFieldInfo {
-        int& value();
-        const char* name();
-    };
 
     if constexpr (std::is_same_v<decltype(f(std::declval<DummyFieldInfo>())), Result>) {
         Result res{Result::SUCCESS};

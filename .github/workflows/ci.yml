@@ -5,20 +5,18 @@ jobs:
   gcc-build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: setup gcc
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: 11
-
       - uses: actions/checkout@master
         with:
           submodules: recursive
+      - uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 11
 
       - name: build
         run: |
           mkdir build
           CXX=g++ cmake -H. -Bbuild
-          cmake --build build
+          cmake --build build -j
       - name: test
         run: |
           cd build/bin
@@ -27,21 +25,38 @@ jobs:
   clang-build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: setup clang
-        uses: egor-tensin/setup-clang@v1
-        with:
-          version: 13
-
       - uses: actions/checkout@master
         with:
           submodules: recursive
+      - uses: egor-tensin/setup-clang@v1
+        with:
+          version: 13
 
       - name: build
         run: |
           mkdir build
           CXX=clang++ cmake -H. -Bbuild
-          cmake --build build
+          cmake --build build -j
       - name: test
         run: |
           cd build/bin
           ./config_loader_test
+
+  msvc-build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: recursive
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: build
+        run: |
+          mkdir build
+          cd build
+          cmake -G Ninja ..
+          ninja
+      - name: test
+        run: |
+          cd build/bin
+          .\config_loader_test.exe

@@ -2,12 +2,14 @@
 // Created by netcan on 2021/07/06.
 //
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include "UTSchema.h"
 #include "DeserializeConfig.h"
 #include <config-loader/ConfigLoader.h>
 
 using namespace Catch;
+using namespace Catch::Matchers;
 using namespace CONFIG_LOADER_NS;
 using namespace xml_config;
 

@@ -3,11 +3,13 @@
 //
 
 #ifdef HAS_YAMLCPP
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include "DeserializeConfig.h"
 using namespace Catch;
+using namespace Catch::Matchers;
 
 static void checkPoint(const YAML::Node& node, double x, double y) {
     REQUIRE(node["x"].as<double>() == x);

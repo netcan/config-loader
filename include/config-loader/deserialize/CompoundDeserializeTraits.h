@@ -28,7 +28,7 @@ struct CompoundDeserializeTraits<T> {
         return forEachField(obj, [&node](auto&& fieldInfo) {
             decltype(auto) fieldName = fieldInfo.name();
             decltype(auto) value = fieldInfo.value();
-            auto res = CompoundDeserializeTraits<std::remove_reference_t<decltype(value)>>
+            auto res = CompoundDeserializeTraits<std::remove_cvref_t<decltype(value)>>
                             ::deserialize(value, node.toChildElem(fieldName));
             if (res != Result::SUCCESS) { LOGE("error handle field: %s", fieldName); }
             return res;
@@ -107,7 +107,7 @@ struct CompoundDeserializeTraits<std::optional<T>> {
         if (! node.isValid()) { return Result::SUCCESS; }
         T value;
         CFL_EXPECT_SUCC(CompoundDeserializeTraits<T>::deserialize(value, node));
-        obj = std::move(value);
+        obj.emplace(std::move(value));
         return Result::SUCCESS;
     }
 };

@@ -16,6 +16,7 @@ concept ParserElem = requires(const ELEM_TYPE elem) {
     { elem.isValid()      } -> std::convertible_to<bool>;
     { elem.getValueText() } -> std::same_as<std::optional<std::string>>;
     { elem.getKeyName()   } -> std::same_as<const char*>;
+    { elem.toChildElem("") } -> std::same_as<ELEM_TYPE>;
     requires requires (Result (&f)(ELEM_TYPE&&)) {
         elem.forEachElement(f);
     };

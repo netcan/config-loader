@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
-project(config_loader)
+project(config-loader)
 
 set(CMAKE_CXX_STANDARD 17)
 
 message(CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+
+option(BUILD_TESTS OFF)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        set (BUILD_TESTS ON)
+endif()
 
 ###############################################################################
 # thirdparty option
@@ -59,7 +64,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${THIRD_PARTY_LIBRARIES})
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(DIRECTORY include/config-loader DESTINATION include)
 
-option(BUILD_TESTS OFF)
+
 if (${BUILD_TESTS})
         add_subdirectory(test/ut)
 endif()

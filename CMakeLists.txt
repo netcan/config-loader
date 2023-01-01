@@ -10,6 +10,13 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         set (BUILD_TESTS ON)
 endif()
 
+option(${PROJECT_NAME}_ASAN OFF)
+set(USE_ASAN ${PROJECT_NAME}_ASAN)
+if (${USE_ASAN} AND (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
+        set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+        set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+endif()
+
 ###############################################################################
 # thirdparty option
 option(HAS_TINYXML2 "enable tinyxml2" ON)

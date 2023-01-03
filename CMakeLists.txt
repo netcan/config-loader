@@ -1,15 +1,22 @@
 cmake_minimum_required(VERSION 3.16)
-project(config_loader)
+project(config-loader)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
-set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
-endif()
 
 message(CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+
+option(${PROJECT_NAME}_BUILD_TESTS OFF)
+set(BUILD_TESTS ${PROJECT_NAME}_BUILD_TESTS)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        set (BUILD_TESTS ON)
+endif()
+
+option(${PROJECT_NAME}_ASAN OFF)
+set(USE_ASAN ${PROJECT_NAME}_ASAN)
+if (${USE_ASAN} AND (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
+        set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+        set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+endif()
 
 ###############################################################################
 # thirdparty option
@@ -21,7 +28,6 @@ message(STATUS "enable tinyxml2: ${HAS_TINYXML2}")
 message(STATUS "enable jsoncpp: ${HAS_JSONCPP}")
 message(STATUS "enable yamlcpp: ${HAS_YAMLCPP}")
 
-include(third-party/ThirdParty.cmake)
 ###############################################################################
 
 set(CONFIG_LOADER_INC
@@ -52,14 +58,21 @@ set(CONFIG_LOADER_INC
         include/config-loader/serialize/TypeSerializer.h
         include/config-loader/utils/ConstexprStringUtils.h)
 
-add_library(config-loader STATIC
+add_library(${PROJECT_NAME} STATIC
         ${CONFIG_LOADER_INC}
         src/utils/GetFileContent.cpp)
 
-target_include_directories(config-loader
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+include(third-party/ThirdParty.cmake)
 
-install(TARGETS config-loader DESTINATION lib)
+target_include_directories(${PROJECT_NAME}
+        PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ${THIRD_PARTY_LIBRARIES})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(DIRECTORY include/config-loader DESTINATION include)
 
-add_subdirectory(test/ut)
+
+if (${BUILD_TESTS})
+        add_subdirectory(test/ut)
+endif()

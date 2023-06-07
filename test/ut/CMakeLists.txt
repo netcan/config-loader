@@ -2,7 +2,6 @@ add_executable(config_loader_test
         ReflectMacroTest.cpp
         UTSchema.h
         UtilsTest.cpp
-        DeserializerTest.cpp
         ResultChecking.cpp
         TinyXML2Test.cpp
         TinyXML2DeserializeTest.cpp
@@ -12,6 +11,12 @@ add_executable(config_loader_test
         YamlCppTest.cpp
         DeserializeConfig.h
         SerializerTest.cpp TypeSerializerTest.cpp ConstexprStringTest.cpp)
+
+set_target_properties(
+        config_loader_test
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
 
 target_link_libraries(config_loader_test PRIVATE config-loader Catch2WithMain ${THIRD_PARTY_LIBRARIES})
 

@@ -1,12 +1,12 @@
 <TestTree>
     <name>hello</name>
     <children>
-        <Node> <name>world</name> </Node>
-        <Node> <name>first</name> </Node>
+        <Node> <name>world</name> <children/> </Node>
+        <Node> <name>first</name> <children/> </Node>
         <Node>
             <name>second</name>
             <children>
-                <Node> <name>leaf</name> </Node>
+                <Node> <name>leaf</name> <children/> </Node>
             </children>
         </Node>
     </children>

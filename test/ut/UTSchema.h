@@ -26,10 +26,10 @@ DEFINE_SCHEMA(SomeOfPoints,
 DEFINE_SCHEMA(STLObj,
               (std::map<int, int>) m1,
               (std::unordered_map<std::string, Point>) m2,
-              (std::map<int, int>) m3,
+              (std::optional<std::map<int, int>>) m3,
               (std::optional<Point>) m4,
               (std::optional<int>) m5,
-              (std::vector<int>) m6);
+              (std::optional<std::vector<int>>) m6);
 
 DEFINE_SCHEMA(TestVariant,
               (std::variant<Point, int, std::string>) sumType);

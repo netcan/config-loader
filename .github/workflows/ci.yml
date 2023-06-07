@@ -43,7 +43,7 @@ jobs:
           ./config_loader_test
 
   msvc-build-and-test:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
         with:

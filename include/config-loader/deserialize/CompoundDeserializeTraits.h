@@ -5,6 +5,7 @@
 #ifndef CONFIG_LOADER_COMPOUNDDESERIALIZETRAITS_H
 #define CONFIG_LOADER_COMPOUNDDESERIALIZETRAITS_H
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
+#include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/concept/Parser.h>
 #include <config-loader/concept/Basic.h>
@@ -48,7 +49,7 @@ struct CompoundDeserializeTraits<T> {
 template<typename SEQ> // for container like list/vector but not string, code reuse
 struct SeqContainerDeserialize {
     static Result deserialize(SEQ& container, concepts::ParserElem auto node) {
-        if (! node.isValid()) { return Result::SUCCESS; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         using value_type = typename SEQ::value_type;
         return node.forEachElement([&container](auto&& item) {
             value_type value;
@@ -71,7 +72,7 @@ struct CompoundDeserializeTraits<std::list<T>>
 template<typename KV> // for kv container like map/unordered_map, code reuse
 struct KVContainerDeserialize {
     static Result deserialize(KV& container, concepts::ParserElem auto node) {
-        if (! node.isValid()) { return Result::SUCCESS; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         using Key = typename KV::key_type;
         using Value = typename KV::mapped_type;
 
@@ -132,7 +133,7 @@ struct CompoundDeserializeTraits<std::variant<Ts...>> {
 template<typename SP> // for smart pointer like shared_ptr/unique_ptr, code reuse
 struct SmartPointDeserialize {
     static Result deserialize(SP& sp, concepts::ParserElem auto node) {
-        if (! node.isValid()) { return Result::SUCCESS; }
+        if (! node.isValid()) { return Result::ERR_MISSING_FIELD; }
         using SPElemType = typename SP::element_type;
         SPElemType value;
         CFL_EXPECT_SUCC(CompoundDeserializeTraits<SPElemType>::deserialize(value, node));

@@ -72,14 +72,15 @@ SCENARIO("deserialize json to compound STL container") {
         REQUIRE(data.m2["hello world"].y == 3.4);
         REQUIRE(data.m2.size() == 1);
 
-        REQUIRE(data.m3.empty());
+        REQUIRE(data.m3.has_value());
+        REQUIRE(data.m3->empty());
 
         REQUIRE(data.m4.has_value());
         REQUIRE(data.m4->x == 5.6);
         REQUIRE(data.m4->y == 7.8);
 
         REQUIRE(! data.m5.has_value());
-        REQUIRE(data.m6.empty());
+        REQUIRE(! data.m6.has_value());
     }
 }
 

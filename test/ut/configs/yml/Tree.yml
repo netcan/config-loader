@@ -1,7 +1,10 @@
 name: hello
 children:
   - name: world
+    children: []
   - name: first
+    children: []
   - name: second
     children:
       - name: leaf
+        children: []

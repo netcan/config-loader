@@ -5,7 +5,6 @@
 #ifndef CONFIG_LOADER_COMPOUNDDESERIALIZETRAITS_H
 #define CONFIG_LOADER_COMPOUNDDESERIALIZETRAITS_H
 #include <config-loader/deserialize/DeserializeTraitsDecl.h>
-#include <config-loader/core/ReflectedTraits.h>
 #include <config-loader/core/ForEachField.h>
 #include <config-loader/concept/Parser.h>
 #include <config-loader/concept/Basic.h>
